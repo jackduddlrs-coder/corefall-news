@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { pastStandings, trophyData, getTeamClass } from "@/data/corefallData";
+import { pastStandings, trophyData, getTeamClass, seasons } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
@@ -63,6 +63,11 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
 
   const isActive = seasonHistory.some(s => s.year === 707);
   const trophies = trophyData.find(t => t.name === playerName);
+  
+  // Get Season Star awards
+  const seasonStars = useMemo(() => {
+    return seasons.filter(s => s.star === playerName).map(s => s.year);
+  }, [playerName]);
 
   const toggleYear = (year: number) => {
     const newSelected = new Set(selectedYears);
@@ -137,18 +142,26 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             Career Honors
           </div>
           <div className="mb-8">
-            {trophies ? (
+            {(trophies || seasonStars.length > 0) ? (
               <>
-                {Array(trophies.apex).fill(0).map((_, i) => (
+                {trophies && Array(trophies.apex).fill(0).map((_, i) => (
                   <span key={`apex-${i}`} className="award-badge award-apex">🏆 Apex Champion</span>
                 ))}
-                {Array(trophies.ctt).fill(0).map((_, i) => (
+                {trophies && Array(trophies.ctt).fill(0).map((_, i) => (
                   <span key={`ctt-${i}`} className="award-badge award-ctt">🛡️ CTT Winner</span>
                 ))}
-                {trophies.major > 0 && (
+                {seasonStars.length > 0 && (
+                  <span className="award-badge award-star">⭐ {seasonStars.length}x Season Star</span>
+                )}
+                {trophies && trophies.major > 0 && (
                   <span className="award-badge award-major">⚔️ {trophies.major} Major Titles</span>
                 )}
-                {trophies.list && (
+                {seasonStars.length > 0 && (
+                  <div className="mt-2 text-sm text-muted-foreground">
+                    Season Star: {seasonStars.join(", ")}
+                  </div>
+                )}
+                {trophies?.list && (
                   <div className="mt-2 text-sm text-muted-foreground">{trophies.list}</div>
                 )}
               </>
