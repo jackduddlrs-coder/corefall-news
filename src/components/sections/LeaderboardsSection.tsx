@@ -7,13 +7,14 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "team-points" | "team-championships" | "team-players";
+type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "youngest-champs" | "oldest-champs" | "team-points" | "team-championships" | "team-players";
 
 interface PlayerStats {
   name: string;
   team: string;
   value: number;
   season?: string;
+  age?: number;
 }
 
 interface TeamStats {
@@ -173,12 +174,28 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(([team, players]) => ({ team, value: players.size }))
       .sort((a, b) => b.value - a.value);
 
+    // Youngest/Oldest Champions
+    const champions: PlayerStats[] = seasons
+      .filter(s => selectedYears.has(s.year.toString()) && s.apex && s.apexAge)
+      .map(s => ({
+        name: s.apex,
+        team: s.team,
+        value: s.apexAge,
+        season: s.year.toString(),
+        age: s.apexAge
+      }));
+    
+    const youngestChampions = [...champions].sort((a, b) => a.value - b.value);
+    const oldestChampions = [...champions].sort((a, b) => b.value - a.value);
+
     return {
       "single-points": singleSeasonPoints,
       "all-time-points": allTimePoints,
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
+      "youngest-champs": youngestChampions,
+      "oldest-champs": oldestChampions,
       "team-points": teamPoints,
       "team-championships": teamChamps,
       "team-players": teamPlayers
@@ -192,6 +209,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
+      case "youngest-champs": return "Youngest Apex Champions";
+      case "oldest-champs": return "Oldest Apex Champions";
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
@@ -201,6 +220,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const getValueLabel = (type: LeaderboardType) => {
     switch (type) {
       case "appearances": return "Seasons";
+      case "youngest-champs":
+      case "oldest-champs": return "Age";
       case "team-points": return "Points";
       case "team-championships": return "Titles";
       case "team-players": return "Players";
@@ -210,7 +231,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos";
+    const showSeason = type === "single-points" || type === "single-kos" || type === "youngest-champs" || type === "oldest-champs";
 
     return (
       <div className="overflow-x-auto">
@@ -374,6 +395,12 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="appearances" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Appearances
             </TabsTrigger>
+            <TabsTrigger value="youngest-champs" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Youngest Champs
+            </TabsTrigger>
+            <TabsTrigger value="oldest-champs" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Oldest Champs
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -409,6 +436,12 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="appearances" className="mt-0">
             {renderPlayerLeaderboard("appearances")}
+          </TabsContent>
+          <TabsContent value="youngest-champs" className="mt-0">
+            {renderPlayerLeaderboard("youngest-champs")}
+          </TabsContent>
+          <TabsContent value="oldest-champs" className="mt-0">
+            {renderPlayerLeaderboard("oldest-champs")}
           </TabsContent>
           <TabsContent value="team-points" className="mt-0">
             {renderTeamLeaderboard("team-points")}
