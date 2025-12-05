@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { pastStandings, pastTeamStandings, getTeamClass, seasons } from "@/data/corefallData";
+import { pastStandings, pastTeamStandings, getTeamClass, seasons, trophyData, apexDetailed } from "@/data/corefallData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface LeaderboardsSectionProps {
@@ -174,19 +174,80 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(([team, players]) => ({ team, value: players.size }))
       .sort((a, b) => b.value - a.value);
 
-    // Youngest/Oldest Champions
-    const champions: PlayerStats[] = seasons
-      .filter(s => selectedYears.has(s.year.toString()) && s.apex && s.apexAge)
-      .map(s => ({
-        name: s.apex,
-        team: s.team,
-        value: s.apexAge,
-        season: s.year.toString(),
-        age: s.apexAge
-      }));
+    // Youngest/Oldest Champions (Apex + Major winners)
+    // Build a map of player ages by season from pastStandings
+    const playerAgesBySeason: Record<string, Record<string, number>> = {};
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      playerAgesBySeason[season] = {};
+      players.forEach(p => {
+        playerAgesBySeason[season][p.Name] = p.Age;
+      });
+    });
+
+    // Collect all major/apex wins with ages
+    const allWins: PlayerStats[] = [];
     
-    const youngestChampions = [...champions].sort((a, b) => a.value - b.value);
-    const oldestChampions = [...champions].sort((a, b) => b.value - a.value);
+    // Add Apex wins from apexDetailed (has exact ages)
+    apexDetailed.forEach(a => {
+      if (selectedYears.has(a.year.toString())) {
+        allWins.push({
+          name: a.win,
+          team: a.wTeam,
+          value: a.winAge,
+          season: `${a.year} Apex`,
+          age: a.winAge
+        });
+      }
+    });
+
+    // Parse trophy data for major wins
+    trophyData.forEach(player => {
+      if (player.major === 0) return;
+      
+      // Parse the list to extract major tournament wins and years
+      const listParts = player.list.split(', ');
+      listParts.forEach(part => {
+        // Match patterns like "Heritage (701, 702, 704, 707)" or "Descent (704)"
+        const match = part.match(/^([A-Za-z\s]+)\s*\(([^)]+)\)/);
+        if (match) {
+          const tournamentName = match[1].trim();
+          const years = match[2].split(',').map(y => y.trim());
+          
+          // Skip Apex and CTT (already counted separately)
+          if (tournamentName === 'Apex' || tournamentName === 'CTT') return;
+          
+          years.forEach(yearStr => {
+            const year = parseInt(yearStr);
+            if (isNaN(year) || !selectedYears.has(yearStr)) return;
+            
+            // Get player age for that season
+            const seasonAges = playerAgesBySeason[yearStr];
+            let age = seasonAges?.[player.name];
+            
+            // If not in standings, try to infer from apexDetailed
+            if (!age) {
+              const apexEntry = apexDetailed.find(a => a.year === year && (a.win === player.name || a.lose === player.name));
+              if (apexEntry) {
+                age = apexEntry.win === player.name ? apexEntry.winAge : apexEntry.loseAge;
+              }
+            }
+            
+            if (age && age > 0) {
+              allWins.push({
+                name: player.name,
+                team: getMostPlayedTeam(player.name) || 'Unknown',
+                value: age,
+                season: `${yearStr} ${tournamentName}`,
+                age: age
+              });
+            }
+          });
+        }
+      });
+    });
+    
+    const youngestChampions = [...allWins].sort((a, b) => a.value - b.value);
+    const oldestChampions = [...allWins].sort((a, b) => b.value - a.value);
 
     return {
       "single-points": singleSeasonPoints,
@@ -209,8 +270,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
-      case "youngest-champs": return "Youngest Apex Champions";
-      case "oldest-champs": return "Oldest Apex Champions";
+      case "youngest-champs": return "Youngest Apex/Major Champions";
+      case "oldest-champs": return "Oldest Apex/Major Champions";
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
