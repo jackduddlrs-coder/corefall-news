@@ -27,6 +27,7 @@ export function SeasonsSection({ onPlayerClick, onTeamClick }: SeasonsSectionPro
                 <td className="p-3 text-primary font-bold">{s.year}</td>
                 <td className="p-3">
                   <span className="clickable-name c-apex" onClick={() => onPlayerClick(s.apex)}>🏆 {s.apex}</span>
+                  <span className="text-muted-foreground text-xs ml-1">({s.apexAge})</span>
                   {" "}
                   <span className={`team-tag clickable-team ${getTeamClass(s.team)}`} onClick={() => onTeamClick(s.team)}>
                     {s.team}
@@ -39,6 +40,7 @@ export function SeasonsSection({ onPlayerClick, onTeamClick }: SeasonsSectionPro
                 </td>
                 <td className="p-3">
                   <span className="clickable-name" onClick={() => onPlayerClick(s.star)}>⭐ {s.star}</span>
+                  <span className="text-muted-foreground text-xs ml-1">({s.starAge})</span>
                   {" "}
                   <span className={`team-tag clickable-team ${getTeamClass(s.starTeam)}`} onClick={() => onTeamClick(s.starTeam)}>
                     {s.starTeam}
