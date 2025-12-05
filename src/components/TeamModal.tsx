@@ -51,16 +51,26 @@ export function TeamModal({ teamName, onClose }: TeamModalProps) {
     }
   });
 
-  // All-Time Awards
-  let allTimeCTT = 0;
-  let allTimeApex = 0;
-  let allTimeStar = 0;
+  // All-Time Awards with details
+  const apexWins: { year: number; player: string }[] = [];
+  const cttWins: { year: number }[] = [];
+  const starWins: { year: number; player: string }[] = [];
 
   seasons.forEach(s => {
-    if (s.ctt === teamName) allTimeCTT++;
-    if (s.team === teamName) allTimeApex++;
-    if (s.starTeam === teamName) allTimeStar++;
+    if (s.team === teamName) {
+      apexWins.push({ year: s.year, player: s.apex });
+    }
+    if (s.ctt === teamName) {
+      cttWins.push({ year: s.year });
+    }
+    if (s.starTeam === teamName) {
+      starWins.push({ year: s.year, player: s.star });
+    }
   });
+
+  const allTimeApex = apexWins.length;
+  const allTimeCTT = cttWins.length;
+  const allTimeStar = starWins.length;
 
   return (
     <div 
@@ -88,10 +98,45 @@ export function TeamModal({ teamName, onClose }: TeamModalProps) {
           <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
             Franchise Trophy Case (All-Time)
           </div>
-          <div className="mb-8">
-            {allTimeApex > 0 && <span className="award-badge award-apex">👑 {allTimeApex}x Apex Titles</span>}
-            {allTimeCTT > 0 && <span className="award-badge award-ctt">🛡️ {allTimeCTT}x CTT Titles</span>}
-            {allTimeStar > 0 && <span className="award-badge award-major">⭐ {allTimeStar}x Season Stars</span>}
+          <div className="mb-8 space-y-4">
+            {allTimeApex > 0 && (
+              <div className="bg-background/50 p-4 rounded-lg border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="award-badge award-apex">👑 {allTimeApex}x Apex Titles</span>
+                </div>
+                <div className="text-sm text-muted-foreground pl-2">
+                  {apexWins.map((w, i) => (
+                    <span key={w.year}>
+                      {w.player} ({w.year}){i < apexWins.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {allTimeCTT > 0 && (
+              <div className="bg-background/50 p-4 rounded-lg border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="award-badge award-ctt">🛡️ {allTimeCTT}x CTT Titles</span>
+                </div>
+                <div className="text-sm text-muted-foreground pl-2">
+                  Years: {cttWins.map(w => w.year).join(", ")}
+                </div>
+              </div>
+            )}
+            {allTimeStar > 0 && (
+              <div className="bg-background/50 p-4 rounded-lg border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="award-badge award-major">⭐ {allTimeStar}x Season Stars</span>
+                </div>
+                <div className="text-sm text-muted-foreground pl-2">
+                  {starWins.map((w, i) => (
+                    <span key={w.year}>
+                      {w.player} ({w.year}){i < starWins.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
             {allTimeApex === 0 && allTimeCTT === 0 && allTimeStar === 0 && (
               <span className="text-muted-foreground">No major titles recorded.</span>
             )}
