@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { pastStandings, pastTeamStandings, getTeamClass, seasons, trophyData, apexDetailed } from "@/data/corefallData";
+import { pastStandings, pastTeamStandings, getTeamClass, seasons, majorWinners, apexDetailed } from "@/data/corefallData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface LeaderboardsSectionProps {
@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "youngest-champs" | "oldest-champs" | "team-points" | "team-championships" | "team-players";
+type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "champ-ages" | "team-points" | "team-championships" | "team-players";
 
 interface PlayerStats {
   name: string;
@@ -27,6 +27,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [activeTab, setActiveTab] = useState<LeaderboardType>("single-points");
   const allSeasons = Object.keys(pastStandings).sort();
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(allSeasons));
+  const [champAgeSortAsc, setChampAgeSortAsc] = useState<boolean>(true); // true = youngest first
 
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
@@ -174,7 +175,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(([team, players]) => ({ team, value: players.size }))
       .sort((a, b) => b.value - a.value);
 
-    // Youngest/Oldest Champions (Apex + Major winners)
+    // Champion Ages (all major/apex winners from majorWinners data)
     // Build a map of player ages by season from pastStandings
     const playerAgesBySeason: Record<string, Record<string, number>> = {};
     Object.entries(pastStandings).forEach(([season, players]) => {
@@ -184,70 +185,34 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       });
     });
 
-    // Collect all major/apex wins with ages
-    const allWins: PlayerStats[] = [];
+    // Collect all major/apex wins with ages from majorWinners
+    const champAges: PlayerStats[] = [];
     
-    // Add Apex wins from apexDetailed (has exact ages)
-    apexDetailed.forEach(a => {
-      if (selectedYears.has(a.year.toString())) {
-        allWins.push({
-          name: a.win,
-          team: a.wTeam,
-          value: a.winAge,
-          season: `${a.year} Apex`,
-          age: a.winAge
+    majorWinners.forEach(win => {
+      if (!selectedYears.has(win.year.toString())) return;
+      
+      // Get player age for that season
+      const seasonAges = playerAgesBySeason[win.year.toString()];
+      let age = seasonAges?.[win.winner];
+      
+      // If not in standings, try to infer from apexDetailed
+      if (!age) {
+        const apexEntry = apexDetailed.find(a => a.year === win.year && (a.win === win.winner || a.lose === win.winner));
+        if (apexEntry) {
+          age = apexEntry.win === win.winner ? apexEntry.winAge : apexEntry.loseAge;
+        }
+      }
+      
+      if (age && age > 0) {
+        champAges.push({
+          name: win.winner,
+          team: getMostPlayedTeam(win.winner) || 'Unknown',
+          value: age,
+          season: `${win.year} ${win.tournament}`,
+          age: age
         });
       }
     });
-
-    // Parse trophy data for major wins
-    trophyData.forEach(player => {
-      if (player.major === 0) return;
-      
-      // Parse the list to extract major tournament wins and years
-      const listParts = player.list.split(', ');
-      listParts.forEach(part => {
-        // Match patterns like "Heritage (701, 702, 704, 707)" or "Descent (704)"
-        const match = part.match(/^([A-Za-z\s]+)\s*\(([^)]+)\)/);
-        if (match) {
-          const tournamentName = match[1].trim();
-          const years = match[2].split(',').map(y => y.trim());
-          
-          // Skip Apex and CTT (already counted separately)
-          if (tournamentName === 'Apex' || tournamentName === 'CTT') return;
-          
-          years.forEach(yearStr => {
-            const year = parseInt(yearStr);
-            if (isNaN(year) || !selectedYears.has(yearStr)) return;
-            
-            // Get player age for that season
-            const seasonAges = playerAgesBySeason[yearStr];
-            let age = seasonAges?.[player.name];
-            
-            // If not in standings, try to infer from apexDetailed
-            if (!age) {
-              const apexEntry = apexDetailed.find(a => a.year === year && (a.win === player.name || a.lose === player.name));
-              if (apexEntry) {
-                age = apexEntry.win === player.name ? apexEntry.winAge : apexEntry.loseAge;
-              }
-            }
-            
-            if (age && age > 0) {
-              allWins.push({
-                name: player.name,
-                team: getMostPlayedTeam(player.name) || 'Unknown',
-                value: age,
-                season: `${yearStr} ${tournamentName}`,
-                age: age
-              });
-            }
-          });
-        }
-      });
-    });
-    
-    const youngestChampions = [...allWins].sort((a, b) => a.value - b.value);
-    const oldestChampions = [...allWins].sort((a, b) => b.value - a.value);
 
     return {
       "single-points": singleSeasonPoints,
@@ -255,8 +220,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
-      "youngest-champs": youngestChampions,
-      "oldest-champs": oldestChampions,
+      "champ-ages": champAges,
       "team-points": teamPoints,
       "team-championships": teamChamps,
       "team-players": teamPlayers
@@ -270,8 +234,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
-      case "youngest-champs": return "Youngest Apex/Major Champions";
-      case "oldest-champs": return "Oldest Apex/Major Champions";
+      case "champ-ages": return `Champion Ages (${(leaderboards["champ-ages"] as PlayerStats[]).length} titles)`;
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
@@ -281,8 +244,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const getValueLabel = (type: LeaderboardType) => {
     switch (type) {
       case "appearances": return "Seasons";
-      case "youngest-champs":
-      case "oldest-champs": return "Age";
+      case "champ-ages": return "Age";
       case "team-points": return "Points";
       case "team-championships": return "Titles";
       case "team-players": return "Players";
@@ -290,9 +252,78 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     }
   };
 
+  const renderChampAgesLeaderboard = () => {
+    const data = [...(leaderboards["champ-ages"] as PlayerStats[])].sort((a, b) => 
+      champAgeSortAsc ? a.value - b.value : b.value - a.value
+    );
+
+    return (
+      <div className="overflow-x-auto">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm text-muted-foreground">
+            Showing {data.length} tournament wins
+          </span>
+          <button
+            onClick={() => setChampAgeSortAsc(!champAgeSortAsc)}
+            className="text-xs px-3 py-1.5 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+          >
+            Sort: {champAgeSortAsc ? "Youngest First ↑" : "Oldest First ↓"}
+          </button>
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Player</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Team</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Tournament</th>
+              <th 
+                className="text-right p-2 md:p-3 text-muted-foreground font-semibold cursor-pointer hover:text-primary"
+                onClick={() => setChampAgeSortAsc(!champAgeSortAsc)}
+              >
+                Age {champAgeSortAsc ? "↑" : "↓"}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((player, index) => (
+              <tr key={`${player.name}-${player.season}-${index}`} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                <td className="p-2 md:p-3">
+                  <span
+                    onClick={() => onPlayerClick(player.name)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {player.name}
+                  </span>
+                  <span 
+                    onClick={() => onTeamClick(player.team)}
+                    className={`ml-2 text-xs px-1.5 py-0.5 rounded cursor-pointer sm:hidden ${getTeamClass(player.team)}`}
+                  >
+                    {player.team}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 hidden sm:table-cell">
+                  <span 
+                    onClick={() => onTeamClick(player.team)}
+                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(player.team)}`}
+                  >
+                    {player.team}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 text-muted-foreground hidden md:table-cell">{player.season}</td>
+                <td className="p-2 md:p-3 text-right font-bold text-foreground">{player.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos" || type === "youngest-champs" || type === "oldest-champs";
+    const showSeason = type === "single-points" || type === "single-kos";
 
     return (
       <div className="overflow-x-auto">
@@ -456,11 +487,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="appearances" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Appearances
             </TabsTrigger>
-            <TabsTrigger value="youngest-champs" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Youngest Champs
-            </TabsTrigger>
-            <TabsTrigger value="oldest-champs" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Oldest Champs
+            <TabsTrigger value="champ-ages" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Champion Ages
             </TabsTrigger>
           </TabsList>
         </div>
@@ -498,11 +526,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           <TabsContent value="appearances" className="mt-0">
             {renderPlayerLeaderboard("appearances")}
           </TabsContent>
-          <TabsContent value="youngest-champs" className="mt-0">
-            {renderPlayerLeaderboard("youngest-champs")}
-          </TabsContent>
-          <TabsContent value="oldest-champs" className="mt-0">
-            {renderPlayerLeaderboard("oldest-champs")}
+          <TabsContent value="champ-ages" className="mt-0">
+            {renderChampAgesLeaderboard()}
           </TabsContent>
           <TabsContent value="team-points" className="mt-0">
             {renderTeamLeaderboard("team-points")}
