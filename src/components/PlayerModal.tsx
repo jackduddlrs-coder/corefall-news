@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { pastStandings, trophyData, getTeamClass } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -11,38 +11,74 @@ interface PlayerModalProps {
 export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
   const [expandedSeasons, setExpandedSeasons] = useState<Set<number>>(new Set());
 
-  let careerPoints = 0;
-  let careerKOs = 0;
-  let yearsActive = 0;
-  let apexAppearances = 0;
-  let totalRanks = 0;
-  const seasonHistory: { year: number; team: string; rank: number; points: number; ko: number }[] = [];
-
-  // Gather History from Archives (700-707)
-  Object.keys(pastStandings).forEach(year => {
-    const pData = pastStandings[year].find(p => p.Name === playerName);
-    if (pData) {
-      seasonHistory.push({
-        year: parseInt(year),
-        team: pData.Team,
-        rank: pData.Rank,
-        points: pData.Points,
-        ko: pData.KOs
-      });
-      careerPoints += pData.Points;
-      careerKOs += pData.KOs;
-      totalRanks += pData.Rank;
-      yearsActive++;
-      if (pData.Rank <= 16) {
-        apexAppearances++;
+  // Gather all season history first
+  const seasonHistory = useMemo(() => {
+    const history: { year: number; team: string; rank: number; points: number; ko: number }[] = [];
+    Object.keys(pastStandings).forEach(year => {
+      const pData = pastStandings[year].find(p => p.Name === playerName);
+      if (pData) {
+        history.push({
+          year: parseInt(year),
+          team: pData.Team,
+          rank: pData.Rank,
+          points: pData.Points,
+          ko: pData.KOs
+        });
       }
-    }
-  });
+    });
+    return history.sort((a, b) => b.year - a.year);
+  }, [playerName]);
 
-  seasonHistory.sort((a, b) => b.year - a.year);
+  // Initialize selected years with all years the player was active
+  const [selectedYears, setSelectedYears] = useState<Set<number>>(() => 
+    new Set(seasonHistory.map(s => s.year))
+  );
+
+  // Calculate career totals based on selected years
+  const careerTotals = useMemo(() => {
+    let points = 0;
+    let kos = 0;
+    let totalRanks = 0;
+    let apexApps = 0;
+    let count = 0;
+
+    seasonHistory.forEach(s => {
+      if (selectedYears.has(s.year)) {
+        points += s.points;
+        kos += s.ko;
+        totalRanks += s.rank;
+        count++;
+        if (s.rank <= 16) apexApps++;
+      }
+    });
+
+    return {
+      points,
+      kos,
+      avgFinish: count > 0 ? (totalRanks / count).toFixed(1) : '-',
+      apexApps,
+      yearsActive: count
+    };
+  }, [seasonHistory, selectedYears]);
 
   const isActive = seasonHistory.some(s => s.year === 707);
   const trophies = trophyData.find(t => t.name === playerName);
+
+  const toggleYear = (year: number) => {
+    const newSelected = new Set(selectedYears);
+    if (newSelected.has(year)) {
+      if (newSelected.size > 1) { // Keep at least one year selected
+        newSelected.delete(year);
+      }
+    } else {
+      newSelected.add(year);
+    }
+    setSelectedYears(newSelected);
+  };
+
+  const selectAllYears = () => {
+    setSelectedYears(new Set(seasonHistory.map(s => s.year)));
+  };
 
   const toggleSeason = (year: number) => {
     const newExpanded = new Set(expandedSeasons);
@@ -61,6 +97,15 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     const playerData = seasonData[playerName];
     if (!playerData) return null;
     return { tournaments: tournamentNames[yearStr] || [], results: playerData };
+  };
+
+  const getYearRangeLabel = () => {
+    if (selectedYears.size === seasonHistory.length) {
+      return `(700-707)`;
+    }
+    const years = Array.from(selectedYears).sort();
+    if (years.length === 1) return `(${years[0]})`;
+    return `(${years.length} seasons)`;
   };
 
   return (
@@ -112,29 +157,57 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             )}
           </div>
 
-          <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
-            Career Totals (700-707)
+          <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
+            <div className="text-primary text-sm uppercase font-bold tracking-wider">
+              Career Totals {getYearRangeLabel()}
+            </div>
+            {selectedYears.size < seasonHistory.length && (
+              <button 
+                onClick={selectAllYears}
+                className="text-xs text-primary hover:text-secondary transition-colors"
+              >
+                Reset Filter
+              </button>
+            )}
           </div>
+          
+          {/* Year Filter */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {seasonHistory.map(s => (
+              <button
+                key={s.year}
+                onClick={() => toggleYear(s.year)}
+                className={`px-3 py-1 text-xs font-bold rounded border transition-all ${
+                  selectedYears.has(s.year)
+                    ? 'bg-primary/20 border-primary text-primary'
+                    : 'bg-muted/20 border-border text-muted-foreground hover:border-muted-foreground'
+                }`}
+              >
+                {s.year}
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Total Points</div>
-              <div className="text-2xl text-white font-bold mt-1">{careerPoints.toLocaleString()}</div>
+              <div className="text-2xl text-white font-bold mt-1">{careerTotals.points.toLocaleString()}</div>
             </div>
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Career KOs</div>
-              <div className="text-2xl text-white font-bold mt-1">{careerKOs}</div>
+              <div className="text-2xl text-white font-bold mt-1">{careerTotals.kos}</div>
             </div>
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Avg Finish</div>
-              <div className="text-2xl text-white font-bold mt-1">#{yearsActive > 0 ? (totalRanks / yearsActive).toFixed(1) : '-'}</div>
+              <div className="text-2xl text-white font-bold mt-1">#{careerTotals.avgFinish}</div>
             </div>
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Apex Apps</div>
-              <div className="text-2xl text-white font-bold mt-1">{apexAppearances}</div>
+              <div className="text-2xl text-white font-bold mt-1">{careerTotals.apexApps}</div>
             </div>
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Years Active</div>
-              <div className="text-2xl text-white font-bold mt-1">{yearsActive}</div>
+              <div className="text-2xl text-white font-bold mt-1">{careerTotals.yearsActive}</div>
             </div>
           </div>
 
@@ -157,11 +230,12 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                   const tournamentData = getPlayerTournamentData(h.year);
                   const isExpanded = expandedSeasons.has(h.year);
                   const hasTournamentData = tournamentData !== null;
+                  const isIncluded = selectedYears.has(h.year);
                   
                   return (
                     <React.Fragment key={h.year}>
                       <tr 
-                        className={`border-b border-border hover:bg-muted/50 ${hasTournamentData ? 'cursor-pointer' : ''}`}
+                        className={`border-b border-border hover:bg-muted/50 ${hasTournamentData ? 'cursor-pointer' : ''} ${!isIncluded ? 'opacity-40' : ''}`}
                         onClick={() => hasTournamentData && toggleSeason(h.year)}
                       >
                         <td className="p-3 text-primary font-bold">
