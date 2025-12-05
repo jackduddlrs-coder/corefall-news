@@ -1,11 +1,47 @@
+import { useState, useMemo } from "react";
 import { trophyData } from "@/data/corefallData";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface MajorsSectionProps {
   onPlayerClick: (name: string) => void;
 }
 
+type SortKey = "total" | "apex" | "ctt" | "major" | "name";
+type SortDirection = "asc" | "desc";
+
 export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
-  const sortedTrophies = [...trophyData].sort((a, b) => b.total - a.total);
+  const [sortKey, setSortKey] = useState<SortKey>("total");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const sortedTrophies = useMemo(() => {
+    return [...trophyData].sort((a, b) => {
+      let comparison = 0;
+      if (sortKey === "name") {
+        comparison = a.name.localeCompare(b.name);
+      } else {
+        comparison = a[sortKey] - b[sortKey];
+      }
+      return sortDirection === "desc" ? -comparison : comparison;
+    });
+  }, [sortKey, sortDirection]);
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === "desc" ? "asc" : "desc");
+    } else {
+      setSortKey(key);
+      setSortDirection("desc");
+    }
+  };
+
+  const SortIcon = ({ column }: { column: SortKey }) => {
+    if (sortKey !== column) return null;
+    return sortDirection === "desc" ? (
+      <ChevronDown className="inline w-4 h-4 ml-1" />
+    ) : (
+      <ChevronUp className="inline w-4 h-4 ml-1" />
+    );
+  };
 
   return (
     <div className="animate-fadeIn">
@@ -16,12 +52,42 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
         <table className="w-full border-collapse text-sm min-w-[800px]">
           <thead>
             <tr>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white">#</th>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white">Fighter</th>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white">Total</th>
-              <th className="bg-black text-[hsl(var(--gold))] uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white">Apex</th>
-              <th className="bg-black text-[hsl(var(--silver))] uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white">CTT</th>
-              <th className="bg-black text-[hsl(var(--bronze))] uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white">Major</th>
+              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">#</th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white transition-colors"
+                onClick={() => handleSort("name")}
+              >
+                Fighter
+                <SortIcon column="name" />
+              </th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white transition-colors"
+                onClick={() => handleSort("total")}
+              >
+                Total
+                <SortIcon column="total" />
+              </th>
+              <th 
+                className="bg-black text-[hsl(var(--gold))] uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white transition-colors"
+                onClick={() => handleSort("apex")}
+              >
+                Apex
+                <SortIcon column="apex" />
+              </th>
+              <th 
+                className="bg-black text-[hsl(var(--silver))] uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white transition-colors"
+                onClick={() => handleSort("ctt")}
+              >
+                CTT
+                <SortIcon column="ctt" />
+              </th>
+              <th 
+                className="bg-black text-[hsl(var(--bronze))] uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white transition-colors"
+                onClick={() => handleSort("major")}
+              >
+                Major
+                <SortIcon column="major" />
+              </th>
               <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Detailed Victory List</th>
             </tr>
           </thead>
