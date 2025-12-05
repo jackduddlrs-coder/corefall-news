@@ -683,12 +683,12 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
   ]
 };
 
-// Complete Major Winners Data (11 tournaments per season x 8 seasons = 88 total)
-// Tournaments: Apex, CTT, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life
+// Complete Major Winners Data (10 majors + 1 Apex = 11 tournaments per season x 8 seasons = 88 total)
+// Tournaments: Apex, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
+// Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
   // Season 707
   { year: 707, tournament: "Apex", winner: "Cascade Juner" },
-  { year: 707, tournament: "CTT", winner: "Cascade Juner" },
   { year: 707, tournament: "Heritage", winner: "Rain Lieryon" },
   { year: 707, tournament: "Descent", winner: "Cascade Juner" },
   { year: 707, tournament: "Malice", winner: "Nothing Sawryr" },
@@ -698,9 +698,9 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 707, tournament: "Wind Breakers", winner: "Killa Binbac" },
   { year: 707, tournament: "Armageddon", winner: "Cascade Juner" },
   { year: 707, tournament: "New Life", winner: "Zeus Ziki" },
+  { year: 707, tournament: "Chaos Reigns", winner: "Heal Calofloure" },
   // Season 706
   { year: 706, tournament: "Apex", winner: "Jungle Unovo" },
-  { year: 706, tournament: "CTT", winner: "Zeus Ziki" },
   { year: 706, tournament: "Heritage", winner: "Zeus Ziki" },
   { year: 706, tournament: "Descent", winner: "Killa Binbac" },
   { year: 706, tournament: "Malice", winner: "Cascade Juner" },
@@ -709,10 +709,10 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 706, tournament: "Heartland", winner: "Rain Lieryon" },
   { year: 706, tournament: "Wind Breakers", winner: "Heal Calofloure" },
   { year: 706, tournament: "Armageddon", winner: "Wraith Cunelly" },
+  { year: 706, tournament: "New Life", winner: "Zeus Ziki" },
   { year: 706, tournament: "Chaos Reigns", winner: "Cascade Juner" },
   // Season 705
   { year: 705, tournament: "Apex", winner: "Heal Calofloure" },
-  { year: 705, tournament: "CTT", winner: "Blood Astur" },
   { year: 705, tournament: "Heritage", winner: "Jungle Unovo" },
   { year: 705, tournament: "Descent", winner: "Joy Dafvies" },
   { year: 705, tournament: "Malice", winner: "Whiteout Gar-Kiola" },
@@ -722,9 +722,9 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 705, tournament: "Wind Breakers", winner: "Heal Calofloure" },
   { year: 705, tournament: "Armageddon", winner: "Killa Binbac" },
   { year: 705, tournament: "New Life", winner: "Heal Calofloure" },
+  { year: 705, tournament: "Chaos Reigns", winner: "Blood Astur" },
   // Season 704
   { year: 704, tournament: "Apex", winner: "Rain Lieryon" },
-  { year: 704, tournament: "CTT", winner: "Blood Astur" },
   { year: 704, tournament: "Heritage", winner: "Rain Lieryon" },
   { year: 704, tournament: "Descent", winner: "Rain Lieryon" },
   { year: 704, tournament: "Malice", winner: "Rain Lieryon" },
@@ -734,9 +734,9 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 704, tournament: "Wind Breakers", winner: "Jungle Unovo" },
   { year: 704, tournament: "Armageddon", winner: "Jungle Unovo" },
   { year: 704, tournament: "New Life", winner: "Cascade Juner" },
+  { year: 704, tournament: "Chaos Reigns", winner: "Heal Calofloure" },
   // Season 703
   { year: 703, tournament: "Apex", winner: "Jungle Unovo" },
-  { year: 703, tournament: "CTT", winner: "Night Corondolo" },
   { year: 703, tournament: "Heritage", winner: "Nemesis Owanash" },
   { year: 703, tournament: "Descent", winner: "Cascade Juner" },
   { year: 703, tournament: "Malice", winner: "Blood Astur" },
@@ -745,10 +745,10 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 703, tournament: "Heartland", winner: "Rain Lieryon" },
   { year: 703, tournament: "Wind Breakers", winner: "Rain Lieryon" },
   { year: 703, tournament: "Armageddon", winner: "Night Corondolo" },
+  { year: 703, tournament: "New Life", winner: "Killa Binbac" },
   { year: 703, tournament: "Chaos Reigns", winner: "Hero Valii" },
   // Season 702
   { year: 702, tournament: "Apex", winner: "Rain Lieryon" },
-  { year: 702, tournament: "CTT", winner: "Killa Binbac" },
   { year: 702, tournament: "Heritage", winner: "Rain Lieryon" },
   { year: 702, tournament: "Descent", winner: "Jungle Unovo" },
   { year: 702, tournament: "Malice", winner: "Night Corondolo" },
@@ -757,10 +757,10 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 702, tournament: "Heartland", winner: "Cold Varuth" },
   { year: 702, tournament: "Wind Breakers", winner: "Nemesis Owanash" },
   { year: 702, tournament: "Armageddon", winner: "Jungle Unovo" },
+  { year: 702, tournament: "New Life", winner: "Hero Valii" },
   { year: 702, tournament: "Chaos Reigns", winner: "Shark Obimovch" },
   // Season 701
   { year: 701, tournament: "Apex", winner: "Pheonix Oliv" },
-  { year: 701, tournament: "CTT", winner: "Night Corondolo" },
   { year: 701, tournament: "Heritage", winner: "Rain Lieryon" },
   { year: 701, tournament: "Descent", winner: "Pheonix Oliv" },
   { year: 701, tournament: "Malice", winner: "Splash Gradey" },
@@ -770,9 +770,9 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 701, tournament: "Wind Breakers", winner: "Nemesis Owanash" },
   { year: 701, tournament: "Armageddon", winner: "Jungle Unovo" },
   { year: 701, tournament: "New Life", winner: "Jungle Unovo" },
+  { year: 701, tournament: "Chaos Reigns", winner: "Monster Piccoloo" },
   // Season 700
   { year: 700, tournament: "Apex", winner: "Splash Gradey" },
-  { year: 700, tournament: "CTT", winner: "Cold Varuth" },
   { year: 700, tournament: "Heritage", winner: "Pheonix Oliv" },
   { year: 700, tournament: "Descent", winner: "Splash Gradey" },
   { year: 700, tournament: "Malice", winner: "Cold Varuth" },
@@ -781,7 +781,8 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 700, tournament: "Heartland", winner: "Night Corondolo" },
   { year: 700, tournament: "Wind Breakers", winner: "Pheonix Oliv" },
   { year: 700, tournament: "Armageddon", winner: "Rain Lieryon" },
-  { year: 700, tournament: "New Life", winner: "Hero Valii" }
+  { year: 700, tournament: "New Life", winner: "Hero Valii" },
+  { year: 700, tournament: "Chaos Reigns", winner: "Tiger Griff" }
 ];
 
 // Helper function
