@@ -135,29 +135,31 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(([team, total]) => ({ team, value: total }))
       .sort((a, b) => b.value - a.value);
 
-    // Team championships (Apex + CTT from seasons data)
-    const teamChampionships: Record<string, { apex: number; ctt: number }> = {};
+    // Team championships (Apex, CTT, Star from seasons data - same logic as Team History)
+    const teamChampionships: Record<string, { apex: number; ctt: number; star: number }> = {};
     seasons.forEach(s => {
       if (!selectedYears.has(s.year.toString())) return;
+      // Apex titles
       if (s.team) {
-        if (!teamChampionships[s.team]) teamChampionships[s.team] = { apex: 0, ctt: 0 };
+        if (!teamChampionships[s.team]) teamChampionships[s.team] = { apex: 0, ctt: 0, star: 0 };
         teamChampionships[s.team].apex++;
       }
-      // CTT winner - find their team from standings
+      // CTT titles (s.ctt is the team name)
       if (s.ctt) {
-        const cttSeason = pastStandings[s.year.toString()];
-        const cttPlayer = cttSeason?.find(p => p.Name === s.ctt);
-        if (cttPlayer) {
-          if (!teamChampionships[cttPlayer.Team]) teamChampionships[cttPlayer.Team] = { apex: 0, ctt: 0 };
-          teamChampionships[cttPlayer.Team].ctt++;
-        }
+        if (!teamChampionships[s.ctt]) teamChampionships[s.ctt] = { apex: 0, ctt: 0, star: 0 };
+        teamChampionships[s.ctt].ctt++;
+      }
+      // Season Star
+      if (s.starTeam) {
+        if (!teamChampionships[s.starTeam]) teamChampionships[s.starTeam] = { apex: 0, ctt: 0, star: 0 };
+        teamChampionships[s.starTeam].star++;
       }
     });
     const teamChamps: TeamStats[] = Object.entries(teamChampionships)
       .map(([team, counts]) => ({
         team, 
-        value: counts.apex + counts.ctt,
-        details: `${counts.apex} Apex, ${counts.ctt} CTT`
+        value: counts.apex + counts.ctt + counts.star,
+        details: `${counts.apex} Apex, ${counts.ctt} CTT, ${counts.star} Star`
       }))
       .sort((a, b) => b.value - a.value);
 
