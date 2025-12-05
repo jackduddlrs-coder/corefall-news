@@ -108,6 +108,17 @@ function DoubleElimBracket({ season }: { season: string }) {
   const finals = matches.find(m => m.round === "Finals");
   const sf = matches.filter(m => m.round === "SF");
 
+  // Get group winners for display
+  const getGroupWinner = (group: string) => {
+    const ubf = getGroupMatches(group, "UBF");
+    return ubf[0]?.winner || "";
+  };
+
+  const getGroupRunnerUp = (group: string) => {
+    const lbf = getGroupMatches(group, "LBF");
+    return lbf[0]?.winner || "";
+  };
+
   const GroupBracket = ({ group }: { group: string }) => {
     const ubr1 = getGroupMatches(group, "UBR1");
     const ubsf = getGroupMatches(group, "UBSF");
@@ -117,8 +128,13 @@ function DoubleElimBracket({ season }: { season: string }) {
     const lbsf = getGroupMatches(group, "LBSF");
     const lbf = getGroupMatches(group, "LBF");
 
+    const groupWinner = ubf[0]?.winner || "";
+    const groupRunnerUp = lbf[0]?.winner || "";
+    const winnerTeam = getPlayerTeam(groupWinner);
+    const runnerUpTeam = getPlayerTeam(groupRunnerUp);
+
     return (
-      <div className="bg-card/30 rounded-lg p-4 border border-border/50">
+      <div className="bg-card/30 rounded-lg p-4 border border-border/50 relative">
         <h4 className="text-sm font-bold text-primary mb-4">Group {group}</h4>
         
         {/* Upper Bracket */}
@@ -196,6 +212,23 @@ function DoubleElimBracket({ season }: { season: string }) {
             </div>
           </div>
         </div>
+
+        {/* Advancing Players indicator */}
+        <div className="mt-4 pt-3 border-t border-border/50">
+          <div className="text-[9px] text-muted-foreground mb-2">ADVANCES TO CHAMPIONSHIP</div>
+          <div className="flex gap-2">
+            <div className="flex items-center gap-1.5 bg-primary/10 border border-primary/30 rounded px-2 py-1">
+              <TeamBadge team={winnerTeam} compact />
+              <span className="text-[10px] text-primary font-medium">{groupWinner}</span>
+              <span className="text-[8px] text-cyan-400">(UB)</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-muted/30 border border-border rounded px-2 py-1">
+              <TeamBadge team={runnerUpTeam} compact />
+              <span className="text-[10px] text-foreground">{groupRunnerUp}</span>
+              <span className="text-[8px] text-red-400">(LB)</span>
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -206,14 +239,40 @@ function DoubleElimBracket({ season }: { season: string }) {
       <p className="text-xs text-muted-foreground mb-4">Double-elimination group stages → Single elimination finals</p>
       
       {/* Group Stage */}
-      <div className="grid md:grid-cols-2 gap-4 mb-6">
+      <div className="grid md:grid-cols-2 gap-4 mb-4">
         <GroupBracket group="A" />
         <GroupBracket group="B" />
+      </div>
+
+      {/* Flow Connector */}
+      <div className="flex justify-center mb-4">
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center">
+            <div className="w-0.5 h-6 bg-gradient-to-b from-primary/50 to-primary"></div>
+            <div className="text-[9px] text-primary font-semibold">Group A Winner</div>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-lg">
+            <span className="text-lg">↓</span>
+            <span className="text-xs text-primary font-bold">CHAMPIONSHIP BRACKET</span>
+            <span className="text-lg">↓</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-0.5 h-6 bg-gradient-to-b from-primary/50 to-primary"></div>
+            <div className="text-[9px] text-primary font-semibold">Group B Winner</div>
+          </div>
+        </div>
       </div>
 
       {/* Final Bracket */}
       <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
         <h4 className="text-sm font-bold text-primary mb-4">CHAMPIONSHIP BRACKET</h4>
+        
+        {/* Matchup Labels */}
+        <div className="flex justify-center gap-8 mb-3 text-[9px] text-muted-foreground">
+          <span>Group A UB Winner vs Group B LB Winner</span>
+          <span>Group B UB Winner vs Group A LB Winner</span>
+        </div>
+
         <div className="flex gap-8 items-center justify-center flex-wrap">
           {/* Semifinals */}
           <div className="flex flex-col">
@@ -226,7 +285,11 @@ function DoubleElimBracket({ season }: { season: string }) {
           </div>
 
           {/* Arrow */}
-          <div className="text-muted-foreground text-2xl">→</div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-8 h-0.5 bg-primary/50"></div>
+            <div className="text-primary text-xl">→</div>
+            <div className="w-8 h-0.5 bg-primary/50"></div>
+          </div>
 
           {/* Finals */}
           <div className="flex flex-col">
@@ -237,7 +300,11 @@ function DoubleElimBracket({ season }: { season: string }) {
           </div>
 
           {/* Arrow */}
-          <div className="text-muted-foreground text-2xl">→</div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-8 h-0.5 bg-primary/50"></div>
+            <div className="text-primary text-xl">→</div>
+            <div className="w-8 h-0.5 bg-primary/50"></div>
+          </div>
 
           {/* Champion */}
           <div className="flex flex-col">
