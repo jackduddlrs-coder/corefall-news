@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { pastStandings, trophyData, getTeamClass, seasons } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface PlayerModalProps {
   playerName: string;
@@ -223,6 +224,36 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
               <div className="text-2xl text-white font-bold mt-1">{careerTotals.yearsActive}</div>
             </div>
           </div>
+
+          {/* Career Trajectory Chart */}
+          {seasonHistory.length > 1 && (
+            <>
+              <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
+                Career Trajectory
+              </div>
+              <div className="mb-8 bg-background/50 p-4 rounded-lg border border-border">
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={[...seasonHistory].sort((a, b) => a.year - b.year)}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                    <XAxis dataKey="year" stroke="#888" fontSize={12} />
+                    <YAxis yAxisId="left" stroke="#00d4ff" fontSize={12} />
+                    <YAxis yAxisId="right" orientation="right" stroke="#ff6b6b" fontSize={12} reversed domain={[1, 40]} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#1a1f25', border: '1px solid #333', borderRadius: '8px' }}
+                      labelStyle={{ color: '#fff' }}
+                    />
+                    <Legend />
+                    <Line yAxisId="left" type="monotone" dataKey="points" stroke="#00d4ff" strokeWidth={2} dot={{ fill: '#00d4ff' }} name="Points" />
+                    <Line yAxisId="right" type="monotone" dataKey="rank" stroke="#ff6b6b" strokeWidth={2} dot={{ fill: '#ff6b6b' }} name="Rank" />
+                  </LineChart>
+                </ResponsiveContainer>
+                <div className="flex justify-center gap-6 mt-2 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-[#00d4ff] inline-block"></span> Points (left axis)</span>
+                  <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-[#ff6b6b] inline-block"></span> Rank (right axis, lower=better)</span>
+                </div>
+              </div>
+            </>
+          )}
 
           <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
             Season History & Tournament Results
