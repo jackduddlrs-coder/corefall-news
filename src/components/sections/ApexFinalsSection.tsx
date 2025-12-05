@@ -30,6 +30,7 @@ export function ApexFinalsSection({ onPlayerClick, onTeamClick }: ApexFinalsSect
                   <span className="clickable-name c-apex text-lg font-bold" onClick={() => onPlayerClick(a.win)}>
                     {a.win} 👑
                   </span>
+                  <span className="text-muted-foreground text-xs ml-1">({a.winAge})</span>
                 </td>
                 <td className="p-3">
                   <span className={`team-tag clickable-team ${getTeamClass(a.wTeam)}`} onClick={() => onTeamClick(a.wTeam)}>
@@ -38,6 +39,7 @@ export function ApexFinalsSection({ onPlayerClick, onTeamClick }: ApexFinalsSect
                 </td>
                 <td className="p-3">
                   <span className="clickable-name" onClick={() => onPlayerClick(a.lose)}>{a.lose}</span>
+                  <span className="text-muted-foreground text-xs ml-1">({a.loseAge})</span>
                 </td>
                 <td className="p-3">
                   <span className={`team-tag clickable-team ${getTeamClass(a.lTeam)}`} onClick={() => onTeamClick(a.lTeam)}>
