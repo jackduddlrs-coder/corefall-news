@@ -6,37 +6,217 @@ interface BracketMatch {
   winner: string;
   loser: string;
   score: string;
+  group?: string;
 }
 
 function parseBracketData(matches: { round: string; match: string }[]): BracketMatch[] {
   return matches.map(m => {
-    // Parse "Winner (score) vs Loser" format - handle nested parentheses
     const vsIndex = m.match.indexOf(" vs ");
     if (vsIndex === -1) return { round: m.round, winner: "", loser: "", score: "" };
     
     const beforeVs = m.match.substring(0, vsIndex);
-    const loser = m.match.substring(vsIndex + 4).trim();
+    let loser = m.match.substring(vsIndex + 4).trim();
+    
+    // Extract group info if present
+    let group: string | undefined;
+    const groupMatch = loser.match(/\(Group ([AB])\)$/);
+    if (groupMatch) {
+      group = groupMatch[1];
+      loser = loser.replace(/\s*\(Group [AB]\)$/, "").trim();
+    }
     
     const firstParen = beforeVs.indexOf("(");
-    if (firstParen === -1) return { round: m.round, winner: beforeVs.trim(), loser, score: "" };
+    if (firstParen === -1) return { round: m.round, winner: beforeVs.trim(), loser, score: "", group };
     
     const winner = beforeVs.substring(0, firstParen).trim();
     const score = beforeVs.substring(firstParen + 1, beforeVs.lastIndexOf(")"));
     
-    return { round: m.round, winner, loser, score };
+    return { round: m.round, winner, loser, score, group };
   });
 }
 
-// Check if a season has standard single-elimination bracket format
 function hasStandardBracket(season: string): boolean {
   const matches = fullMatches[season];
   if (!matches) return false;
-  
   const rounds = matches.map(m => m.round);
-  // Standard bracket has R16, QF, SF, Finals (no group stages)
   return rounds.includes("R16") && rounds.includes("QF") && 
          rounds.includes("SF") && rounds.includes("Finals") &&
          !rounds.includes("UBR1") && !rounds.includes("LBR1");
+}
+
+function hasDoubleElimBracket(season: string): boolean {
+  const matches = fullMatches[season];
+  if (!matches) return false;
+  const rounds = matches.map(m => m.round);
+  return rounds.includes("UBR1") && rounds.includes("LBR1");
+}
+
+const MatchBox = ({ winner, loser, score, isChampion, compact }: { 
+  winner: string; loser: string; score: string; isChampion?: boolean; compact?: boolean 
+}) => (
+  <div className={`bg-card border rounded-lg overflow-hidden ${compact ? 'text-[10px] min-w-[120px]' : 'text-xs min-w-[140px]'} ${isChampion ? 'border-primary' : 'border-border'}`}>
+    <div className={`px-2 py-1.5 flex justify-between items-center ${isChampion ? 'bg-primary/20 text-primary font-bold' : 'bg-muted/30 text-foreground'}`}>
+      <span className="truncate">{winner}</span>
+      <span className="text-[10px] ml-1 opacity-70">{score.includes("(") ? score.split("(")[0] : score}</span>
+    </div>
+    <div className="px-2 py-1.5 text-muted-foreground border-t border-border/50">
+      <span className="truncate">{loser}</span>
+    </div>
+  </div>
+);
+
+function DoubleElimBracket({ season }: { season: string }) {
+  const matches = parseBracketData(fullMatches[season]);
+  
+  const getGroupMatches = (group: string, round: string) => 
+    matches.filter(m => m.group === group && m.round === round);
+  
+  const finals = matches.find(m => m.round === "Finals");
+  const sf = matches.filter(m => m.round === "SF");
+
+  const GroupBracket = ({ group }: { group: string }) => {
+    const ubr1 = getGroupMatches(group, "UBR1");
+    const ubsf = getGroupMatches(group, "UBSF");
+    const ubf = getGroupMatches(group, "UBF");
+    const lbr1 = getGroupMatches(group, "LBR1");
+    const lbqf = getGroupMatches(group, "LBQF");
+    const lbsf = getGroupMatches(group, "LBSF");
+    const lbf = getGroupMatches(group, "LBF");
+
+    return (
+      <div className="bg-card/30 rounded-lg p-4 border border-border/50">
+        <h4 className="text-sm font-bold text-primary mb-4">Group {group}</h4>
+        
+        {/* Upper Bracket */}
+        <div className="mb-4">
+          <div className="text-[10px] font-semibold text-cyan-400 mb-2">UPPER BRACKET</div>
+          <div className="flex gap-4 items-start overflow-x-auto pb-2">
+            {/* UB Round 1 */}
+            <div className="flex flex-col">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Round 1</div>
+              <div className="flex flex-col gap-2">
+                {ubr1.map((m, i) => (
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                ))}
+              </div>
+            </div>
+            
+            {/* UB Semis */}
+            <div className="flex flex-col pt-6">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Semis</div>
+              <div className="flex flex-col gap-[52px]">
+                {ubsf.map((m, i) => (
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                ))}
+              </div>
+            </div>
+            
+            {/* UB Finals */}
+            <div className="flex flex-col pt-[60px]">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Finals</div>
+              {ubf.map((m, i) => (
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Lower Bracket */}
+        <div>
+          <div className="text-[10px] font-semibold text-red-400 mb-2">LOWER BRACKET</div>
+          <div className="flex gap-4 items-start overflow-x-auto pb-2">
+            {/* LB Round 1 */}
+            <div className="flex flex-col">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Round 1</div>
+              <div className="flex flex-col gap-2">
+                {lbr1.map((m, i) => (
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                ))}
+              </div>
+            </div>
+            
+            {/* LB Quarters */}
+            <div className="flex flex-col">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Quarters</div>
+              <div className="flex flex-col gap-2">
+                {lbqf.map((m, i) => (
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                ))}
+              </div>
+            </div>
+            
+            {/* LB Semis */}
+            <div className="flex flex-col pt-3">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Semis</div>
+              {lbsf.map((m, i) => (
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+              ))}
+            </div>
+            
+            {/* LB Finals */}
+            <div className="flex flex-col pt-3">
+              <div className="text-[9px] text-muted-foreground mb-1 text-center">Finals</div>
+              {lbf.map((m, i) => (
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="overflow-x-auto pb-4">
+      <h3 className="text-lg font-bold text-primary mb-4">Apex {season} Championship Bracket</h3>
+      <p className="text-xs text-muted-foreground mb-4">Double-elimination group stages → Single elimination finals</p>
+      
+      {/* Group Stage */}
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <GroupBracket group="A" />
+        <GroupBracket group="B" />
+      </div>
+
+      {/* Final Bracket */}
+      <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/30">
+        <h4 className="text-sm font-bold text-primary mb-4">CHAMPIONSHIP BRACKET</h4>
+        <div className="flex gap-8 items-center justify-center flex-wrap">
+          {/* Semifinals */}
+          <div className="flex flex-col">
+            <div className="text-[10px] text-muted-foreground mb-2 text-center">Semifinals</div>
+            <div className="flex flex-col gap-3">
+              {sf.map((m, i) => (
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} />
+              ))}
+            </div>
+          </div>
+
+          {/* Arrow */}
+          <div className="text-muted-foreground text-2xl">→</div>
+
+          {/* Finals */}
+          <div className="flex flex-col">
+            <div className="text-[10px] text-muted-foreground mb-2 text-center">Grand Finals</div>
+            {finals && (
+              <MatchBox winner={finals.winner} loser={finals.loser} score={finals.score} isChampion />
+            )}
+          </div>
+
+          {/* Arrow */}
+          <div className="text-muted-foreground text-2xl">→</div>
+
+          {/* Champion */}
+          <div className="flex flex-col">
+            <div className="text-[10px] text-primary mb-2 text-center font-semibold">Champion</div>
+            <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-2 border-primary rounded-lg p-3 text-center min-w-[140px]">
+              <div className="text-base font-bold text-primary">{finals?.winner}</div>
+              <div className="text-[10px] text-muted-foreground mt-1">Apex {season} Champion</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ApexBracket({ season }: { season: string }) {
@@ -46,18 +226,6 @@ function ApexBracket({ season }: { season: string }) {
   const qf = matches.filter(m => m.round === "QF");
   const sf = matches.filter(m => m.round === "SF");
   const finals = matches.find(m => m.round === "Finals");
-
-  const MatchBox = ({ winner, loser, score, isChampion }: { winner: string; loser: string; score: string; isChampion?: boolean }) => (
-    <div className={`bg-card border rounded-lg overflow-hidden text-xs min-w-[140px] ${isChampion ? 'border-primary' : 'border-border'}`}>
-      <div className={`px-2 py-1.5 flex justify-between items-center ${isChampion ? 'bg-primary/20 text-primary font-bold' : 'bg-muted/30 text-foreground'}`}>
-        <span className="truncate">{winner}</span>
-        <span className="text-[10px] ml-1 opacity-70">{score.includes("(") ? score.split("(")[0] : score}</span>
-      </div>
-      <div className="px-2 py-1.5 text-muted-foreground border-t border-border/50">
-        <span className="truncate">{loser}</span>
-      </div>
-    </div>
-  );
 
   return (
     <div className="overflow-x-auto pb-4">
@@ -141,10 +309,11 @@ function ApexBracket({ season }: { season: string }) {
 }
 
 export function FullApexSection() {
-  const [openSeason, setOpenSeason] = useState<string | null>("700");
+  const [openSeason, setOpenSeason] = useState<string | null>("707");
   const [viewModes, setViewModes] = useState<Record<string, "bracket" | "list">>({
     "700": "bracket", "701": "bracket", "702": "bracket", 
-    "703": "bracket", "704": "bracket", "705": "bracket"
+    "703": "bracket", "704": "bracket", "705": "bracket",
+    "706": "bracket", "707": "bracket"
   });
 
   const seasonKeys = Object.keys(fullMatches).sort((a, b) => Number(b) - Number(a));
@@ -163,7 +332,8 @@ export function FullApexSection() {
 
       <div>
         {seasonKeys.map(season => {
-          const hasBracket = hasStandardBracket(season);
+          const hasBracket = hasStandardBracket(season) || hasDoubleElimBracket(season);
+          const isDoubleElim = hasDoubleElimBracket(season);
           const currentView = viewModes[season] || "list";
           
           return (
@@ -172,15 +342,17 @@ export function FullApexSection() {
                 className={`cursor-pointer p-4 w-full border-none text-left text-lg transition-colors bg-[#222] text-white border-b border-border flex justify-between items-center font-bold hover:bg-[#333] hover:text-primary ${openSeason === season ? "bg-[#333] text-primary" : ""}`}
                 onClick={() => setOpenSeason(openSeason === season ? null : season)}
               >
-                <span>Apex {season}</span>
+                <span>
+                  Apex {season}
+                  {isDoubleElim && <span className="ml-2 text-xs text-cyan-400">(Double Elim)</span>}
+                </span>
                 <span className="text-primary font-bold ml-1">{openSeason === season ? "−" : "+"}</span>
               </button>
               
               <div 
-                className={`bg-panel overflow-hidden transition-all duration-200 ${openSeason === season ? "max-h-[2000px]" : "max-h-0"}`}
+                className={`bg-panel overflow-hidden transition-all duration-200 ${openSeason === season ? "max-h-[3000px]" : "max-h-0"}`}
               >
                 <div className="p-4">
-                  {/* View toggle for seasons with bracket support */}
                   {hasBracket && (
                     <div className="flex gap-2 mb-4">
                       <button
@@ -198,9 +370,12 @@ export function FullApexSection() {
                     </div>
                   )}
 
-                  {/* Show bracket or list based on view mode */}
                   {hasBracket && currentView === "bracket" ? (
-                    <ApexBracket season={season} />
+                    isDoubleElim ? (
+                      <DoubleElimBracket season={season} />
+                    ) : (
+                      <ApexBracket season={season} />
+                    )
                   ) : (
                     fullMatches[season].map((m, idx) => (
                       <div 
