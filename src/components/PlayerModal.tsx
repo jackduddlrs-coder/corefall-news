@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { pastStandings, trophyData, getTeamClass } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -153,9 +153,8 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                   const hasTournamentData = tournamentData !== null;
                   
                   return (
-                    <>
+                    <React.Fragment key={h.year}>
                       <tr 
-                        key={h.year} 
                         className={`border-b border-border hover:bg-muted/50 ${hasTournamentData ? 'cursor-pointer' : ''}`}
                         onClick={() => hasTournamentData && toggleSeason(h.year)}
                       >
@@ -173,7 +172,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                         <td className="p-3">{h.ko}</td>
                       </tr>
                       {isExpanded && tournamentData && (
-                        <tr key={`${h.year}-tournaments`}>
+                        <tr>
                           <td colSpan={5} className="p-0 bg-background/50">
                             <div className="p-4">
                               <div className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-bold">
@@ -211,7 +210,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 }) : (
                   <tr>
