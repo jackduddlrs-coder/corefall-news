@@ -6,10 +6,11 @@ import { TeamsSection } from "@/components/sections/TeamsSection";
 import { MajorsSection } from "@/components/sections/MajorsSection";
 import { FullApexSection } from "@/components/sections/FullApexSection";
 import { ApexFinalsSection } from "@/components/sections/ApexFinalsSection";
+import { PlayerComparisonSection } from "@/components/sections/PlayerComparisonSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 
-type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex";
+type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare";
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: "home", label: "Feed" },
@@ -19,6 +20,7 @@ const navItems: { id: SectionId; label: string }[] = [
   { id: "majors", label: "Trophy Room" },
   { id: "full-apex", label: "Full Apex Results" },
   { id: "apex", label: "Finals History" },
+  { id: "compare", label: "Compare" },
 ];
 
 const Index = () => {
@@ -71,6 +73,9 @@ const Index = () => {
         {activeSection === "full-apex" && <FullApexSection />}
         {activeSection === "apex" && (
           <ApexFinalsSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+        )}
+        {activeSection === "compare" && (
+          <PlayerComparisonSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
       </div>
 
