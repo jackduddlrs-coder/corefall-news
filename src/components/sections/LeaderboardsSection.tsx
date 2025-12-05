@@ -42,17 +42,28 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50)
       .map(p => ({ name: p.name, team: p.team, value: p.points, season: p.season }));
 
-    // All-time points (sum across all seasons)
-    const playerTotalPoints: Record<string, { team: string; total: number }> = {};
+    // Track team seasons for each player
+    const playerTeamSeasons: Record<string, Record<string, number>> = {};
     allPlayers.forEach(p => {
-      if (!playerTotalPoints[p.name]) {
-        playerTotalPoints[p.name] = { team: p.team, total: 0 };
+      if (!playerTeamSeasons[p.name]) {
+        playerTeamSeasons[p.name] = {};
       }
-      playerTotalPoints[p.name].total += p.points;
-      playerTotalPoints[p.name].team = p.team; // Use most recent team
+      playerTeamSeasons[p.name][p.team] = (playerTeamSeasons[p.name][p.team] || 0) + 1;
+    });
+
+    // Helper to get most played team
+    const getMostPlayedTeam = (name: string): string => {
+      const teams = playerTeamSeasons[name];
+      return Object.entries(teams).sort((a, b) => b[1] - a[1])[0][0];
+    };
+
+    // All-time points (sum across all seasons)
+    const playerTotalPoints: Record<string, number> = {};
+    allPlayers.forEach(p => {
+      playerTotalPoints[p.name] = (playerTotalPoints[p.name] || 0) + p.points;
     });
     const allTimePoints: PlayerStats[] = Object.entries(playerTotalPoints)
-      .map(([name, data]) => ({ name, team: data.team, value: data.total }))
+      .map(([name, total]) => ({ name, team: getMostPlayedTeam(name), value: total }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
@@ -63,16 +74,12 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(p => ({ name: p.name, team: p.team, value: p.kos, season: p.season }));
 
     // All-time KOs (sum across all seasons)
-    const playerTotalKOs: Record<string, { team: string; total: number }> = {};
+    const playerTotalKOs: Record<string, number> = {};
     allPlayers.forEach(p => {
-      if (!playerTotalKOs[p.name]) {
-        playerTotalKOs[p.name] = { team: p.team, total: 0 };
-      }
-      playerTotalKOs[p.name].total += p.kos;
-      playerTotalKOs[p.name].team = p.team;
+      playerTotalKOs[p.name] = (playerTotalKOs[p.name] || 0) + p.kos;
     });
     const allTimeKOs: PlayerStats[] = Object.entries(playerTotalKOs)
-      .map(([name, data]) => ({ name, team: data.team, value: data.total }))
+      .map(([name, total]) => ({ name, team: getMostPlayedTeam(name), value: total }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
