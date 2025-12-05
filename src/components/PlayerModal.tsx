@@ -15,6 +15,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
   let careerKOs = 0;
   let yearsActive = 0;
   let apexAppearances = 0;
+  let totalRanks = 0;
   const seasonHistory: { year: number; team: string; rank: number; points: number; ko: number }[] = [];
 
   // Gather History from Archives (700-707)
@@ -30,6 +31,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       });
       careerPoints += pData.Points;
       careerKOs += pData.KOs;
+      totalRanks += pData.Rank;
       yearsActive++;
       if (pData.Rank <= 16) {
         apexAppearances++;
@@ -113,7 +115,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
           <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
             Career Totals (700-707)
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Total Points</div>
               <div className="text-2xl text-white font-bold mt-1">{careerPoints.toLocaleString()}</div>
@@ -121,6 +123,10 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Career KOs</div>
               <div className="text-2xl text-white font-bold mt-1">{careerKOs}</div>
+            </div>
+            <div className="bg-background p-4 rounded-lg border border-border text-center">
+              <div className="text-xs text-muted-foreground uppercase tracking-wider">Avg Finish</div>
+              <div className="text-2xl text-white font-bold mt-1">#{yearsActive > 0 ? (totalRanks / yearsActive).toFixed(1) : '-'}</div>
             </div>
             <div className="bg-background p-4 rounded-lg border border-border text-center">
               <div className="text-xs text-muted-foreground uppercase tracking-wider">Apex Apps</div>
