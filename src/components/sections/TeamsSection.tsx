@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { seasons, getTeamClass } from "@/data/corefallData";
+import { useState, useMemo } from "react";
+import { seasons, getTeamClass, pastStandings } from "@/data/corefallData";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface TeamsSectionProps {
   onTeamClick: (name: string) => void;
+  onPlayerClick?: (name: string) => void;
 }
 
 interface AwardDetail {
@@ -19,9 +21,10 @@ interface TeamAwards {
 type SortKey = "name" | "apex" | "ctt" | "star";
 type SortDir = "asc" | "desc";
 
-export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
+export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) {
   const [sortKey, setSortKey] = useState<SortKey>("apex");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
 
   // Calculate team stats with details
   const teamStats: Record<string, TeamAwards> = {};
@@ -40,6 +43,32 @@ export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
     teamStats[s.starTeam].star.push({ year: s.year, player: s.star });
   });
 
+  // Get all-time top players for each team
+  const teamTopPlayers = useMemo(() => {
+    const result: Record<string, { name: string; totalPoints: number; seasons: number }[]> = {};
+    const playersByTeam: Record<string, Record<string, { totalPoints: number; seasons: number }>> = {};
+
+    Object.values(pastStandings).forEach(seasonStandings => {
+      seasonStandings.forEach(p => {
+        if (!playersByTeam[p.Team]) playersByTeam[p.Team] = {};
+        if (!playersByTeam[p.Team][p.Name]) {
+          playersByTeam[p.Team][p.Name] = { totalPoints: 0, seasons: 0 };
+        }
+        playersByTeam[p.Team][p.Name].totalPoints += p.Points;
+        playersByTeam[p.Team][p.Name].seasons += 1;
+      });
+    });
+
+    Object.entries(playersByTeam).forEach(([team, players]) => {
+      result[team] = Object.entries(players)
+        .map(([name, stats]) => ({ name, ...stats }))
+        .sort((a, b) => b.totalPoints - a.totalPoints)
+        .slice(0, 5);
+    });
+
+    return result;
+  }, []);
+
   const teamList = Object.entries(teamStats)
     .map(([name, awards]) => ({ 
       name, 
@@ -48,7 +77,8 @@ export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
       star: awards.star,
       apexCount: awards.apex.length,
       cttCount: awards.ctt.length,
-      starCount: awards.star.length
+      starCount: awards.star.length,
+      topPlayers: teamTopPlayers[name] || []
     }))
     .sort((a, b) => {
       let aVal: string | number;
@@ -111,6 +141,10 @@ export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
     );
   };
 
+  const toggleTeamExpand = (teamName: string) => {
+    setExpandedTeam(expandedTeam === teamName ? null : teamName);
+  };
+
   return (
     <div className="animate-fadeIn">
       <h1 className="text-white">Team Franchise History</h1>
@@ -144,21 +178,70 @@ export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
               >
                 Season Stars{getSortIndicator("star")}
               </th>
+              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 w-10"></th>
             </tr>
           </thead>
           <tbody>
-            {teamList.map(t => (
-              <tr key={t.name} className="border-b border-[#2a2f38] hover:bg-[#2c323d] even:bg-[#1f242b] align-top">
-                <td className="p-3">
-                  <span className={`team-tag clickable-team ${getTeamClass(t.name)}`} onClick={() => onTeamClick(t.name)}>
-                    {t.name}
-                  </span>
-                </td>
-                <td className="p-3 text-center c-apex">{formatAwards(t.apex, true)}</td>
-                <td className="p-3 text-center c-ctt">{formatAwards(t.ctt, false)}</td>
-                <td className="p-3 text-center c-major">{formatAwards(t.star, true)}</td>
-              </tr>
-            ))}
+            {teamList.map(t => {
+              const isExpanded = expandedTeam === t.name;
+              return (
+                <>
+                  <tr 
+                    key={t.name} 
+                    className={`border-b border-[#2a2f38] hover:bg-[#2c323d] align-top cursor-pointer ${isExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
+                    onClick={() => t.topPlayers.length > 0 && toggleTeamExpand(t.name)}
+                  >
+                    <td className="p-3">
+                      <span 
+                        className={`team-tag clickable-team ${getTeamClass(t.name)}`} 
+                        onClick={(e) => { e.stopPropagation(); onTeamClick(t.name); }}
+                      >
+                        {t.name}
+                      </span>
+                      {t.topPlayers.length > 0 && (
+                        <span className="ml-2 text-xs text-muted-foreground hidden md:inline">
+                          ({t.topPlayers.length} top players)
+                        </span>
+                      )}
+                    </td>
+                    <td className="p-3 text-center c-apex">{formatAwards(t.apex, true)}</td>
+                    <td className="p-3 text-center c-ctt">{formatAwards(t.ctt, false)}</td>
+                    <td className="p-3 text-center c-major">{formatAwards(t.star, true)}</td>
+                    <td className="p-3 text-center">
+                      {t.topPlayers.length > 0 && (
+                        isExpanded ? 
+                          <ChevronUp className="h-4 w-4 text-muted-foreground inline" /> : 
+                          <ChevronDown className="h-4 w-4 text-muted-foreground inline" />
+                      )}
+                    </td>
+                  </tr>
+                  {isExpanded && t.topPlayers.length > 0 && (
+                    <tr key={`${t.name}-players`}>
+                      <td colSpan={5} className="p-0 bg-[#1a1f25]">
+                        <div className="p-3">
+                          <div className="text-xs text-muted-foreground mb-2">Top Historical Players (Since 700)</div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            {t.topPlayers.map((p, idx) => (
+                              <div 
+                                key={p.name} 
+                                className={`flex justify-between items-center text-xs py-2 px-3 bg-background/30 rounded border border-border/30 ${onPlayerClick ? 'cursor-pointer hover:bg-background/60' : ''}`}
+                                onClick={(e) => { e.stopPropagation(); onPlayerClick?.(p.name); }}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className="text-muted-foreground">#{idx + 1}</span>
+                                  <span className="clickable-name">{p.name}</span>
+                                </div>
+                                <span className="font-semibold text-foreground">{p.totalPoints.toLocaleString()} pts</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              );
+            })}
           </tbody>
         </table>
       </div>
