@@ -10,18 +10,27 @@ interface BracketMatch {
 
 function parseBracketData(matches: { round: string; match: string }[]): BracketMatch[] {
   return matches.map(m => {
-    // Parse "Winner (score) vs Loser" format
-    const regex = /^(.+?)\s*\(([^)]+)\)\s*vs\s*(.+)$/;
-    const match = m.match.match(regex);
-    if (match) {
-      return {
-        round: m.round,
-        winner: match[1].trim(),
-        loser: match[3].trim(),
-        score: match[2]
-      };
-    }
-    return { round: m.round, winner: "", loser: "", score: "" };
+    // Parse "Winner (score) vs Loser" format - handle nested parentheses
+    // Find the last ) before " vs " to handle nested scores like (2-1(4-3,0-4,4-2))
+    const vsIndex = m.match.indexOf(" vs ");
+    if (vsIndex === -1) return { round: m.round, winner: "", loser: "", score: "" };
+    
+    const beforeVs = m.match.substring(0, vsIndex);
+    const loser = m.match.substring(vsIndex + 4).trim();
+    
+    // Find the opening parenthesis for the score
+    const firstParen = beforeVs.indexOf("(");
+    if (firstParen === -1) return { round: m.round, winner: beforeVs.trim(), loser, score: "" };
+    
+    const winner = beforeVs.substring(0, firstParen).trim();
+    const score = beforeVs.substring(firstParen + 1, beforeVs.lastIndexOf(")"));
+    
+    return {
+      round: m.round,
+      winner,
+      loser,
+      score
+    };
   });
 }
 
