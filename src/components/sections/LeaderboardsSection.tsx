@@ -19,12 +19,30 @@ interface PlayerStats {
 
 export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: LeaderboardsSectionProps) => {
   const [activeTab, setActiveTab] = useState<LeaderboardType>("single-points");
+  const allSeasons = Object.keys(pastStandings).sort();
+  const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(allSeasons));
 
-  // Calculate all leaderboards from pastStandings data
+  const toggleYear = (year: string) => {
+    setSelectedYears(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(year)) {
+        if (newSet.size > 1) newSet.delete(year);
+      } else {
+        newSet.add(year);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAll = () => setSelectedYears(new Set(allSeasons));
+  const clearAll = () => setSelectedYears(new Set([allSeasons[0]]));
+
+  // Calculate all leaderboards from pastStandings data filtered by selected years
   const leaderboards = useMemo(() => {
     const allPlayers: { name: string; team: string; points: number; kos: number; season: string }[] = [];
     
     Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
       players.forEach(player => {
         allPlayers.push({
           name: player.Name,
@@ -42,7 +60,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50)
       .map(p => ({ name: p.name, team: p.team, value: p.points, season: p.season }));
 
-    // Track team seasons for each player
+    // Track team seasons for each player (within selected years)
     const playerTeamSeasons: Record<string, Record<string, number>> = {};
     allPlayers.forEach(p => {
       if (!playerTeamSeasons[p.name]) {
@@ -54,10 +72,11 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     // Helper to get most played team
     const getMostPlayedTeam = (name: string): string => {
       const teams = playerTeamSeasons[name];
+      if (!teams) return "Unknown";
       return Object.entries(teams).sort((a, b) => b[1] - a[1])[0][0];
     };
 
-    // All-time points (sum across all seasons)
+    // All-time points (sum across selected seasons)
     const playerTotalPoints: Record<string, number> = {};
     allPlayers.forEach(p => {
       playerTotalPoints[p.name] = (playerTotalPoints[p.name] || 0) + p.points;
@@ -73,7 +92,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50)
       .map(p => ({ name: p.name, team: p.team, value: p.kos, season: p.season }));
 
-    // All-time KOs (sum across all seasons)
+    // All-time KOs (sum across selected seasons)
     const playerTotalKOs: Record<string, number> = {};
     allPlayers.forEach(p => {
       playerTotalKOs[p.name] = (playerTotalKOs[p.name] || 0) + p.kos;
@@ -89,7 +108,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs
     };
-  }, []);
+  }, [selectedYears]);
 
   const getTitle = (type: LeaderboardType) => {
     switch (type) {
@@ -160,11 +179,51 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     );
   };
 
+  const yearRangeLabel = selectedYears.size === allSeasons.length 
+    ? "700-707" 
+    : Array.from(selectedYears).sort().join(", ");
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Leaderboards</h2>
-        <p className="text-muted-foreground text-sm md:text-base">All-time records and single season bests from seasons 700-707.</p>
+        <p className="text-muted-foreground text-sm md:text-base">
+          Records from {selectedYears.size === allSeasons.length ? "seasons 700-707" : `season${selectedYears.size > 1 ? "s" : ""} ${yearRangeLabel}`}.
+        </p>
+      </div>
+
+      {/* Year Filter */}
+      <div className="bg-card rounded-lg border border-border p-3 md:p-4">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className="text-sm font-medium text-muted-foreground">Filter by Season:</span>
+          <button
+            onClick={selectAll}
+            className="text-xs px-2 py-1 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+          >
+            All
+          </button>
+          <button
+            onClick={clearAll}
+            className="text-xs px-2 py-1 rounded bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {allSeasons.map(year => (
+            <button
+              key={year}
+              onClick={() => toggleYear(year)}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
+                selectedYears.has(year)
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              {year}
+            </button>
+          ))}
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as LeaderboardType)} className="w-full">
