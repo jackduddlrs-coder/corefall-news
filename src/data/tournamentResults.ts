@@ -3087,29 +3087,564 @@ export const playerTournamentResults: Record<string, Record<string, Record<strin
     }
   },
   "701": {
+    // Pheonix Oliv - Total: 2925 (125+475+1100+1500+2000+2125+2525+2675+2925=2925) - KOs: 12
     "Pheonix Oliv": {
-      "Heartland": { finish: "1st", points: 550, kos: 2 },
-      "Chaos": { finish: "1st", points: 550, kos: 2 },
-      "Heritage": { finish: "1st", points: 550, kos: 2 },
-      "Descent": { finish: "1st", points: 550, kos: 2 },
-      "Solar": { finish: "1st", points: 550, kos: 2 },
-      "Nightmare": { finish: "3rd", points: 400, kos: 1 },
-      "Wind Breakers": { finish: "2nd", points: 450, kos: 1 },
-      "Malice": { finish: "3rd", points: 400, kos: 1 },
-      "Armageddon": { finish: "2nd", points: 450, kos: 1 },
-      "New Life": { finish: "1st", points: 550, kos: 2 }
+      "Heartland": { finish: "13th-16th", points: 125, kos: 0 },
+      "Chaos": { finish: "3rd", points: 350, kos: 2 },
+      "Heritage": { finish: "1st", points: 500, kos: 2 },
+      "Descent": { finish: "1st", points: 500, kos: 1 },
+      "Solar": { finish: "1st", points: 500, kos: 3 },
+      "Nightmare": { finish: "1st", points: 500, kos: 2 },
+      "Wind Breakers": { finish: "2nd", points: 400, kos: 0 },
+      "Malice": { finish: "13th-16th", points: 125, kos: 1 },
+      "Armageddon": { finish: "9th-12th", points: 150, kos: 2 },
+      "New Life": { finish: "5th-6th", points: 250, kos: 1 }
     },
+    // Rain Lieryon - Total: 2775 (125+375+875+1175+1475+1600+1725+1975+2375+2775=2775) - KOs: 11
     "Rain Lieryon": {
-      "Heartland": { finish: "2nd", points: 450, kos: 1 },
-      "Chaos": { finish: "2nd", points: 450, kos: 1 },
-      "Heritage": { finish: "2nd", points: 450, kos: 1 },
-      "Descent": { finish: "2nd", points: 450, kos: 1 },
-      "Solar": { finish: "3rd", points: 400, kos: 1 },
-      "Nightmare": { finish: "1st", points: 550, kos: 2 },
-      "Wind Breakers": { finish: "3rd", points: 400, kos: 1 },
-      "Malice": { finish: "1st", points: 550, kos: 2 },
-      "Armageddon": { finish: "1st", points: 550, kos: 2 },
-      "New Life": { finish: "2nd", points: 450, kos: 1 }
+      "Heartland": { finish: "13th-16th", points: 125, kos: 1 },
+      "Chaos": { finish: "5th-6th", points: 250, kos: 1 },
+      "Heritage": { finish: "1st", points: 500, kos: 2 },
+      "Descent": { finish: "4th", points: 300, kos: 2 },
+      "Solar": { finish: "4th", points: 300, kos: 0 },
+      "Nightmare": { finish: "13th-16th", points: 125, kos: 0 },
+      "Wind Breakers": { finish: "13th-16th", points: 125, kos: 0 },
+      "Malice": { finish: "5th-6th", points: 250, kos: 1 },
+      "Armageddon": { finish: "2nd", points: 400, kos: 2 },
+      "New Life": { finish: "2nd", points: 400, kos: 2 }
+    },
+    // Monster Piccoloo - Total: 2725 (250+750+875+1275+1425+1825+1975+2275+2475+2725=2725) - KOs: 12
+    "Monster Piccoloo": {
+      "Heartland": { finish: "5th-6th", points: 250, kos: 1 },
+      "Chaos": { finish: "1st", points: 500, kos: 1 },
+      "Heritage": { finish: "13th-16th", points: 125, kos: 1 },
+      "Descent": { finish: "2nd", points: 400, kos: 2 },
+      "Solar": { finish: "9th-12th", points: 150, kos: 1 },
+      "Nightmare": { finish: "2nd", points: 400, kos: 2 },
+      "Wind Breakers": { finish: "9th-12th", points: 150, kos: 0 },
+      "Malice": { finish: "4th", points: 300, kos: 1 },
+      "Armageddon": { finish: "7th-8th", points: 200, kos: 1 },
+      "New Life": { finish: "5th-6th", points: 250, kos: 2 }
+    },
+    // Jungle Unovo - Total: 2600 (150+150+250+650+775+900+1150+1250+1600+2100+2600=2600) - KOs: 10
+    "Jungle Unovo": {
+      "Heartland": { finish: "9th-12th", points: 150, kos: 1 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 0 },
+      "Heritage": { finish: "2nd", points: 400, kos: 0 },
+      "Descent": { finish: "13th-16th", points: 125, kos: 0 },
+      "Solar": { finish: "13th-16th", points: 125, kos: 1 },
+      "Nightmare": { finish: "5th-6th", points: 250, kos: 2 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 0 },
+      "Malice": { finish: "3rd", points: 350, kos: 1 },
+      "Armageddon": { finish: "1st", points: 500, kos: 3 },
+      "New Life": { finish: "1st", points: 500, kos: 2 }
+    },
+    // Nemesis Owanash - Total: 2325 (400+500+800+1000+1350+1475+1975+2125+2250+2325=2325) - KOs: 9
+    "Nemesis Owanash": {
+      "Heartland": { finish: "2nd", points: 400, kos: 2 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 0 },
+      "Heritage": { finish: "4th", points: 300, kos: 1 },
+      "Descent": { finish: "7th-8th", points: 200, kos: 1 },
+      "Solar": { finish: "3rd", points: 350, kos: 1 },
+      "Nightmare": { finish: "13th-16th", points: 125, kos: 1 },
+      "Wind Breakers": { finish: "1st", points: 500, kos: 2 },
+      "Malice": { finish: "9th-12th", points: 150, kos: 1 },
+      "Armageddon": { finish: "13th-16th", points: 125, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Splash Gradey - Total: 2150 (350+500+650+1000+1200+1350+1450+1950+2075+2150=2150) - KOs: 4
+    "Splash Gradey": {
+      "Heartland": { finish: "3rd", points: 350, kos: 1 },
+      "Chaos": { finish: "9th-12th", points: 150, kos: 0 },
+      "Heritage": { finish: "9th-12th", points: 150, kos: 0 },
+      "Descent": { finish: "3rd", points: 350, kos: 0 },
+      "Solar": { finish: "7th-8th", points: 200, kos: 1 },
+      "Nightmare": { finish: "9th-12th", points: 150, kos: 1 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 1 },
+      "Malice": { finish: "1st", points: 500, kos: 0 },
+      "Armageddon": { finish: "13th-16th", points: 125, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Strike Mag-Opel - Total: 2075 (300+375+575+700+850+1100+1450+1700+1950+2075=2075) - KOs: 5
+    "Strike Mag-Opel": {
+      "Heartland": { finish: "4th", points: 300, kos: 0 },
+      "Chaos": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Heritage": { finish: "7th-8th", points: 200, kos: 2 },
+      "Descent": { finish: "13th-16th", points: 125, kos: 0 },
+      "Solar": { finish: "9th-12th", points: 150, kos: 0 },
+      "Nightmare": { finish: "5th-6th", points: 250, kos: 2 },
+      "Wind Breakers": { finish: "3rd", points: 350, kos: 0 },
+      "Malice": { finish: "5th-6th", points: 250, kos: 1 },
+      "Armageddon": { finish: "5th-6th", points: 250, kos: 0 },
+      "New Life": { finish: "13th-16th", points: 125, kos: 0 }
+    },
+    // Hero Valii - Total: 1800 (500+625+750+1000+1100+1300+1400+1600+1700+1800=1800) - KOs: 6
+    "Hero Valii": {
+      "Heartland": { finish: "1st", points: 500, kos: 1 },
+      "Chaos": { finish: "13th-16th", points: 125, kos: 0 },
+      "Heritage": { finish: "13th-16th", points: 125, kos: 0 },
+      "Descent": { finish: "5th-6th", points: 250, kos: 0 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 1 },
+      "Nightmare": { finish: "7th-8th", points: 200, kos: 1 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 1 },
+      "Malice": { finish: "7th-8th", points: 200, kos: 1 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 1 },
+      "New Life": { finish: "17th-24th", points: 100, kos: 0 }
+    },
+    // Shark Obimovch - Total: 1750 (100+500+600+850+950+1025+1425+1525+1650+1750=1750) - KOs: 10
+    "Shark Obimovch": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 1 },
+      "Chaos": { finish: "2nd", points: 400, kos: 2 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 1 },
+      "Descent": { finish: "5th-6th", points: 250, kos: 1 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 0 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "2nd", points: 400, kos: 4 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "13th-16th", points: 125, kos: 1 },
+      "New Life": { finish: "17th-24th", points: 100, kos: 0 }
+    },
+    // Cold Varuth - Total: 1750 (150+250+600+675+925+1075+1325+1400+1650+1750=1750) - KOs: 4
+    "Cold Varuth": {
+      "Heartland": { finish: "9th-12th", points: 150, kos: 0 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 1 },
+      "Heritage": { finish: "3rd", points: 350, kos: 2 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "5th-6th", points: 250, kos: 0 },
+      "Nightmare": { finish: "9th-12th", points: 150, kos: 0 },
+      "Wind Breakers": { finish: "5th-6th", points: 250, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "5th-6th", points: 250, kos: 1 },
+      "New Life": { finish: "17th-24th", points: 100, kos: 0 }
+    },
+    // Storm Dayniel - Total: 1725 (150+150+250+350+500+900+1000+1200+1275+1425+1725=1725) - KOs: 6
+    "Storm Dayniel": {
+      "Heartland": { finish: "9th-12th", points: 150, kos: 1 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 1 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 1 },
+      "Descent": { finish: "9th-12th", points: 150, kos: 1 },
+      "Solar": { finish: "2nd", points: 400, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 0 },
+      "Wind Breakers": { finish: "7th-8th", points: 200, kos: 1 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "9th-12th", points: 150, kos: 1 },
+      "New Life": { finish: "4th", points: 300, kos: 0 }
+    },
+    // Tiger Griff - Total: 1550 (100+350+425+625+825+925+1175+1250+1450+1550=1550) - KOs: 5
+    "Tiger Griff": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 0 },
+      "Chaos": { finish: "5th-6th", points: 250, kos: 1 },
+      "Heritage": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Descent": { finish: "7th-8th", points: 200, kos: 1 },
+      "Solar": { finish: "7th-8th", points: 200, kos: 1 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 0 },
+      "Wind Breakers": { finish: "5th-6th", points: 250, kos: 1 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "7th-8th", points: 200, kos: 1 },
+      "New Life": { finish: "17th-24th", points: 100, kos: 0 }
+    },
+    // Justice Karoawaki - Total: 1500 (250+350+600+675+750+825+1125+1250+1400+1500=1500) - KOs: 4
+    "Justice Karoawaki": {
+      "Heartland": { finish: "5th-6th", points: 250, kos: 2 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 0 },
+      "Heritage": { finish: "5th-6th", points: 250, kos: 1 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "4th", points: 300, kos: 0 },
+      "Malice": { finish: "13th-16th", points: 125, kos: 0 },
+      "Armageddon": { finish: "9th-12th", points: 150, kos: 1 },
+      "New Life": { finish: "17th-24th", points: 100, kos: 0 }
+    },
+    // Cloud Youug - Total: 1450 (200+275+350+475+775+925+1025+1100+1450=1450) - KOs: 4
+    "Cloud Youug": {
+      "Heartland": { finish: "7th-8th", points: 200, kos: 0 },
+      "Chaos": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Heritage": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Descent": { finish: "13th-16th", points: 125, kos: 1 },
+      "Solar": { finish: "4th", points: 300, kos: 0 },
+      "Nightmare": { finish: "9th-12th", points: 150, kos: 1 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "3rd", points: 350, kos: 2 }
+    },
+    // Violence Coslo - Total: 1425 (125+125+225+475+625+750+825+900+1000+1300+1425=1425) - KOs: 7
+    "Violence Coslo": {
+      "Heartland": { finish: "13th-16th", points: 125, kos: 1 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 1 },
+      "Heritage": { finish: "5th-6th", points: 250, kos: 2 },
+      "Descent": { finish: "9th-12th", points: 150, kos: 0 },
+      "Solar": { finish: "13th-16th", points: 125, kos: 0 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "4th", points: 300, kos: 1 },
+      "New Life": { finish: "13th-16th", points: 125, kos: 2 }
+    },
+    // Killa Binbac - Total: 1425 (75+75+175+275+375+575+725+875+1225+1425=1425) - KOs: 8
+    "Killa Binbac": {
+      "Heartland": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 1 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 1 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 0 },
+      "Nightmare": { finish: "7th-8th", points: 200, kos: 1 },
+      "Wind Breakers": { finish: "9th-12th", points: 150, kos: 2 },
+      "Malice": { finish: "9th-12th", points: 150, kos: 0 },
+      "Armageddon": { finish: "3rd", points: 350, kos: 1 },
+      "New Life": { finish: "7th-8th", points: 200, kos: 2 }
+    },
+    // Night Corondolo - Total: 1350 (100+225+375+525+775+925+1000+1150+1250+1350=1350) - KOs: 8
+    "Night Corondolo": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 0 },
+      "Chaos": { finish: "13th-16th", points: 125, kos: 0 },
+      "Heritage": { finish: "9th-12th", points: 150, kos: 1 },
+      "Descent": { finish: "9th-12th", points: 150, kos: 1 },
+      "Solar": { finish: "5th-6th", points: 250, kos: 0 },
+      "Nightmare": { finish: "9th-12th", points: 150, kos: 1 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "9th-12th", points: 150, kos: 3 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 1 },
+      "New Life": { finish: "17th-24th", points: 100, kos: 1 }
+    },
+    // Cascade Juner - Total: 1300 (100+250+350+500+575+925+1000+1100+1175+1300=1300) - KOs: 4
+    "Cascade Juner": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 0 },
+      "Chaos": { finish: "9th-12th", points: 150, kos: 2 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 1 },
+      "Descent": { finish: "9th-12th", points: 150, kos: 0 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "3rd", points: 350, kos: 0 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "13th-16th", points: 125, kos: 1 }
+    },
+    // Purple Vafe - Total: 1225 (0+300+450+525+625+700+825+900+1025+1225=1225) - KOs: 4
+    "Purple Vafe": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "4th", points: 300, kos: 2 },
+      "Heritage": { finish: "9th-12th", points: 150, kos: 1 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 1 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "13th-16th", points: 125, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "13th-16th", points: 125, kos: 0 },
+      "New Life": { finish: "7th-8th", points: 200, kos: 0 }
+    },
+    // Heal Calofloure - Total: 1125 (0+200+400+500+575+700+775+850+1000+1125=1125) - KOs: 5
+    "Heal Calofloure": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "7th-8th", points: 200, kos: 1 },
+      "Heritage": { finish: "7th-8th", points: 200, kos: 1 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 1 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "13th-16th", points: 125, kos: 1 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "9th-12th", points: 150, kos: 1 },
+      "New Life": { finish: "13th-16th", points: 125, kos: 0 }
+    },
+    // Hulk Saechez - Total: 1025 (150+300+400+475+600+725+850+950+1025=1025) - KOs: 4
+    "Hulk Saechez": {
+      "Heartland": { finish: "9th-12th", points: 150, kos: 1 },
+      "Chaos": { finish: "9th-12th", points: 150, kos: 0 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "13th-16th", points: 125, kos: 1 },
+      "Nightmare": { finish: "13th-16th", points: 125, kos: 1 },
+      "Wind Breakers": { finish: "13th-16th", points: 125, kos: 0 },
+      "Malice": { finish: "13th-16th", points: 125, kos: 1 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Blood Astur - Total: 975 (100+225+325+425+525+525+725+825+975=975) - KOs: 7
+    "Blood Astur": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 1 },
+      "Chaos": { finish: "13th-16th", points: 125, kos: 1 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 0 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 1 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 1 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 1 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "7th-8th", points: 200, kos: 1 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 1 },
+      "New Life": { finish: "9th-12th", points: 150, kos: 1 }
+    },
+    // Tox Manahoe - Total: 825 (0+0+150+300+500+600+675+825=825) - KOs: 4
+    "Tox Manahoe": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "9th-12th", points: 150, kos: 2 },
+      "Solar": { finish: "9th-12th", points: 150, kos: 1 },
+      "Nightmare": { finish: "7th-8th", points: 200, kos: 1 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "9th-12th", points: 150, kos: 0 }
+    },
+    // Saint Lameron - Total: 800 (75+275+350+425+500+650+725+800=800) - KOs: 2
+    "Saint Lameron": {
+      "Heartland": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Chaos": { finish: "7th-8th", points: 200, kos: 1 },
+      "Heritage": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "9th-12th", points: 150, kos: 1 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Gold Gahir - Total: 750 (200+300+375+450+550+650+750=750) - KOs: 1
+    "Gold Gahir": {
+      "Heartland": { finish: "7th-8th", points: 200, kos: 1 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 0 },
+      "Heritage": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 0 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Iceberg Minance - Total: 725 (125+200+275+350+450+550+650+725=725) - KOs: 0
+    "Iceberg Minance": {
+      "Heartland": { finish: "13th-16th", points: 125, kos: 0 },
+      "Chaos": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Heritage": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 0 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Love Jaust - Total: 725 (0+125+275+375+450+550+625+725=725) - KOs: 2
+    "Love Jaust": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "13th-16th", points: 125, kos: 1 },
+      "Heritage": { finish: "9th-12th", points: 150, kos: 0 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 1 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 0 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Space Mahr - Total: 675 (0+75+175+275+375+450+525+600+675=675) - KOs: 0
+    "Space Mahr": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 0 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 0 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 0 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Astro Daslo - Total: 650 (75+75+200+300+400+500+650=650) - KOs: 1
+    "Astro Daslo": {
+      "Heartland": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "13th-16th", points: 125, kos: 1 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 0 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "9th-12th", points: 150, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Heat Herlais - Total: 600 (0+0+125+225+325+400+525+600=600) - KOs: 2
+    "Heat Herlais": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "13th-16th", points: 125, kos: 1 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 0 },
+      "Solar": { finish: "17th-24th", points: 100, kos: 0 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "13th-16th", points: 125, kos: 1 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Reckoner Lahnier - Total: 600 (0+0+150+250+400+500+600=600) - KOs: 4
+    "Reckoner Lahnier": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "9th-12th", points: 150, kos: 1 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 1 },
+      "Wind Breakers": { finish: "9th-12th", points: 150, kos: 1 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 1 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Heretic Forchis - Total: 450 (100+100+200+300+375+450=450) - KOs: 1
+    "Heretic Forchis": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 1 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "17th-24th", points: 100, kos: 0 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 0 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Light Brog - Total: 450 (75+225+300+375+375+450=450) - KOs: 0
+    "Light Brog": {
+      "Heartland": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Chaos": { finish: "9th-12th", points: 150, kos: 0 },
+      "Heritage": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Descent": { finish: "DNP", points: 0, kos: 0 },
+      "Solar": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Black Hole Junes - Total: 425 (100+100+175+275+425=425) - KOs: 2
+    "Black Hole Junes": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 1 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 1 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "9th-12th", points: 150, kos: 0 }
+    },
+    // Ninja Derlow - Total: 375 (0+75+75+200+275+375=375) - KOs: 0
+    "Ninja Derlow": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "13th-16th", points: 125, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Menace Upa - Total: 375 (100+100+225+300+375=375) - KOs: 1
+    "Menace Upa": {
+      "Heartland": { finish: "17th-24th", points: 100, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "DNP", points: 0, kos: 0 },
+      "Solar": { finish: "13th-16th", points: 125, kos: 1 },
+      "Nightmare": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "25th-32nd", points: 75, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Utopia Vaaxo - Total: 325 (0+0+100+225+325=325) - KOs: 2
+    "Utopia Vaaxo": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "DNP", points: 0, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "17th-24th", points: 100, kos: 1 },
+      "Malice": { finish: "13th-16th", points: 125, kos: 1 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Eagle Manhais - Total: 275 (0+0+75+175+275=275) - KOs: 1
+    "Eagle Manhais": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "17th-24th", points: 100, kos: 1 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "17th-24th", points: 100, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Money Yalbam - Total: 175 (0+100+0+0+0+0+0+0+75+175=175) - KOs: 0
+    "Money Yalbam": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "17th-24th", points: 100, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "DNP", points: 0, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Boar Byur - Total: 175 (0+0+0+0+100+0+0+0+75+175=175) - KOs: 0
+    "Boar Byur": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "17th-24th", points: 100, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "25th-32nd", points: 75, kos: 0 }
+    },
+    // Shot Paola - Total: 175 (0+0+0+75+0+0+0+0+100+0=175) - KOs: 0
+    "Shot Paola": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "17th-24th", points: 100, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Daylight Gaetes - Total: 150 (0+0+0+0+0+0+75+75+150=150) - KOs: 0
+    "Daylight Gaetes": {
+      "Heartland": { finish: "DNP", points: 0, kos: 0 },
+      "Chaos": { finish: "DNP", points: 0, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "DNP", points: 0, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Malice": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
+    },
+    // Spirit Matthieu - Total: 150 (75+75+150=150) - KOs: 0
+    "Spirit Matthieu": {
+      "Heartland": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Chaos": { finish: "25th-32nd", points: 75, kos: 0 },
+      "Heritage": { finish: "DNP", points: 0, kos: 0 },
+      "Descent": { finish: "DNP", points: 0, kos: 0 },
+      "Solar": { finish: "DNP", points: 0, kos: 0 },
+      "Nightmare": { finish: "DNP", points: 0, kos: 0 },
+      "Wind Breakers": { finish: "DNP", points: 0, kos: 0 },
+      "Malice": { finish: "DNP", points: 0, kos: 0 },
+      "Armageddon": { finish: "DNP", points: 0, kos: 0 },
+      "New Life": { finish: "DNP", points: 0, kos: 0 }
     }
   },
   "700": {
