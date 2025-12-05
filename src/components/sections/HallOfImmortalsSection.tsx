@@ -13,6 +13,7 @@ interface Immortal {
   careerPoints: number;
   careerKOs: number;
   apexTitles: number;
+  championshipYears: number[];
 }
 
 const inducteeNames = [
@@ -27,17 +28,17 @@ const inducteeNames = [
   "Rolle Asikov"
 ];
 
-// Historical Apex titles data (pre-700 + any from standings data)
-const apexTitlesData: Record<string, number> = {
-  "Pheonix Oliv": 4,      // 698, 699, 700, 701
-  "Mountain Granton": 1,   // 697
-  "Snow Masogoto": 3,      // 691, 692, 695
-  "Soler Varo": 2,         // 690, 693
-  "Spade Faxzin": 2,       // 683, 684
-  "Prince Jonkan": 2,      // 680, 681
-  "Vibrant Yaul": 1,       // 685
-  "Ring Hawlikaw": 1,      // 682
-  "Rolle Asikov": 1        // 679
+// Historical Apex titles data with years
+const apexTitlesData: Record<string, { count: number; years: number[] }> = {
+  "Pheonix Oliv": { count: 4, years: [698, 699, 700, 701] },
+  "Mountain Granton": { count: 1, years: [697] },
+  "Snow Masogoto": { count: 3, years: [691, 692, 695] },
+  "Soler Varo": { count: 2, years: [690, 693] },
+  "Spade Faxzin": { count: 2, years: [683, 684] },
+  "Prince Jonkan": { count: 2, years: [680, 681] },
+  "Vibrant Yaul": { count: 1, years: [685] },
+  "Ring Hawlikaw": { count: 1, years: [682] },
+  "Rolle Asikov": { count: 1, years: [679] }
 };
 
 // Override primary teams for immortals (historical affiliations)
@@ -78,13 +79,16 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
     const careerPoints = playerSeasons.reduce((sum, p) => sum + p.points, 0);
     const careerKOs = playerSeasons.reduce((sum, p) => sum + p.kos, 0);
 
+    const titleData = apexTitlesData[playerName] || { count: 0, years: [] };
+
     return {
       name: playerName,
       primaryTeam,
       seasonsPlayed: playerSeasons.length,
       careerPoints,
       careerKOs,
-      apexTitles: apexTitlesData[playerName] || 0
+      apexTitles: titleData.count,
+      championshipYears: titleData.years
     };
   };
 
@@ -125,6 +129,15 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
                   </span>
                 </div>
               </div>
+
+              {immortal.championshipYears.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-muted-foreground mb-1">Apex Championships</p>
+                  <p className="text-xs md:text-sm font-medium text-amber-500/90">
+                    {immortal.championshipYears.join(", ")}
+                  </p>
+                </div>
+              )}
               
               {immortal.seasonsPlayed > 0 && (
                 <div className="grid grid-cols-3 gap-2 text-center mt-4 pt-3 border-t border-border/50">
