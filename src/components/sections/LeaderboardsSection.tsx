@@ -1,20 +1,25 @@
 import { useState, useMemo } from "react";
-import { pastStandings, getTeamClass } from "@/data/corefallData";
+import { pastStandings, pastTeamStandings, getTeamClass, seasons } from "@/data/corefallData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface LeaderboardsSectionProps {
   onPlayerClick: (name: string) => void;
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos";
+type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "team-points" | "team-championships" | "team-players";
 
 interface PlayerStats {
   name: string;
   team: string;
   value: number;
   season?: string;
+}
+
+interface TeamStats {
+  team: string;
+  value: number;
+  details?: string;
 }
 
 export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: LeaderboardsSectionProps) => {
@@ -102,11 +107,74 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
+    // Most Apex Appearances (top 40 finishes in selected seasons)
+    const playerAppearances: Record<string, number> = {};
+    allPlayers.forEach(p => {
+      playerAppearances[p.name] = (playerAppearances[p.name] || 0) + 1;
+    });
+    const appearances: PlayerStats[] = Object.entries(playerAppearances)
+      .map(([name, count]) => ({ name, team: getMostPlayedTeam(name), value: count }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
+    // Team Leaderboards
+    // Team total points (from pastTeamStandings)
+    const teamTotalPoints: Record<string, number> = {};
+    Object.entries(pastTeamStandings).forEach(([season, teams]) => {
+      if (!selectedYears.has(season)) return;
+      teams.forEach(t => {
+        teamTotalPoints[t.team] = (teamTotalPoints[t.team] || 0) + t.points;
+      });
+    });
+    const teamPoints: TeamStats[] = Object.entries(teamTotalPoints)
+      .map(([team, total]) => ({ team, value: total }))
+      .sort((a, b) => b.value - a.value);
+
+    // Team championships (Apex + CTT from seasons data)
+    const teamChampionships: Record<string, { apex: number; ctt: number }> = {};
+    seasons.forEach(s => {
+      if (!selectedYears.has(s.year.toString())) return;
+      if (s.team) {
+        if (!teamChampionships[s.team]) teamChampionships[s.team] = { apex: 0, ctt: 0 };
+        teamChampionships[s.team].apex++;
+      }
+      // CTT winner - find their team from standings
+      if (s.ctt) {
+        const cttSeason = pastStandings[s.year.toString()];
+        const cttPlayer = cttSeason?.find(p => p.Name === s.ctt);
+        if (cttPlayer) {
+          if (!teamChampionships[cttPlayer.Team]) teamChampionships[cttPlayer.Team] = { apex: 0, ctt: 0 };
+          teamChampionships[cttPlayer.Team].ctt++;
+        }
+      }
+    });
+    const teamChamps: TeamStats[] = Object.entries(teamChampionships)
+      .map(([team, counts]) => ({
+        team, 
+        value: counts.apex + counts.ctt,
+        details: `${counts.apex} Apex, ${counts.ctt} CTT`
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    // Team top 40 players produced
+    const teamPlayersCount: Record<string, Set<string>> = {};
+    allPlayers.forEach(p => {
+      if (!teamPlayersCount[p.team]) teamPlayersCount[p.team] = new Set();
+      teamPlayersCount[p.team].add(p.name);
+    });
+    const teamPlayers: TeamStats[] = Object.entries(teamPlayersCount)
+      .map(([team, players]) => ({ team, value: players.size }))
+      .sort((a, b) => b.value - a.value);
+
     return {
       "single-points": singleSeasonPoints,
       "all-time-points": allTimePoints,
       "single-kos": singleSeasonKOs,
-      "all-time-kos": allTimeKOs
+      "all-time-kos": allTimeKOs,
+      "appearances": appearances,
+      "team-points": teamPoints,
+      "team-championships": teamChamps,
+      "team-players": teamPlayers
     };
   }, [selectedYears]);
 
@@ -116,15 +184,25 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "all-time-points": return "All-Time Career Points";
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
+      case "appearances": return "Most Apex Appearances";
+      case "team-points": return "Team Total Points";
+      case "team-championships": return "Team Championships";
+      case "team-players": return "Top 40 Players Produced";
     }
   };
 
   const getValueLabel = (type: LeaderboardType) => {
-    return type.includes("points") ? "Points" : "KOs";
+    switch (type) {
+      case "appearances": return "Seasons";
+      case "team-points": return "Points";
+      case "team-championships": return "Titles";
+      case "team-players": return "Players";
+      default: return type.includes("points") ? "Points" : "KOs";
+    }
   };
 
-  const renderLeaderboard = (type: LeaderboardType) => {
-    const data = leaderboards[type];
+  const renderPlayerLeaderboard = (type: LeaderboardType) => {
+    const data = leaderboards[type] as PlayerStats[];
     const showSeason = type === "single-points" || type === "single-kos";
 
     return (
@@ -179,9 +257,53 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     );
   };
 
+  const renderTeamLeaderboard = (type: LeaderboardType) => {
+    const data = leaderboards[type] as TeamStats[];
+    const showDetails = type === "team-championships";
+
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Team</th>
+              {showDetails && (
+                <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Breakdown</th>
+              )}
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">{getValueLabel(type)}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((team, index) => (
+              <tr key={team.team} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                <td className="p-2 md:p-3">
+                  <span 
+                    onClick={() => onTeamClick(team.team)}
+                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(team.team)}`}
+                  >
+                    {team.team}
+                  </span>
+                </td>
+                {showDetails && (
+                  <td className="p-2 md:p-3 text-muted-foreground hidden sm:table-cell">{team.details}</td>
+                )}
+                <td className="p-2 md:p-3 text-right font-bold text-foreground">{team.value.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   const yearRangeLabel = selectedYears.size === allSeasons.length 
     ? "700-707" 
     : Array.from(selectedYears).sort().join(", ");
+
+  const isTeamLeaderboard = (type: LeaderboardType) => 
+    type === "team-points" || type === "team-championships" || type === "team-players";
 
   return (
     <div className="space-y-6">
@@ -227,35 +349,68 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as LeaderboardType)} className="w-full">
-        <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
-          <TabsTrigger value="single-points" className="flex-1 min-w-[120px] text-xs md:text-sm py-2">
-            Season Points
-          </TabsTrigger>
-          <TabsTrigger value="all-time-points" className="flex-1 min-w-[120px] text-xs md:text-sm py-2">
-            Career Points
-          </TabsTrigger>
-          <TabsTrigger value="single-kos" className="flex-1 min-w-[120px] text-xs md:text-sm py-2">
-            Season KOs
-          </TabsTrigger>
-          <TabsTrigger value="all-time-kos" className="flex-1 min-w-[120px] text-xs md:text-sm py-2">
-            Career KOs
-          </TabsTrigger>
-        </TabsList>
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground font-medium">Player Stats</p>
+          <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
+            <TabsTrigger value="single-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Season Pts
+            </TabsTrigger>
+            <TabsTrigger value="all-time-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Career Pts
+            </TabsTrigger>
+            <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Season KOs
+            </TabsTrigger>
+            <TabsTrigger value="all-time-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Career KOs
+            </TabsTrigger>
+            <TabsTrigger value="appearances" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Appearances
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        <div className="space-y-2 mt-4">
+          <p className="text-xs text-muted-foreground font-medium">Team Stats</p>
+          <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
+            <TabsTrigger value="team-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Total Points
+            </TabsTrigger>
+            <TabsTrigger value="team-championships" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Championships
+            </TabsTrigger>
+            <TabsTrigger value="team-players" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Players Produced
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <div className="mt-4 bg-card rounded-lg border border-border p-2 md:p-4">
           <h3 className="text-lg md:text-xl font-semibold mb-4 text-foreground">{getTitle(activeTab)}</h3>
           
           <TabsContent value="single-points" className="mt-0">
-            {renderLeaderboard("single-points")}
+            {renderPlayerLeaderboard("single-points")}
           </TabsContent>
           <TabsContent value="all-time-points" className="mt-0">
-            {renderLeaderboard("all-time-points")}
+            {renderPlayerLeaderboard("all-time-points")}
           </TabsContent>
           <TabsContent value="single-kos" className="mt-0">
-            {renderLeaderboard("single-kos")}
+            {renderPlayerLeaderboard("single-kos")}
           </TabsContent>
           <TabsContent value="all-time-kos" className="mt-0">
-            {renderLeaderboard("all-time-kos")}
+            {renderPlayerLeaderboard("all-time-kos")}
+          </TabsContent>
+          <TabsContent value="appearances" className="mt-0">
+            {renderPlayerLeaderboard("appearances")}
+          </TabsContent>
+          <TabsContent value="team-points" className="mt-0">
+            {renderTeamLeaderboard("team-points")}
+          </TabsContent>
+          <TabsContent value="team-championships" className="mt-0">
+            {renderTeamLeaderboard("team-championships")}
+          </TabsContent>
+          <TabsContent value="team-players" className="mt-0">
+            {renderTeamLeaderboard("team-players")}
           </TabsContent>
         </div>
       </Tabs>
