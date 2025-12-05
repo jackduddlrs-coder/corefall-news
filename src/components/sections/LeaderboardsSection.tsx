@@ -107,10 +107,15 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
-    // Most Apex Appearances (top 40 finishes in selected seasons)
+    // Most Apex Appearances (top 16 finishes - the Apex bracket)
     const playerAppearances: Record<string, number> = {};
-    allPlayers.forEach(p => {
-      playerAppearances[p.name] = (playerAppearances[p.name] || 0) + 1;
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      players.forEach(player => {
+        if (player.Rank <= 16) {
+          playerAppearances[player.Name] = (playerAppearances[player.Name] || 0) + 1;
+        }
+      });
     });
     const appearances: PlayerStats[] = Object.entries(playerAppearances)
       .map(([name, count]) => ({ name, team: getMostPlayedTeam(name), value: count }))
