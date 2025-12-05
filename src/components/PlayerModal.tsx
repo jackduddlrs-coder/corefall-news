@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { pastStandings, trophyData, getTeamClass } from "@/data/corefallData";
+import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface PlayerModalProps {
   playerName: string;
@@ -6,6 +9,8 @@ interface PlayerModalProps {
 }
 
 export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
+  const [expandedSeasons, setExpandedSeasons] = useState<Set<number>>(new Set());
+
   let careerPoints = 0;
   let careerKOs = 0;
   let yearsActive = 0;
@@ -36,6 +41,25 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
 
   const isActive = seasonHistory.some(s => s.year === 707);
   const trophies = trophyData.find(t => t.name === playerName);
+
+  const toggleSeason = (year: number) => {
+    const newExpanded = new Set(expandedSeasons);
+    if (newExpanded.has(year)) {
+      newExpanded.delete(year);
+    } else {
+      newExpanded.add(year);
+    }
+    setExpandedSeasons(newExpanded);
+  };
+
+  const getPlayerTournamentData = (year: number) => {
+    const yearStr = year.toString();
+    const seasonData = playerTournamentResults[yearStr];
+    if (!seasonData) return null;
+    const playerData = seasonData[playerName];
+    if (!playerData) return null;
+    return { tournaments: tournamentNames[yearStr] || [], results: playerData };
+  };
 
   return (
     <div 
@@ -109,29 +133,87 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
           </div>
 
           <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
-            Season History & Team Record
+            Season History & Tournament Results
           </div>
-          <div className="overflow-x-auto bg-panel rounded-lg shadow-lg max-h-[300px] overflow-y-auto">
+          <div className="overflow-x-auto bg-panel rounded-lg shadow-lg max-h-[400px] overflow-y-auto">
             <table className="w-full border-collapse text-sm min-w-[500px]">
               <thead>
                 <tr>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Year</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Team</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Rank</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Points</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">KOs</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Year</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Team</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Rank</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Points</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">KOs</th>
                 </tr>
               </thead>
               <tbody>
-                {seasonHistory.length > 0 ? seasonHistory.map(h => (
-                  <tr key={h.year} className="border-b border-border hover:bg-muted/50">
-                    <td className="p-3 text-primary font-bold">{h.year}</td>
-                    <td className="p-3"><span className={`team-tag ${getTeamClass(h.team)}`}>{h.team}</span></td>
-                    <td className="p-3">#{h.rank}</td>
-                    <td className="p-3">{h.points}</td>
-                    <td className="p-3">{h.ko}</td>
-                  </tr>
-                )) : (
+                {seasonHistory.length > 0 ? seasonHistory.map(h => {
+                  const tournamentData = getPlayerTournamentData(h.year);
+                  const isExpanded = expandedSeasons.has(h.year);
+                  const hasTournamentData = tournamentData !== null;
+                  
+                  return (
+                    <>
+                      <tr 
+                        key={h.year} 
+                        className={`border-b border-border hover:bg-muted/50 ${hasTournamentData ? 'cursor-pointer' : ''}`}
+                        onClick={() => hasTournamentData && toggleSeason(h.year)}
+                      >
+                        <td className="p-3 text-primary font-bold">
+                          <div className="flex items-center gap-2">
+                            {hasTournamentData && (
+                              isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
+                            )}
+                            {h.year}
+                          </div>
+                        </td>
+                        <td className="p-3"><span className={`team-tag ${getTeamClass(h.team)}`}>{h.team}</span></td>
+                        <td className="p-3">#{h.rank}</td>
+                        <td className="p-3">{h.points}</td>
+                        <td className="p-3">{h.ko}</td>
+                      </tr>
+                      {isExpanded && tournamentData && (
+                        <tr key={`${h.year}-tournaments`}>
+                          <td colSpan={5} className="p-0 bg-background/50">
+                            <div className="p-4">
+                              <div className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-bold">
+                                Tournament Results - Season {h.year}
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                {tournamentData.tournaments.map(tournament => {
+                                  const result = tournamentData.results[tournament];
+                                  if (!result) return null;
+                                  
+                                  const isWin = result.finish === "1st";
+                                  const isTop3 = result.finish === "2nd" || result.finish === "3rd";
+                                  
+                                  return (
+                                    <div 
+                                      key={tournament}
+                                      className={`p-2 rounded border text-center ${
+                                        isWin ? 'bg-primary/20 border-primary' : 
+                                        isTop3 ? 'bg-secondary/20 border-secondary' : 
+                                        'bg-muted/20 border-border'
+                                      }`}
+                                    >
+                                      <div className="text-xs font-bold text-foreground truncate">{tournament}</div>
+                                      <div className={`text-sm font-bold ${isWin ? 'text-primary' : isTop3 ? 'text-secondary' : 'text-muted-foreground'}`}>
+                                        {result.finish}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground">
+                                        {result.points}pts / {result.kos}KO
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  );
+                }) : (
                   <tr>
                     <td colSpan={5} className="p-3 text-muted-foreground">No detailed season records found (Pre-700 or Inactive).</td>
                   </tr>
