@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { pastStandings, pastTeamStandings, getTeamClass } from "@/data/corefallData";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface ArchiveSectionProps {
   onPlayerClick: (name: string) => void;
@@ -14,11 +15,24 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   
   const seasonOptions = ["707", "706", "705", "704", "703", "702", "701", "700"];
   
   const standings = pastStandings[selectedSeason] || [];
   const teamStandings = pastTeamStandings[selectedSeason] || [];
+
+  // Get players for each team
+  const teamPlayers = useMemo(() => {
+    const players: Record<string, { name: string; rank: number; points: number }[]> = {};
+    standings.forEach(p => {
+      if (!players[p.Team]) players[p.Team] = [];
+      players[p.Team].push({ name: p.Name, rank: p.Rank, points: p.Points });
+    });
+    // Sort by rank within each team
+    Object.values(players).forEach(arr => arr.sort((a, b) => a.rank - b.rank));
+    return players;
+  }, [standings]);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -51,6 +65,10 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
     return sortDir === "desc" ? " ▼" : " ▲";
   };
 
+  const toggleTeamExpand = (teamName: string) => {
+    setExpandedTeam(expandedTeam === teamName ? null : teamName);
+  };
+
   return (
     <div className="animate-fadeIn">
       <h1 className="text-white">Historical Standings Archive</h1>
@@ -59,7 +77,7 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
       <div className="flex flex-wrap gap-4 mb-5">
         <select 
           value={selectedSeason}
-          onChange={e => { setSelectedSeason(e.target.value); setSortKey(null); }}
+          onChange={e => { setSelectedSeason(e.target.value); setSortKey(null); setExpandedTeam(null); }}
           className="p-2.5 bg-[#222] text-white border border-border rounded cursor-pointer w-[200px]"
         >
           {seasonOptions.map(s => (
@@ -137,20 +155,65 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Rank</th>
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Team</th>
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10">Points</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 w-10"></th>
                 </tr>
               </thead>
               <tbody>
-                {teamStandings.map((t, idx) => (
-                  <tr key={t.team} className="border-b border-[#2a2f38] hover:bg-[#2c323d] even:bg-[#1f242b]">
-                    <td className="p-3 font-bold text-muted-foreground">{idx + 1}</td>
-                    <td className="p-3">
-                      <span className={`team-tag clickable-team ${getTeamClass(t.team)}`} onClick={() => onTeamClick(t.team)}>
-                        {t.team}
-                      </span>
-                    </td>
-                    <td className="p-3 text-center font-bold text-white">{t.points.toLocaleString()}</td>
-                  </tr>
-                ))}
+                {teamStandings.map((t, idx) => {
+                  const players = teamPlayers[t.team] || [];
+                  const isExpanded = expandedTeam === t.team;
+                  return (
+                    <>
+                      <tr 
+                        key={t.team} 
+                        className={`border-b border-[#2a2f38] hover:bg-[#2c323d] cursor-pointer ${isExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
+                        onClick={() => players.length > 0 && toggleTeamExpand(t.team)}
+                      >
+                        <td className="p-3 font-bold text-muted-foreground">{idx + 1}</td>
+                        <td className="p-3">
+                          <span 
+                            className={`team-tag clickable-team ${getTeamClass(t.team)}`} 
+                            onClick={(e) => { e.stopPropagation(); onTeamClick(t.team); }}
+                          >
+                            {t.team}
+                          </span>
+                          {players.length > 0 && (
+                            <span className="ml-2 text-xs text-muted-foreground">
+                              ({players.length} in top 40)
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 text-center font-bold text-white">{t.points.toLocaleString()}</td>
+                        <td className="p-3 text-center">
+                          {players.length > 0 && (
+                            isExpanded ? 
+                              <ChevronUp className="h-4 w-4 text-muted-foreground inline" /> : 
+                              <ChevronDown className="h-4 w-4 text-muted-foreground inline" />
+                          )}
+                        </td>
+                      </tr>
+                      {isExpanded && players.length > 0 && (
+                        <tr key={`${t.team}-players`}>
+                          <td colSpan={4} className="p-0 bg-[#1a1f25]">
+                            <div className="p-3 space-y-1">
+                              {players.map(p => (
+                                <div 
+                                  key={p.name} 
+                                  className="flex justify-between items-center text-xs py-1 px-2 hover:bg-[#2c323d] rounded cursor-pointer"
+                                  onClick={(e) => { e.stopPropagation(); onPlayerClick(p.name); }}
+                                >
+                                  <span className="text-muted-foreground">#{p.rank}</span>
+                                  <span className="clickable-name flex-1 mx-2">{p.name}</span>
+                                  <span className="font-semibold text-foreground">{p.points} pts</span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  );
+                })}
               </tbody>
             </table>
           </div>
