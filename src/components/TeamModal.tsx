@@ -1,20 +1,25 @@
-import { pastTeamStandings, seasons, getTeamClass } from "@/data/corefallData";
+import { useState } from "react";
+import { pastTeamStandings, pastStandings, seasons, getTeamClass } from "@/data/corefallData";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface TeamModalProps {
   teamName: string;
   onClose: () => void;
+  onPlayerClick?: (name: string) => void;
 }
 
-export function TeamModal({ teamName, onClose }: TeamModalProps) {
+export function TeamModal({ teamName, onClose, onPlayerClick }: TeamModalProps) {
+  const [expandedYear, setExpandedYear] = useState<number | null>(null);
+  
   let totalPoints = 0;
   let seasonCount = 0;
   let rankSum = 0;
   let bestRank = 99;
   let bestYear = "";
 
-  const history: { year: number; rank: number; points: number; note: string }[] = [];
+  const history: { year: number; rank: number; points: number; note: string; players: { name: string; rank: number; points: number }[] }[] = [];
 
-  // Compile History
+  // Compile History with players
   Object.keys(pastTeamStandings).sort((a, b) => Number(b) - Number(a)).forEach(year => {
     const seasonData = pastTeamStandings[year];
     const idx = seasonData.findIndex(t => t.team === teamName);
@@ -31,11 +36,19 @@ export function TeamModal({ teamName, onClose }: TeamModalProps) {
         if (seasonRecord.starTeam === teamName) notes.push("⭐ Season Star");
       }
 
+      // Get players for this team in this season
+      const seasonStandings = pastStandings[year] || [];
+      const teamPlayers = seasonStandings
+        .filter(p => p.Team === teamName)
+        .map(p => ({ name: p.Name, rank: p.Rank, points: p.Points }))
+        .sort((a, b) => a.rank - b.rank);
+
       history.push({
         year: parseInt(year),
         rank,
         points,
-        note: notes.join(" • ")
+        note: notes.join(" • "),
+        players: teamPlayers
       });
     }
   });
@@ -71,6 +84,26 @@ export function TeamModal({ teamName, onClose }: TeamModalProps) {
   const allTimeApex = apexWins.length;
   const allTimeCTT = cttWins.length;
   const allTimeStar = starWins.length;
+
+  // Get all-time top players for this team
+  const allTimePlayers: Record<string, { totalPoints: number; totalKOs: number; seasons: number }> = {};
+  Object.values(pastStandings).forEach(seasonStandings => {
+    seasonStandings.forEach(p => {
+      if (p.Team === teamName) {
+        if (!allTimePlayers[p.Name]) {
+          allTimePlayers[p.Name] = { totalPoints: 0, totalKOs: 0, seasons: 0 };
+        }
+        allTimePlayers[p.Name].totalPoints += p.Points;
+        allTimePlayers[p.Name].totalKOs += p.KOs;
+        allTimePlayers[p.Name].seasons += 1;
+      }
+    });
+  });
+
+  const topPlayers = Object.entries(allTimePlayers)
+    .map(([name, stats]) => ({ name, ...stats }))
+    .sort((a, b) => b.totalPoints - a.totalPoints)
+    .slice(0, 10);
 
   return (
     <div 
@@ -142,6 +175,31 @@ export function TeamModal({ teamName, onClose }: TeamModalProps) {
             )}
           </div>
 
+          {topPlayers.length > 0 && (
+            <>
+              <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
+                Top Historical Players (Since 700)
+              </div>
+              <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {topPlayers.map((p, idx) => (
+                  <div 
+                    key={p.name}
+                    className={`flex items-center justify-between p-2 rounded border border-border/50 bg-background/30 ${onPlayerClick ? 'cursor-pointer hover:bg-background/60' : ''}`}
+                    onClick={() => onPlayerClick?.(p.name)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground w-5">#{idx + 1}</span>
+                      <span className="text-sm font-medium text-foreground">{p.name}</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {p.totalPoints.toLocaleString()} pts • {p.seasons} szn
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
           <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
             Era Statistics (Since 700)
           </div>
@@ -165,27 +223,64 @@ export function TeamModal({ teamName, onClose }: TeamModalProps) {
           </div>
 
           <div className="text-primary border-b border-border pb-2 mb-4 text-sm uppercase font-bold tracking-wider">
-            Season-by-Season Record
+            Season-by-Season Record (Click to expand roster)
           </div>
-          <div className="overflow-x-auto bg-panel rounded-lg shadow-lg max-h-[300px] overflow-y-auto">
+          <div className="overflow-x-auto bg-panel rounded-lg shadow-lg max-h-[400px] overflow-y-auto">
             <table className="w-full border-collapse text-sm min-w-[400px]">
               <thead>
                 <tr>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Season</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Rank</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Points</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0">Notes</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Season</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Rank</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Points</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Notes</th>
+                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 w-10"></th>
                 </tr>
               </thead>
               <tbody>
-                {history.map(h => (
-                  <tr key={h.year} className="border-b border-border hover:bg-muted/50">
-                    <td className="p-3 text-primary font-bold">{h.year}</td>
-                    <td className={`p-3 ${h.rank === 1 ? "text-[hsl(var(--gold))] font-bold" : ""}`}>#{h.rank}</td>
-                    <td className="p-3">{h.points.toLocaleString()}</td>
-                    <td className="p-3 text-sm text-muted-foreground">{h.note}</td>
-                  </tr>
-                ))}
+                {history.map(h => {
+                  const isExpanded = expandedYear === h.year;
+                  return (
+                    <>
+                      <tr 
+                        key={h.year} 
+                        className={`border-b border-border hover:bg-muted/50 cursor-pointer ${isExpanded ? 'bg-muted/50' : ''}`}
+                        onClick={() => setExpandedYear(isExpanded ? null : h.year)}
+                      >
+                        <td className="p-3 text-primary font-bold">{h.year}</td>
+                        <td className={`p-3 ${h.rank === 1 ? "text-[hsl(var(--gold))] font-bold" : ""}`}>#{h.rank}</td>
+                        <td className="p-3">{h.points.toLocaleString()}</td>
+                        <td className="p-3 text-sm text-muted-foreground">{h.note}</td>
+                        <td className="p-3 text-center">
+                          {h.players.length > 0 && (
+                            isExpanded ? 
+                              <ChevronUp className="h-4 w-4 text-muted-foreground inline" /> : 
+                              <ChevronDown className="h-4 w-4 text-muted-foreground inline" />
+                          )}
+                        </td>
+                      </tr>
+                      {isExpanded && h.players.length > 0 && (
+                        <tr key={`${h.year}-players`}>
+                          <td colSpan={5} className="p-0 bg-[#1a1f25]">
+                            <div className="p-3 space-y-1">
+                              <div className="text-xs text-muted-foreground mb-2">Top 40 Players ({h.players.length})</div>
+                              {h.players.map(p => (
+                                <div 
+                                  key={p.name} 
+                                  className={`flex justify-between items-center text-xs py-1 px-2 hover:bg-[#2c323d] rounded ${onPlayerClick ? 'cursor-pointer' : ''}`}
+                                  onClick={(e) => { e.stopPropagation(); onPlayerClick?.(p.name); }}
+                                >
+                                  <span className="text-muted-foreground">#{p.rank}</span>
+                                  <span className="clickable-name flex-1 mx-2">{p.name}</span>
+                                  <span className="font-semibold text-foreground">{p.points} pts</span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  );
+                })}
               </tbody>
             </table>
           </div>

@@ -66,7 +66,7 @@ const Index = () => {
         {activeSection === "archive" && (
           <ArchiveHubSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
-        {activeSection === "teams" && <TeamsSection onTeamClick={handleTeamClick} />}
+        {activeSection === "teams" && <TeamsSection onTeamClick={handleTeamClick} onPlayerClick={handlePlayerClick} />}
         {activeSection === "majors" && <MajorsSection onPlayerClick={handlePlayerClick} />}
         {activeSection === "full-apex" && <FullApexSection />}
         {activeSection === "apex" && (
@@ -90,7 +90,8 @@ const Index = () => {
       {selectedTeam && (
         <TeamModal 
           teamName={selectedTeam} 
-          onClose={() => setSelectedTeam(null)} 
+          onClose={() => setSelectedTeam(null)}
+          onPlayerClick={handlePlayerClick}
         />
       )}
     </div>
