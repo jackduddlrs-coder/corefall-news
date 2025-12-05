@@ -4,13 +4,14 @@ import { LeaderboardsSection } from "./LeaderboardsSection";
 import { ArchiveSection } from "./ArchiveSection";
 import { SeasonsSection } from "./SeasonsSection";
 import { HallOfImmortalsSection } from "./HallOfImmortalsSection";
+import { RosterMovesSection } from "./RosterMovesSection";
 
 interface ArchiveHubSectionProps {
   onPlayerClick: (name: string) => void;
   onTeamClick: (name: string) => void;
 }
 
-type ArchiveTab = "leaderboards" | "standings" | "seasons" | "immortals";
+type ArchiveTab = "leaderboards" | "standings" | "seasons" | "immortals" | "moves";
 
 export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSectionProps) => {
   const [activeTab, setActiveTab] = useState<ArchiveTab>("leaderboards");
@@ -23,17 +24,20 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as ArchiveTab)} className="w-full">
-        <TabsList className="w-full flex h-auto gap-1 bg-muted/50 p-1">
-          <TabsTrigger value="leaderboards" className="flex-1 text-xs md:text-base py-2.5">
+        <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
+          <TabsTrigger value="leaderboards" className="flex-1 text-xs md:text-sm py-2.5">
             Leaderboards
           </TabsTrigger>
-          <TabsTrigger value="standings" className="flex-1 text-xs md:text-base py-2.5">
+          <TabsTrigger value="standings" className="flex-1 text-xs md:text-sm py-2.5">
             Standings
           </TabsTrigger>
-          <TabsTrigger value="seasons" className="flex-1 text-xs md:text-base py-2.5">
+          <TabsTrigger value="seasons" className="flex-1 text-xs md:text-sm py-2.5">
             Seasons
           </TabsTrigger>
-          <TabsTrigger value="immortals" className="flex-1 text-xs md:text-base py-2.5">
+          <TabsTrigger value="moves" className="flex-1 text-xs md:text-sm py-2.5">
+            Roster Moves
+          </TabsTrigger>
+          <TabsTrigger value="immortals" className="flex-1 text-xs md:text-sm py-2.5">
             Immortals
           </TabsTrigger>
         </TabsList>
@@ -47,6 +51,9 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
           </TabsContent>
           <TabsContent value="seasons" className="mt-0">
             <SeasonsSection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
+          </TabsContent>
+          <TabsContent value="moves" className="mt-0">
+            <RosterMovesSection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
           </TabsContent>
           <TabsContent value="immortals" className="mt-0">
             <HallOfImmortalsSection onPlayerClick={onPlayerClick} />
