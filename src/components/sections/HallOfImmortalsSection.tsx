@@ -29,7 +29,7 @@ const inducteeNames = [
 
 // Historical Apex titles data (pre-700 + any from standings data)
 const apexTitlesData: Record<string, number> = {
-  "Pheonix Oliv": 2,      // 698, 699
+  "Pheonix Oliv": 4,      // 698, 699, 700, 701
   "Mountain Granton": 1,   // 697
   "Snow Masogoto": 3,      // 691, 692, 695
   "Soler Varo": 2,         // 690, 693
@@ -38,6 +38,18 @@ const apexTitlesData: Record<string, number> = {
   "Vibrant Yaul": 1,       // 685
   "Ring Hawlikaw": 1,      // 682
   "Rolle Asikov": 1        // 679
+};
+
+// Override primary teams for immortals (historical affiliations)
+const primaryTeamOverrides: Record<string, string> = {
+  "Pheonix Oliv": "Varcity/Dashlol",
+  "Snow Masogoto": "Engery",
+  "Soler Varo": "Damage",
+  "Prince Jonkan": "Damage",
+  "Spade Faxzin": "Gastro",
+  "Vibrant Yaul": "Ovest/Limium",
+  "Rolle Asikov": "Limium",
+  "Ring Hawlikaw": "Rass"
 };
 
 export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) => {
@@ -53,12 +65,14 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
 
     const playerSeasons = allPlayers.filter(p => p.name === playerName);
     
-    // Get most played team
-    const teamCounts: Record<string, number> = {};
-    playerSeasons.forEach(p => {
-      teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
-    });
-    const primaryTeam = Object.entries(teamCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Legacy";
+    // Use override team if available, otherwise calculate from data
+    const primaryTeam = primaryTeamOverrides[playerName] || (() => {
+      const teamCounts: Record<string, number> = {};
+      playerSeasons.forEach(p => {
+        teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+      });
+      return Object.entries(teamCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Legacy";
+    })();
 
     // Sum stats
     const careerPoints = playerSeasons.reduce((sum, p) => sum + p.points, 0);
