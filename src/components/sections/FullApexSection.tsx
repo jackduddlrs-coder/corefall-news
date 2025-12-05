@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { fullMatches, pastStandings, getTeamClass } from "@/data/corefallData";
 
 interface BracketMatch {
@@ -9,21 +9,13 @@ interface BracketMatch {
   group?: string;
 }
 
-// Build a map of player name -> team for all seasons
-function buildPlayerTeamMap(): Record<string, string> {
-  const map: Record<string, string> = {};
-  Object.values(pastStandings).forEach(seasonStandings => {
-    seasonStandings.forEach(player => {
-      map[player.Name] = player.Team;
-    });
-  });
-  return map;
-}
-
-const playerTeamMap = buildPlayerTeamMap();
-
-function getPlayerTeam(playerName: string): string {
-  return playerTeamMap[playerName] || "";
+// Get player's team for a specific season from standings
+function getPlayerTeamForSeason(playerName: string, season: string): string {
+  const seasonStandings = pastStandings[season];
+  if (!seasonStandings) return "";
+  
+  const player = seasonStandings.find(p => p.Name === playerName);
+  return player?.Team || "";
 }
 
 function parseBracketData(matches: { round: string; match: string }[]): BracketMatch[] {
@@ -78,11 +70,11 @@ const TeamBadge = ({ team, compact }: { team: string; compact?: boolean }) => {
   );
 };
 
-const MatchBox = ({ winner, loser, score, isChampion, compact }: { 
-  winner: string; loser: string; score: string; isChampion?: boolean; compact?: boolean 
+const MatchBox = ({ winner, loser, score, isChampion, compact, season }: { 
+  winner: string; loser: string; score: string; isChampion?: boolean; compact?: boolean; season: string 
 }) => {
-  const winnerTeam = getPlayerTeam(winner);
-  const loserTeam = getPlayerTeam(loser);
+  const winnerTeam = getPlayerTeamForSeason(winner, season);
+  const loserTeam = getPlayerTeamForSeason(loser, season);
   
   return (
     <div className={`bg-card border rounded-lg overflow-hidden ${compact ? 'text-[10px] min-w-[130px]' : 'text-xs min-w-[160px]'} ${isChampion ? 'border-primary' : 'border-border'}`}>
@@ -130,8 +122,8 @@ function DoubleElimBracket({ season }: { season: string }) {
 
     const groupWinner = ubf[0]?.winner || "";
     const groupRunnerUp = lbf[0]?.winner || "";
-    const winnerTeam = getPlayerTeam(groupWinner);
-    const runnerUpTeam = getPlayerTeam(groupRunnerUp);
+    const winnerTeam = getPlayerTeamForSeason(groupWinner, season);
+    const runnerUpTeam = getPlayerTeamForSeason(groupRunnerUp, season);
 
     return (
       <div className="bg-card/30 rounded-lg p-4 border border-border/50 relative">
@@ -146,7 +138,7 @@ function DoubleElimBracket({ season }: { season: string }) {
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Round 1</div>
               <div className="flex flex-col gap-2">
                 {ubr1.map((m, i) => (
-                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
                 ))}
               </div>
             </div>
@@ -156,7 +148,7 @@ function DoubleElimBracket({ season }: { season: string }) {
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Semis</div>
               <div className="flex flex-col gap-[52px]">
                 {ubsf.map((m, i) => (
-                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
                 ))}
               </div>
             </div>
@@ -165,7 +157,7 @@ function DoubleElimBracket({ season }: { season: string }) {
             <div className="flex flex-col pt-[60px]">
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Finals</div>
               {ubf.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
               ))}
             </div>
           </div>
@@ -180,7 +172,7 @@ function DoubleElimBracket({ season }: { season: string }) {
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Round 1</div>
               <div className="flex flex-col gap-2">
                 {lbr1.map((m, i) => (
-                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
                 ))}
               </div>
             </div>
@@ -190,7 +182,7 @@ function DoubleElimBracket({ season }: { season: string }) {
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Quarters</div>
               <div className="flex flex-col gap-2">
                 {lbqf.map((m, i) => (
-                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                  <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
                 ))}
               </div>
             </div>
@@ -199,7 +191,7 @@ function DoubleElimBracket({ season }: { season: string }) {
             <div className="flex flex-col pt-3">
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Semis</div>
               {lbsf.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
               ))}
             </div>
             
@@ -207,7 +199,7 @@ function DoubleElimBracket({ season }: { season: string }) {
             <div className="flex flex-col pt-3">
               <div className="text-[9px] text-muted-foreground mb-1 text-center">Finals</div>
               {lbf.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} compact season={season} />
               ))}
             </div>
           </div>
@@ -279,7 +271,7 @@ function DoubleElimBracket({ season }: { season: string }) {
             <div className="text-[10px] text-muted-foreground mb-2 text-center">Semifinals</div>
             <div className="flex flex-col gap-3">
               {sf.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} season={season} />
               ))}
             </div>
           </div>
@@ -295,7 +287,7 @@ function DoubleElimBracket({ season }: { season: string }) {
           <div className="flex flex-col">
             <div className="text-[10px] text-muted-foreground mb-2 text-center">Grand Finals</div>
             {finals && (
-              <MatchBox winner={finals.winner} loser={finals.loser} score={finals.score} isChampion />
+              <MatchBox winner={finals.winner} loser={finals.loser} score={finals.score} isChampion season={season} />
             )}
           </div>
 
@@ -339,7 +331,7 @@ function ApexBracket({ season }: { season: string }) {
             <div className="text-xs font-semibold text-muted-foreground mb-2 text-center">Round of 16</div>
             <div className="flex flex-col gap-3">
               {r16.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} season={season} />
               ))}
             </div>
           </div>
@@ -358,7 +350,7 @@ function ApexBracket({ season }: { season: string }) {
             <div className="text-xs font-semibold text-muted-foreground mb-2 text-center">Quarterfinals</div>
             <div className="flex flex-col gap-[54px]">
               {qf.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} season={season} />
               ))}
             </div>
           </div>
@@ -377,7 +369,7 @@ function ApexBracket({ season }: { season: string }) {
             <div className="text-xs font-semibold text-muted-foreground mb-2 text-center">Semifinals</div>
             <div className="flex flex-col gap-[156px]">
               {sf.map((m, i) => (
-                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} />
+                <MatchBox key={i} winner={m.winner} loser={m.loser} score={m.score} season={season} />
               ))}
             </div>
           </div>
@@ -391,7 +383,7 @@ function ApexBracket({ season }: { season: string }) {
           <div className="flex flex-col pt-[188px]">
             <div className="text-xs font-semibold text-muted-foreground mb-2 text-center">Finals</div>
             {finals && (
-              <MatchBox winner={finals.winner} loser={finals.loser} score={finals.score} isChampion />
+              <MatchBox winner={finals.winner} loser={finals.loser} score={finals.score} isChampion season={season} />
             )}
           </div>
 
