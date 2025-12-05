@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { fullMatches } from "@/data/corefallData";
+import { useState, useMemo } from "react";
+import { fullMatches, pastStandings, getTeamClass } from "@/data/corefallData";
 
 interface BracketMatch {
   round: string;
@@ -7,6 +7,23 @@ interface BracketMatch {
   loser: string;
   score: string;
   group?: string;
+}
+
+// Build a map of player name -> team for all seasons
+function buildPlayerTeamMap(): Record<string, string> {
+  const map: Record<string, string> = {};
+  Object.values(pastStandings).forEach(seasonStandings => {
+    seasonStandings.forEach(player => {
+      map[player.Name] = player.Team;
+    });
+  });
+  return map;
+}
+
+const playerTeamMap = buildPlayerTeamMap();
+
+function getPlayerTeam(playerName: string): string {
+  return playerTeamMap[playerName] || "";
 }
 
 function parseBracketData(matches: { round: string; match: string }[]): BracketMatch[] {
@@ -51,19 +68,36 @@ function hasDoubleElimBracket(season: string): boolean {
   return rounds.includes("UBR1") && rounds.includes("LBR1");
 }
 
+const TeamBadge = ({ team, compact }: { team: string; compact?: boolean }) => {
+  if (!team) return null;
+  const teamClass = getTeamClass(team);
+  return (
+    <span className={`${teamClass} ${compact ? 'text-[7px] px-1 py-0.5' : 'text-[8px] px-1.5 py-0.5'} rounded font-bold uppercase whitespace-nowrap`}>
+      {team.slice(0, 3)}
+    </span>
+  );
+};
+
 const MatchBox = ({ winner, loser, score, isChampion, compact }: { 
   winner: string; loser: string; score: string; isChampion?: boolean; compact?: boolean 
-}) => (
-  <div className={`bg-card border rounded-lg overflow-hidden ${compact ? 'text-[10px] min-w-[120px]' : 'text-xs min-w-[140px]'} ${isChampion ? 'border-primary' : 'border-border'}`}>
-    <div className={`px-2 py-1.5 flex justify-between items-center ${isChampion ? 'bg-primary/20 text-primary font-bold' : 'bg-muted/30 text-foreground'}`}>
-      <span className="truncate">{winner}</span>
-      <span className="text-[10px] ml-1 opacity-70">{score.includes("(") ? score.split("(")[0] : score}</span>
+}) => {
+  const winnerTeam = getPlayerTeam(winner);
+  const loserTeam = getPlayerTeam(loser);
+  
+  return (
+    <div className={`bg-card border rounded-lg overflow-hidden ${compact ? 'text-[10px] min-w-[130px]' : 'text-xs min-w-[160px]'} ${isChampion ? 'border-primary' : 'border-border'}`}>
+      <div className={`px-2 py-1.5 flex items-center gap-1.5 ${isChampion ? 'bg-primary/20 text-primary font-bold' : 'bg-muted/30 text-foreground'}`}>
+        <TeamBadge team={winnerTeam} compact={compact} />
+        <span className="truncate flex-1">{winner}</span>
+        <span className="text-[10px] opacity-70">{score.includes("(") ? score.split("(")[0] : score}</span>
+      </div>
+      <div className="px-2 py-1.5 text-muted-foreground border-t border-border/50 flex items-center gap-1.5">
+        <TeamBadge team={loserTeam} compact={compact} />
+        <span className="truncate">{loser}</span>
+      </div>
     </div>
-    <div className="px-2 py-1.5 text-muted-foreground border-t border-border/50">
-      <span className="truncate">{loser}</span>
-    </div>
-  </div>
-);
+  );
+};
 
 function DoubleElimBracket({ season }: { season: string }) {
   const matches = parseBracketData(fullMatches[season]);
