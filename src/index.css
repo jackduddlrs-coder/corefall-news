@@ -111,6 +111,12 @@
     color: #fff;
   }
   
+  .award-star {
+    border-color: hsl(var(--secondary));
+    color: hsl(var(--secondary));
+    background: #1a2a1a;
+  }
+  
   .clickable-name {
     @apply cursor-pointer transition-colors;
     color: #fff;
