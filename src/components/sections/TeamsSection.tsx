@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { seasons, getTeamClass } from "@/data/corefallData";
 
 interface TeamsSectionProps {
@@ -15,7 +16,13 @@ interface TeamAwards {
   star: AwardDetail[];
 }
 
+type SortKey = "name" | "apex" | "ctt" | "star";
+type SortDir = "asc" | "desc";
+
 export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
+  const [sortKey, setSortKey] = useState<SortKey>("apex");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+
   // Calculate team stats with details
   const teamStats: Record<string, TeamAwards> = {};
 
@@ -43,7 +50,49 @@ export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
       cttCount: awards.ctt.length,
       starCount: awards.star.length
     }))
-    .sort((a, b) => b.apexCount - a.apexCount);
+    .sort((a, b) => {
+      let aVal: string | number;
+      let bVal: string | number;
+      
+      switch (sortKey) {
+        case "name":
+          aVal = a.name.toLowerCase();
+          bVal = b.name.toLowerCase();
+          break;
+        case "apex":
+          aVal = a.apexCount;
+          bVal = b.apexCount;
+          break;
+        case "ctt":
+          aVal = a.cttCount;
+          bVal = b.cttCount;
+          break;
+        case "star":
+          aVal = a.starCount;
+          bVal = b.starCount;
+          break;
+        default:
+          return 0;
+      }
+      
+      if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir(key === "name" ? "asc" : "desc");
+    }
+  };
+
+  const getSortIndicator = (key: SortKey) => {
+    if (sortKey !== key) return "";
+    return sortDir === "asc" ? " ▲" : " ▼";
+  };
 
   const formatAwards = (awards: AwardDetail[], showPlayer: boolean) => {
     if (awards.length === 0) return <span className="text-muted-foreground">—</span>;
@@ -71,10 +120,30 @@ export function TeamsSection({ onTeamClick }: TeamsSectionProps) {
         <table className="w-full border-collapse text-sm min-w-[700px]">
           <thead>
             <tr>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Team</th>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10">Apex Titles</th>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10">CTT Titles</th>
-              <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10">Season Stars</th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white"
+                onClick={() => handleSort("name")}
+              >
+                Team{getSortIndicator("name")}
+              </th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white"
+                onClick={() => handleSort("apex")}
+              >
+                Apex Titles{getSortIndicator("apex")}
+              </th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white"
+                onClick={() => handleSort("ctt")}
+              >
+                CTT Titles{getSortIndicator("ctt")}
+              </th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white"
+                onClick={() => handleSort("star")}
+              >
+                Season Stars{getSortIndicator("star")}
+              </th>
             </tr>
           </thead>
           <tbody>
