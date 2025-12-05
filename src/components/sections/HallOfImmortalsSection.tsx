@@ -14,6 +14,7 @@ interface Immortal {
   careerKOs: number;
   apexTitles: number;
   championshipYears: number[];
+  seasonStarYears: number[];
 }
 
 const inducteeNames = [
@@ -39,6 +40,19 @@ const apexTitlesData: Record<string, { count: number; years: number[] }> = {
   "Vibrant Yaul": { count: 1, years: [685] },
   "Ring Hawlikaw": { count: 1, years: [682] },
   "Rolle Asikov": { count: 1, years: [679] }
+};
+
+// Season Star awards data with years
+const seasonStarData: Record<string, number[]> = {
+  "Pheonix Oliv": [695, 696, 697, 698, 699, 700, 701],
+  "Snow Masogoto": [691, 692],
+  "Soler Varo": [689, 690],
+  "Spade Faxzin": [682, 684],
+  "Prince Jonkan": [680, 681],
+  "Vibrant Yaul": [687],
+  "Mountain Granton": [],
+  "Ring Hawlikaw": [],
+  "Rolle Asikov": []
 };
 
 // Override primary teams for immortals (historical affiliations)
@@ -80,6 +94,7 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
     const careerKOs = playerSeasons.reduce((sum, p) => sum + p.kos, 0);
 
     const titleData = apexTitlesData[playerName] || { count: 0, years: [] };
+    const starYears = seasonStarData[playerName] || [];
 
     return {
       name: playerName,
@@ -88,7 +103,8 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
       careerPoints,
       careerKOs,
       apexTitles: titleData.count,
-      championshipYears: titleData.years
+      championshipYears: titleData.years,
+      seasonStarYears: starYears
     };
   };
 
@@ -135,6 +151,18 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
                   <p className="text-xs text-muted-foreground mb-1">Apex Championships</p>
                   <p className="text-xs md:text-sm font-medium text-amber-500/90">
                     {immortal.championshipYears.join(", ")}
+                  </p>
+                </div>
+              )}
+
+              {immortal.seasonStarYears.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                    <Star className="h-3 w-3 text-sky-400" />
+                    Season Star Awards
+                  </p>
+                  <p className="text-xs md:text-sm font-medium text-sky-400/90">
+                    {immortal.seasonStarYears.join(", ")}
                   </p>
                 </div>
               )}
