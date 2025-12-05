@@ -1,23 +1,21 @@
 import { useState } from "react";
 import { FeedSection } from "@/components/sections/FeedSection";
 import { ResultsSection } from "@/components/sections/ResultsSection";
-import { ArchiveSection } from "@/components/sections/ArchiveSection";
+import { ArchiveHubSection } from "@/components/sections/ArchiveHubSection";
 import { TeamsSection } from "@/components/sections/TeamsSection";
-import { SeasonsSection } from "@/components/sections/SeasonsSection";
 import { MajorsSection } from "@/components/sections/MajorsSection";
 import { FullApexSection } from "@/components/sections/FullApexSection";
 import { ApexFinalsSection } from "@/components/sections/ApexFinalsSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 
-type SectionId = "home" | "results" | "archive" | "teams" | "seasons" | "majors" | "full-apex" | "apex";
+type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex";
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: "home", label: "Feed" },
   { id: "results", label: "708 Results" },
-  { id: "archive", label: "Standings Archive" },
+  { id: "archive", label: "Archive" },
   { id: "teams", label: "Team History" },
-  { id: "seasons", label: "Season Archive" },
   { id: "majors", label: "Trophy Room" },
   { id: "full-apex", label: "Full Apex Results" },
   { id: "apex", label: "Finals History" },
@@ -66,12 +64,9 @@ const Index = () => {
           <ResultsSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
         {activeSection === "archive" && (
-          <ArchiveSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+          <ArchiveHubSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
         {activeSection === "teams" && <TeamsSection onTeamClick={handleTeamClick} />}
-        {activeSection === "seasons" && (
-          <SeasonsSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
-        )}
         {activeSection === "majors" && <MajorsSection onPlayerClick={handlePlayerClick} />}
         {activeSection === "full-apex" && <FullApexSection />}
         {activeSection === "apex" && (
