@@ -1,13 +1,14 @@
 import { useState, useMemo } from "react";
 import { pastStandings, getTeamClass } from "@/data/corefallData";
-import { Search, X } from "lucide-react";
+import { getH2HRecord } from "@/data/h2hData";
+import { Search, X, Swords } from "lucide-react";
 
-interface PlayerComparisonSectionProps {
+interface H2HSectionProps {
   onPlayerClick: (name: string) => void;
   onTeamClick: (name: string) => void;
 }
 
-export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerComparisonSectionProps) => {
+export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
   const allSeasons = Object.keys(pastStandings).sort();
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(allSeasons));
   const [player1, setPlayer1] = useState<string>("");
@@ -94,6 +95,9 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
   const stats1 = getPlayerStats(player1);
   const stats2 = getPlayerStats(player2);
 
+  // Get H2H record
+  const h2hRecord = player1 && player2 ? getH2HRecord(player1, player2) : null;
+
   const filteredPlayers1 = allPlayers.filter(p => 
     p.toLowerCase().includes(search1.toLowerCase()) && p !== player2
   );
@@ -124,7 +128,7 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
             setShowDropdown(true);
           }}
           onFocus={() => setShowDropdown(true)}
-          className="bg-transparent border-none outline-none flex-1 text-foreground placeholder:text-muted-foreground"
+          className="bg-transparent border-none outline-none flex-1 text-foreground placeholder:text-muted-foreground text-sm"
         />
         {selectedPlayer && (
           <button onClick={() => { setPlayer(""); setSearch(""); }} className="text-muted-foreground hover:text-foreground">
@@ -159,12 +163,12 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
     const winner2 = higherBetter ? num2 > num1 : num2 < num1;
 
     return (
-      <div className="grid grid-cols-3 gap-4 py-2 border-b border-border/50">
-        <div className={`text-right font-bold ${stats1 && stats2 && winner1 ? 'text-green-500' : 'text-foreground'}`}>
+      <div className="grid grid-cols-3 gap-2 md:gap-4 py-2 border-b border-border/50">
+        <div className={`text-right font-bold text-sm md:text-base ${stats1 && stats2 && winner1 ? 'text-green-500' : 'text-foreground'}`}>
           {val1 ?? '-'}
         </div>
-        <div className="text-center text-muted-foreground text-sm">{label}</div>
-        <div className={`text-left font-bold ${stats1 && stats2 && winner2 ? 'text-green-500' : 'text-foreground'}`}>
+        <div className="text-center text-muted-foreground text-xs md:text-sm">{label}</div>
+        <div className={`text-left font-bold text-sm md:text-base ${stats1 && stats2 && winner2 ? 'text-green-500' : 'text-foreground'}`}>
           {val2 ?? '-'}
         </div>
       </div>
@@ -172,16 +176,16 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Player Comparison</h2>
-        <p className="text-muted-foreground text-sm md:text-base">Compare two players' stats side by side.</p>
+        <h2 className="text-xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">Head to Head</h2>
+        <p className="text-muted-foreground text-xs md:text-base">Compare two players' tournament records and stats.</p>
       </div>
 
       {/* Year Filter */}
-      <div className="bg-card rounded-lg border border-border p-3 md:p-4">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-sm font-medium text-muted-foreground">Filter by Season:</span>
+      <div className="bg-card rounded-lg border border-border p-3">
+        <div className="flex flex-wrap items-center gap-2 mb-2 md:mb-3">
+          <span className="text-xs md:text-sm font-medium text-muted-foreground">Filter by Season:</span>
           <button
             onClick={selectAll}
             className="text-xs px-2 py-1 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
@@ -195,12 +199,12 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
             Clear
           </button>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 md:gap-2">
           {allSeasons.map(year => (
             <button
               key={year}
               onClick={() => toggleYear(year)}
-              className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
+              className={`px-2 md:px-3 py-1 md:py-1.5 rounded text-xs md:text-sm font-medium transition-all ${
                 selectedYears.has(year)
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted/50 text-muted-foreground hover:bg-muted"
@@ -213,15 +217,15 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
       </div>
 
       {/* Player Selection */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-card rounded-lg border border-border p-4">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-2">Player 1</h3>
+      <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+        <div className="bg-card rounded-lg border border-border p-3 md:p-4">
+          <h3 className="text-xs md:text-sm font-semibold text-muted-foreground mb-2">Player 1</h3>
           {renderPlayerSelector(1, player1, setPlayer1, search1, setSearch1, showDropdown1, setShowDropdown1, filteredPlayers1)}
           {stats1 && (
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
               <span 
                 onClick={() => onPlayerClick(stats1.name)}
-                className="text-primary hover:underline cursor-pointer font-bold"
+                className="text-primary hover:underline cursor-pointer font-bold text-sm md:text-base"
               >
                 {stats1.name}
               </span>
@@ -234,14 +238,14 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
             </div>
           )}
         </div>
-        <div className="bg-card rounded-lg border border-border p-4">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-2">Player 2</h3>
+        <div className="bg-card rounded-lg border border-border p-3 md:p-4">
+          <h3 className="text-xs md:text-sm font-semibold text-muted-foreground mb-2">Player 2</h3>
           {renderPlayerSelector(2, player2, setPlayer2, search2, setSearch2, showDropdown2, setShowDropdown2, filteredPlayers2)}
           {stats2 && (
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
               <span 
                 onClick={() => onPlayerClick(stats2.name)}
-                className="text-primary hover:underline cursor-pointer font-bold"
+                className="text-primary hover:underline cursor-pointer font-bold text-sm md:text-base"
               >
                 {stats2.name}
               </span>
@@ -256,10 +260,50 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
         </div>
       </div>
 
+      {/* H2H Record */}
+      {player1 && player2 && (
+        <div className="bg-card rounded-lg border border-border p-4 md:p-6">
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
+            <Swords className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+            <h3 className="text-base md:text-lg font-semibold text-foreground">Tournament Record</h3>
+          </div>
+          
+          {h2hRecord ? (
+            <div className="flex items-center justify-center gap-4 md:gap-8">
+              <div className="text-center">
+                <span 
+                  onClick={() => onPlayerClick(player1)}
+                  className="block text-xs md:text-sm text-muted-foreground hover:text-primary cursor-pointer mb-1"
+                >
+                  {player1.split(' ')[0]}
+                </span>
+                <span className={`text-2xl md:text-4xl font-bold ${h2hRecord.wins > h2hRecord.losses ? 'text-green-500' : h2hRecord.wins < h2hRecord.losses ? 'text-red-500' : 'text-foreground'}`}>
+                  {h2hRecord.wins}
+                </span>
+              </div>
+              <div className="text-xl md:text-2xl text-muted-foreground font-light">-</div>
+              <div className="text-center">
+                <span 
+                  onClick={() => onPlayerClick(player2)}
+                  className="block text-xs md:text-sm text-muted-foreground hover:text-primary cursor-pointer mb-1"
+                >
+                  {player2.split(' ')[0]}
+                </span>
+                <span className={`text-2xl md:text-4xl font-bold ${h2hRecord.losses > h2hRecord.wins ? 'text-green-500' : h2hRecord.losses < h2hRecord.wins ? 'text-red-500' : 'text-foreground'}`}>
+                  {h2hRecord.losses}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground text-sm">No tournament matches found between these players.</p>
+          )}
+        </div>
+      )}
+
       {/* Comparison Table */}
       {(stats1 || stats2) && (
-        <div className="bg-card rounded-lg border border-border p-4">
-          <h3 className="text-lg font-semibold mb-4 text-center text-foreground">Career Totals</h3>
+        <div className="bg-card rounded-lg border border-border p-3 md:p-4">
+          <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-foreground">Career Totals</h3>
           <div className="max-w-md mx-auto">
             {renderStatRow("Total Points", stats1?.totalPoints.toLocaleString(), stats2?.totalPoints.toLocaleString())}
             {renderStatRow("Total KOs", stats1?.totalKOs, stats2?.totalKOs)}
@@ -272,17 +316,17 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
 
       {/* Season by Season */}
       {stats1 && stats2 && (
-        <div className="bg-card rounded-lg border border-border p-4">
-          <h3 className="text-lg font-semibold mb-4 text-center text-foreground">Season by Season</h3>
+        <div className="bg-card rounded-lg border border-border p-3 md:p-4">
+          <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-foreground">Season by Season</h3>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs md:text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="p-2 text-right text-muted-foreground">Points</th>
-                  <th className="p-2 text-right text-muted-foreground">Rank</th>
-                  <th className="p-2 text-center text-muted-foreground">Season</th>
-                  <th className="p-2 text-left text-muted-foreground">Rank</th>
-                  <th className="p-2 text-left text-muted-foreground">Points</th>
+                  <th className="p-1.5 md:p-2 text-right text-muted-foreground">Pts</th>
+                  <th className="p-1.5 md:p-2 text-right text-muted-foreground hidden sm:table-cell">Rank</th>
+                  <th className="p-1.5 md:p-2 text-center text-muted-foreground">Season</th>
+                  <th className="p-1.5 md:p-2 text-left text-muted-foreground hidden sm:table-cell">Rank</th>
+                  <th className="p-1.5 md:p-2 text-left text-muted-foreground">Pts</th>
                 </tr>
               </thead>
               <tbody>
@@ -294,17 +338,17 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
                   
                   return (
                     <tr key={year} className="border-b border-border/50">
-                      <td className={`p-2 text-right ${p1Better ? 'text-green-500 font-bold' : 'text-foreground'}`}>
+                      <td className={`p-1.5 md:p-2 text-right ${p1Better ? 'text-green-500 font-bold' : 'text-foreground'}`}>
                         {s1?.points.toLocaleString() ?? '-'}
                       </td>
-                      <td className="p-2 text-right text-muted-foreground">
+                      <td className="p-1.5 md:p-2 text-right text-muted-foreground hidden sm:table-cell">
                         {s1 ? `#${s1.rank}` : '-'}
                       </td>
-                      <td className="p-2 text-center font-medium text-foreground">{year}</td>
-                      <td className="p-2 text-left text-muted-foreground">
+                      <td className="p-1.5 md:p-2 text-center font-medium text-foreground">{year}</td>
+                      <td className="p-1.5 md:p-2 text-left text-muted-foreground hidden sm:table-cell">
                         {s2 ? `#${s2.rank}` : '-'}
                       </td>
-                      <td className={`p-2 text-left ${p2Better ? 'text-green-500 font-bold' : 'text-foreground'}`}>
+                      <td className={`p-1.5 md:p-2 text-left ${p2Better ? 'text-green-500 font-bold' : 'text-foreground'}`}>
                         {s2?.points.toLocaleString() ?? '-'}
                       </td>
                     </tr>
@@ -317,8 +361,8 @@ export const PlayerComparisonSection = ({ onPlayerClick, onTeamClick }: PlayerCo
       )}
 
       {!player1 && !player2 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p>Select two players above to compare their stats</p>
+        <div className="text-center py-8 md:py-12 text-muted-foreground">
+          <p className="text-sm md:text-base">Select two players above to compare their stats</p>
         </div>
       )}
     </div>
