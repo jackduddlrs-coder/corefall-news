@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
-import { pastStandings, getTeamClass } from "@/data/corefallData";
+import { pastStandings, getTeamClass, apexDetailed } from "@/data/corefallData";
 import { getH2HRecord } from "@/data/h2hData";
-import { Search, X, Swords } from "lucide-react";
+import { Search, X, Swords, Trophy } from "lucide-react";
 
 interface H2HSectionProps {
   onPlayerClick: (name: string) => void;
@@ -97,6 +97,16 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
 
   // Get H2H record
   const h2hRecord = player1 && player2 ? getH2HRecord(player1, player2) : null;
+
+  // Get Apex Finals matchups between the two players
+  const apexMatchups = useMemo(() => {
+    if (!player1 || !player2) return [];
+    return apexDetailed.filter(match => 
+      selectedYears.has(String(match.year)) &&
+      ((match.win === player1 && match.lose === player2) || 
+       (match.win === player2 && match.lose === player1))
+    ).sort((a, b) => b.year - a.year);
+  }, [player1, player2, selectedYears]);
 
   const filteredPlayers1 = allPlayers.filter(p => 
     p.toLowerCase().includes(search1.toLowerCase()) && p !== player2
@@ -297,6 +307,66 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
           ) : (
             <p className="text-center text-muted-foreground text-sm">No tournament matches found between these players.</p>
           )}
+        </div>
+      )}
+
+      {/* Apex Finals Matchups */}
+      {player1 && player2 && apexMatchups.length > 0 && (
+        <div className="bg-card rounded-lg border border-border p-4 md:p-6">
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
+            <Trophy className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
+            <h3 className="text-base md:text-lg font-semibold text-foreground">Apex Finals Matchups</h3>
+          </div>
+          
+          <div className="space-y-3">
+            {apexMatchups.map((match, idx) => {
+              const p1Won = match.win === player1;
+              return (
+                <div key={idx} className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className={`text-sm font-bold ${p1Won ? 'text-green-500' : 'text-red-500'}`}>
+                      {p1Won ? 'W' : 'L'}
+                    </span>
+                    <span 
+                      onClick={() => onPlayerClick(player1)}
+                      className="text-sm hover:text-primary cursor-pointer"
+                    >
+                      {player1.split(' ')[0]}
+                    </span>
+                    <span 
+                      onClick={() => onTeamClick(p1Won ? match.wTeam : match.lTeam)}
+                      className={`text-xs px-1.5 py-0.5 rounded cursor-pointer ${getTeamClass(p1Won ? match.wTeam : match.lTeam)}`}
+                    >
+                      {p1Won ? match.wTeam : match.lTeam}
+                    </span>
+                  </div>
+                  
+                  <div className="text-center px-2 md:px-4">
+                    <span className="text-xs text-muted-foreground">Apex</span>
+                    <span className="block text-sm font-bold text-foreground">{match.year}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 flex-1 justify-end">
+                    <span 
+                      onClick={() => onTeamClick(p1Won ? match.lTeam : match.wTeam)}
+                      className={`text-xs px-1.5 py-0.5 rounded cursor-pointer ${getTeamClass(p1Won ? match.lTeam : match.wTeam)}`}
+                    >
+                      {p1Won ? match.lTeam : match.wTeam}
+                    </span>
+                    <span 
+                      onClick={() => onPlayerClick(player2)}
+                      className="text-sm hover:text-primary cursor-pointer"
+                    >
+                      {player2.split(' ')[0]}
+                    </span>
+                    <span className={`text-sm font-bold ${!p1Won ? 'text-green-500' : 'text-red-500'}`}>
+                      {!p1Won ? 'W' : 'L'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
