@@ -9,8 +9,8 @@ interface ResultsSectionProps {
 export function ResultsSection({ onPlayerClick, onTeamClick }: ResultsSectionProps) {
   const [search, setSearch] = useState("");
   
-  const standings = pastStandings["707"] || [];
-  const teamStandings = pastTeamStandings["707"] || [];
+  const standings = pastStandings["708"] || [];
+  const teamStandings = pastTeamStandings["708"] || [];
 
   const filteredStandings = standings.filter(p => 
     p.Name.toLowerCase().includes(search.toLowerCase()) ||
@@ -20,7 +20,7 @@ export function ResultsSection({ onPlayerClick, onTeamClick }: ResultsSectionPro
   return (
     <div className="animate-fadeIn">
       <h1 className="text-[hsl(var(--gold))]">Season 708 Standings</h1>
-      <p className="text-foreground">Live standings for <strong>Season 708</strong>. (Season Starting Soon - Showing 707 Results)</p>
+      <p className="text-foreground">Live standings for <strong>Season 708</strong> after the Heartland Cup.</p>
 
       <input
         type="text"
