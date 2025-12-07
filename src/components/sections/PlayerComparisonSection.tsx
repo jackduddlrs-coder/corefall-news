@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { pastStandings, getTeamClass, apexDetailed } from "@/data/corefallData";
+import { pastStandings, getTeamClass, apexDetailed, fullMatches } from "@/data/corefallData";
 import { getH2HRecord } from "@/data/h2hData";
 import { Search, X, Swords, Trophy } from "lucide-react";
 
@@ -98,15 +98,65 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
   // Get H2H record
   const h2hRecord = player1 && player2 ? getH2HRecord(player1, player2) : null;
 
-  // Get Apex Finals matchups between the two players
+  // Get all Apex matchups between the two players from fullMatches
   const apexMatchups = useMemo(() => {
     if (!player1 || !player2) return [];
-    return apexDetailed.filter(match => 
-      selectedYears.has(String(match.year)) &&
-      ((match.win === player1 && match.lose === player2) || 
-       (match.win === player2 && match.lose === player1))
-    ).sort((a, b) => b.year - a.year);
+    
+    const matchups: { year: string; round: string; winner: string; loser: string; score: string }[] = [];
+    
+    Object.entries(fullMatches).forEach(([year, matches]) => {
+      if (!selectedYears.has(year)) return;
+      
+      matches.forEach(m => {
+        // Parse match string: "Winner Name (score) vs Loser Name" or with group info
+        const matchStr = m.match.replace(/\s*\(Group [AB]\)$/, ''); // Remove group suffix
+        const vsIndex = matchStr.indexOf(' vs ');
+        if (vsIndex === -1) return;
+        
+        const leftPart = matchStr.substring(0, vsIndex);
+        const loser = matchStr.substring(vsIndex + 4).trim();
+        
+        // Parse winner and score from left part: "Winner Name (score)"
+        const scoreMatch = leftPart.match(/^(.+?)\s*\(([^)]+)\)$/);
+        if (!scoreMatch) return;
+        
+        const winner = scoreMatch[1].trim();
+        const score = scoreMatch[2];
+        
+        // Check if this match involves both players
+        if ((winner === player1 && loser === player2) || (winner === player2 && loser === player1)) {
+          matchups.push({ year, round: m.round, winner, loser, score });
+        }
+      });
+    });
+    
+    // Sort by year descending, then by round importance
+    const roundOrder = ['Finals', 'SF', 'UBF', 'LBF', 'UBSF', 'LBSF', 'QF', 'UBQF', 'LBQF', 'UBR1', 'LBR1', 'R16'];
+    return matchups.sort((a, b) => {
+      const yearDiff = parseInt(b.year) - parseInt(a.year);
+      if (yearDiff !== 0) return yearDiff;
+      return roundOrder.indexOf(a.round) - roundOrder.indexOf(b.round);
+    });
   }, [player1, player2, selectedYears]);
+
+  // Get round display name
+  const getRoundName = (round: string) => {
+    const names: Record<string, string> = {
+      'Finals': 'Finals',
+      'SF': 'Semifinals',
+      'QF': 'Quarterfinals',
+      'R16': 'Round of 16',
+      'UBR1': 'Upper Bracket R1',
+      'LBR1': 'Lower Bracket R1',
+      'UBSF': 'Upper Bracket SF',
+      'LBSF': 'Lower Bracket SF',
+      'UBQF': 'Upper Bracket QF',
+      'LBQF': 'Lower Bracket QF',
+      'UBF': 'Upper Bracket Final',
+      'LBF': 'Lower Bracket Final'
+    };
+    return names[round] || round;
+  };
 
   const filteredPlayers1 = allPlayers.filter(p => 
     p.toLowerCase().includes(search1.toLowerCase()) && p !== player2
@@ -310,56 +360,45 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
         </div>
       )}
 
-      {/* Apex Finals Matchups */}
+      {/* Apex Matchups */}
       {player1 && player2 && apexMatchups.length > 0 && (
         <div className="bg-card rounded-lg border border-border p-4 md:p-6">
           <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
             <Trophy className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
-            <h3 className="text-base md:text-lg font-semibold text-foreground">Apex Finals Matchups</h3>
+            <h3 className="text-base md:text-lg font-semibold text-foreground">Apex Matchups ({apexMatchups.length})</h3>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             {apexMatchups.map((match, idx) => {
-              const p1Won = match.win === player1;
+              const p1Won = match.winner === player1;
               return (
-                <div key={idx} className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
-                  <div className="flex items-center gap-2 flex-1">
-                    <span className={`text-sm font-bold ${p1Won ? 'text-green-500' : 'text-red-500'}`}>
+                <div key={idx} className="flex items-center justify-between bg-muted/30 rounded-lg p-2 md:p-3">
+                  <div className="flex items-center gap-1.5 md:gap-2 flex-1 min-w-0">
+                    <span className={`text-xs md:text-sm font-bold shrink-0 ${p1Won ? 'text-green-500' : 'text-red-500'}`}>
                       {p1Won ? 'W' : 'L'}
                     </span>
                     <span 
                       onClick={() => onPlayerClick(player1)}
-                      className="text-sm hover:text-primary cursor-pointer"
+                      className="text-xs md:text-sm hover:text-primary cursor-pointer truncate"
                     >
                       {player1.split(' ')[0]}
                     </span>
-                    <span 
-                      onClick={() => onTeamClick(p1Won ? match.wTeam : match.lTeam)}
-                      className={`text-xs px-1.5 py-0.5 rounded cursor-pointer ${getTeamClass(p1Won ? match.wTeam : match.lTeam)}`}
-                    >
-                      {p1Won ? match.wTeam : match.lTeam}
-                    </span>
                   </div>
                   
-                  <div className="text-center px-2 md:px-4">
-                    <span className="text-xs text-muted-foreground">Apex</span>
-                    <span className="block text-sm font-bold text-foreground">{match.year}</span>
+                  <div className="text-center px-2 md:px-4 shrink-0">
+                    <span className="text-[10px] md:text-xs text-muted-foreground block">{getRoundName(match.round)}</span>
+                    <span className="text-xs md:text-sm font-bold text-foreground">{match.year}</span>
+                    <span className="text-[10px] md:text-xs text-muted-foreground block">({match.score})</span>
                   </div>
                   
-                  <div className="flex items-center gap-2 flex-1 justify-end">
-                    <span 
-                      onClick={() => onTeamClick(p1Won ? match.lTeam : match.wTeam)}
-                      className={`text-xs px-1.5 py-0.5 rounded cursor-pointer ${getTeamClass(p1Won ? match.lTeam : match.wTeam)}`}
-                    >
-                      {p1Won ? match.lTeam : match.wTeam}
-                    </span>
+                  <div className="flex items-center gap-1.5 md:gap-2 flex-1 justify-end min-w-0">
                     <span 
                       onClick={() => onPlayerClick(player2)}
-                      className="text-sm hover:text-primary cursor-pointer"
+                      className="text-xs md:text-sm hover:text-primary cursor-pointer truncate"
                     >
                       {player2.split(' ')[0]}
                     </span>
-                    <span className={`text-sm font-bold ${!p1Won ? 'text-green-500' : 'text-red-500'}`}>
+                    <span className={`text-xs md:text-sm font-bold shrink-0 ${!p1Won ? 'text-green-500' : 'text-red-500'}`}>
                       {!p1Won ? 'W' : 'L'}
                     </span>
                   </div>
