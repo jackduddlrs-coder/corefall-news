@@ -110,9 +110,11 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50);
 
     // Most Apex Appearances (top 16 finishes - the Apex bracket)
+    // Exclude season 708 until Apex tournament is complete (after New Life 708)
     const playerAppearances: Record<string, number> = {};
     Object.entries(pastStandings).forEach(([season, players]) => {
       if (!selectedYears.has(season)) return;
+      if (season === "708") return; // Skip 708 until Apex is complete
       players.forEach(player => {
         if (player.Rank <= 16) {
           playerAppearances[player.Name] = (playerAppearances[player.Name] || 0) + 1;
