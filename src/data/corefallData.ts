@@ -532,7 +532,7 @@ export const apexDetailed = [
   { year: 703, win: "Jungle Unovo", wTeam: "Cal Hal", winAge: 28, lose: "Night Corondolo", lTeam: "Gastro", loseAge: 30 },
   { year: 702, win: "Rain Lieryon", wTeam: "Dashlol", winAge: 27, lose: "Jungle Unovo", lTeam: "Cal Hal", loseAge: 27 },
   { year: 701, win: "Pheonix Oliv", wTeam: "Varcity", winAge: 30, lose: "Rain Lieryon", lTeam: "Dashlol", loseAge: 26 },
-  { year: 700, win: "Splash Gradey", wTeam: "Cal Hal", winAge: 28, lose: "Monster Piccoloo", lTeam: "Varcity", loseAge: 27 },
+  { year: 700, win: "Splash Gradey", wTeam: "Cal Hal", winAge: 28, lose: "Monster Piccoloo", lTeam: "Varcity", loseAge: 30 },
   { year: 699, win: "Pheonix Oliv", wTeam: "Dashlol", winAge: 28, lose: "Monster Piccoloo", lTeam: "Varcity", loseAge: 26 },
   { year: 698, win: "Pheonix Oliv", wTeam: "Dashlol", winAge: 27, lose: "Astro Daslo", lTeam: "Qalf", loseAge: 26 },
   { year: 697, win: "Mountain Granton", wTeam: "Varcity", winAge: 31, lose: "Cold Varuth", lTeam: "Limium", loseAge: 32 },
