@@ -6,7 +6,7 @@ import { TeamsSection } from "@/components/sections/TeamsSection";
 import { MajorsSection } from "@/components/sections/MajorsSection";
 import { FullApexSection } from "@/components/sections/FullApexSection";
 import { ApexFinalsSection } from "@/components/sections/ApexFinalsSection";
-import { PlayerComparisonSection } from "@/components/sections/PlayerComparisonSection";
+import { H2HSection } from "@/components/sections/PlayerComparisonSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 
@@ -20,7 +20,7 @@ const navItems: { id: SectionId; label: string }[] = [
   { id: "majors", label: "Trophy Room" },
   { id: "full-apex", label: "Full Apex Results" },
   { id: "apex", label: "Finals History" },
-  { id: "compare", label: "Compare" },
+  { id: "compare", label: "H2H" },
 ];
 
 const Index = () => {
@@ -95,7 +95,7 @@ const Index = () => {
           <ApexFinalsSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
         {activeSection === "compare" && (
-          <PlayerComparisonSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+          <H2HSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
       </div>
 
