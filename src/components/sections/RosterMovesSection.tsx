@@ -31,20 +31,20 @@ const MoveCard = ({
   onTeamClick: (name: string) => void;
 }) => {
   return (
-    <div className="flex items-center gap-3 p-3 bg-card/50 rounded-lg border border-border/50 hover:border-border transition-colors">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-card/50 rounded-lg border border-border/50 hover:border-border transition-colors">
       <button
         onClick={() => onPlayerClick(move.player)}
-        className="font-medium text-foreground hover:text-primary transition-colors text-left min-w-[140px] md:min-w-[180px]"
+        className="font-medium text-foreground hover:text-primary transition-colors text-left text-sm sm:text-base sm:min-w-[180px] truncate"
       >
         {move.player}
       </button>
       
       <div className="flex items-center gap-2 flex-1">
-        <button onClick={() => onTeamClick(move.oldTeam)}>
+        <button onClick={() => onTeamClick(move.oldTeam)} className="shrink-0">
           <TeamBadge team={move.oldTeam} />
         </button>
-        <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
-        <button onClick={() => onTeamClick(move.newTeam)}>
+        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
+        <button onClick={() => onTeamClick(move.newTeam)} className="shrink-0">
           <TeamBadge team={move.newTeam} />
         </button>
       </div>
@@ -66,25 +66,25 @@ const SeasonMoves = ({
   isUpcoming?: boolean;
 }) => {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-semibold text-foreground">
+    <div className="space-y-3 sm:space-y-4">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <h3 className="text-base sm:text-lg font-semibold text-foreground">
             Season {season}
           </h3>
         </div>
         {isUpcoming && (
-          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-[10px] sm:text-xs">
             Upcoming
           </Badge>
         )}
-        <Badge variant="secondary" className="ml-auto">
+        <Badge variant="secondary" className="text-[10px] sm:text-xs">
           {moves.length} move{moves.length !== 1 ? 's' : ''}
         </Badge>
       </div>
       
-      <div className="grid gap-2">
+      <div className="grid gap-1.5 sm:gap-2">
         {moves.map((move, idx) => (
           <MoveCard 
             key={`${move.player}-${move.season}-${idx}`} 
@@ -144,34 +144,34 @@ export const RosterMovesSection = ({ onPlayerClick, onTeamClick }: RosterMovesSe
   }, [activeTab, seasons]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-card/50 border border-border/50 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-muted-foreground mb-1">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-xs">Total Moves</span>
+      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+        <div className="bg-card/50 border border-border/50 rounded-lg p-3 sm:p-4">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground mb-1">
+            <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-[10px] sm:text-xs">Total Moves</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">{stats.totalMoves}</p>
+          <p className="text-xl sm:text-2xl font-bold text-foreground">{stats.totalMoves}</p>
         </div>
         
-        <div className="bg-card/50 border border-border/50 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-muted-foreground mb-1">
-            <Calendar className="h-4 w-4" />
-            <span className="text-xs">Seasons Tracked</span>
+        <div className="bg-card/50 border border-border/50 rounded-lg p-3 sm:p-4">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground mb-1">
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-[10px] sm:text-xs">Seasons</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">{stats.totalSeasons}</p>
+          <p className="text-xl sm:text-2xl font-bold text-foreground">{stats.totalSeasons}</p>
         </div>
         
-        <div className="bg-card/50 border border-border/50 rounded-lg p-4 col-span-2">
-          <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <Users className="h-4 w-4" />
-            <span className="text-xs">Most Active Teams</span>
+        <div className="bg-card/50 border border-border/50 rounded-lg p-3 sm:p-4 col-span-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground mb-2">
+            <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-[10px] sm:text-xs">Most Active</span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {stats.mostActive.slice(0, 3).map(({ team, total }) => (
               <button key={team} onClick={() => onTeamClick(team)}>
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-[10px] sm:text-xs">
                   <TeamBadge team={team} />
                   <span className="text-muted-foreground">({total})</span>
                 </Badge>
@@ -184,25 +184,25 @@ export const RosterMovesSection = ({ onPlayerClick, onTeamClick }: RosterMovesSe
       {/* Season Filter Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
-          <TabsTrigger value="all" className="text-xs md:text-sm">
-            All Seasons
+          <TabsTrigger value="all" className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+            All
           </TabsTrigger>
           {seasons.map(season => (
             <TabsTrigger 
               key={season} 
               value={season} 
-              className="text-xs md:text-sm"
+              className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3"
             >
               {season}
               {season === "708" && (
-                <span className="ml-1 text-[10px] text-primary">★</span>
+                <span className="ml-0.5 sm:ml-1 text-[8px] sm:text-[10px] text-primary">★</span>
               )}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-6">
-          <div className="space-y-8">
+        <TabsContent value={activeTab} className="mt-4 sm:mt-6">
+          <div className="space-y-6 sm:space-y-8">
             {filteredMoves.map(({ season, moves, isUpcoming }) => (
               <SeasonMoves
                 key={season}
