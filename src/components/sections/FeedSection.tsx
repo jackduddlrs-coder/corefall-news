@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        HEARTLAND CUP 708: Zeus Ziki Claims Major Title • Season 708 Officially Underway • Gastro Leads Early Team Race
+        CHAOS REIGNS 708: Pulse Farward Wins Major #1 • Zeus Ziki Leads Season Race • Gastro Dominates Team Standings
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-calhal mb-2 inline-block">Heartland Cup 708</span>
+          <span className="team-tag team-varcity mb-2 inline-block">Chaos Reigns 708</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            ZEUS ZIKI<br/>HEARTLAND CHAMPION
+            PULSE FARWARD<br/>CHAOS REIGNS CHAMPION
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Cal Hal star opens Season 708 with a dominant Heartland Cup victory, defeating Nothing Sawryr in the final.
+            The Varcity star claims his first career major title, defeating Heal Calofloure in the Chaos Reigns final.
           </p>
         </div>
       </div>
@@ -26,34 +26,34 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Early Leader</span>
-          <h3 className="text-white mt-3">Gastro Takes Team Lead</h3>
+          <span className="team-tag team-gastro">Team Leader</span>
+          <h3 className="text-white mt-3">Gastro Commands the Race</h3>
           <p className="text-foreground">
-            With <span className="stat-highlight">800 points</span>, Gastro leads the early team standings thanks to Nothing Sawryr (2nd) and Daredevil Gaffe (T-5th).
+            With <span className="stat-highlight">1700 points</span>, Gastro leads the team standings behind Nothing Sawryr (2nd), Daredevil Gaffe (6th), and Supernova Aloi (T-10th).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Major Champion</span>
-          <h3 className="text-white mt-3">Zeus Ziki's 5th Major</h3>
+          <span className="team-tag team-calhal">Points Leader</span>
+          <h3 className="text-white mt-3">Zeus Ziki Leads Individual Race</h3>
           <p className="text-foreground">
-            Zeus Ziki adds the Heartland Cup to his trophy case, his 5th major overall. The 29-year-old is off to a hot start with Cal Hal.
+            The Heartland champ stays atop with <span className="stat-highlight">850 points</span> after a 5th-6th finish at Chaos Reigns. 3 KOs through 2 majors.
+          </p>
+        </div>
+        
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-varcity">Breakthrough</span>
+          <h3 className="text-white mt-3">Pulse Farward's First Major</h3>
+          <p className="text-foreground">
+            The 27-year-old Varcity fighter climbs to 3rd with <span className="stat-highlight">750 points</span> and leads the season with 6 KOs after his dominant Chaos Reigns run.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-damage">Defending Champ</span>
-          <h3 className="text-white mt-3">Cascade Juner 4th</h3>
+          <h3 className="text-white mt-3">Cascade Juner in Top 4</h3>
           <p className="text-foreground">
-            The reigning Apex champion finishes 4th with 350 points and 2 KOs. Still dangerous as ever entering the rest of 708.
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Rising Star</span>
-          <h3 className="text-white mt-3">Vampire Ortez Tied 5th</h3>
-          <p className="text-foreground">
-            After moving to Dashlol, Vampire Ortez ties for 5th with 300 points and leads the tournament with 3 KOs.
+            The reigning Apex champion sits tied 3rd with 750 points after a 3rd place finish at Chaos Reigns. Still the favorite heading forward.
           </p>
         </div>
       </div>
