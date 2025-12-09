@@ -22,7 +22,7 @@ export interface TournamentResult {
 // Verified: Sum of all tournament EP values equals season total points
 export const playerTournamentResults: Record<string, Record<string, Record<string, TournamentResult>>> = {
   "708": {
-    "Zeus Ziki": { "Heartland": { finish: "1st", points: 550, kos: 1 }, "Chaos": { finish: "5th-6th", points: 300, kos: 2 }, "Descent": { finish: "7th-8th", points: 250, kos: 0 } },
+    "Zeus Ziki": { "Heartland": { finish: "1st", points: 550, kos: 1 }, "Chaos": { finish: "5th-6th", points: 300, kos: 2 }, "Heritage": { finish: "5th-6th", points: 300, kos: 2 }, "Descent": { finish: "7th-8th", points: 250, kos: 0 } },
     "Heal Calofloure": { "Heartland": { finish: "9th-12th", points: 200, kos: 0 }, "Chaos": { finish: "2nd", points: 450, kos: 1 }, "Heritage": { finish: "9th-12th", points: 200, kos: 1 }, "Descent": { finish: "3rd", points: 400, kos: 2 } },
     "Mega Hawnnon": { "Heartland": { finish: "7th-8th", points: 250, kos: 1 }, "Chaos": { finish: "9th-12th", points: 200, kos: 1 }, "Heritage": { finish: "25th-32nd", points: 50, kos: 0 }, "Descent": { finish: "1st", points: 550, kos: 1 } },
     "Wraith Cunelly": { "Heartland": { finish: "9th-12th", points: 200, kos: 1 }, "Chaos": { finish: "17th-24th", points: 100, kos: 1 }, "Heritage": { finish: "1st", points: 550, kos: 1 }, "Descent": { finish: "9th-12th", points: 200, kos: 0 } },

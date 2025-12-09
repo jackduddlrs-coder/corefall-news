@@ -505,7 +505,7 @@ export const trophyData = [
   { name: "Killa Binbac", total: 5, apex: 0, ctt: 1, major: 4, list: "Wind Breakers (707), CTT (702), New Life (703), Armageddon (705), Descent (706)" },
   { name: "Hero Valii", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (702), New Life (700, 702), Heartland (701), Chaos Reigns (703)" },
   { name: "Blood Astur", total: 5, apex: 0, ctt: 3, major: 2, list: "CTT (703, 704, 705), Malice (703), Chaos Reigns (705)" },
-  { name: "Zeus Ziki", total: 6, apex: 0, ctt: 1, major: 5, list: "Heartland Cup (708), Heritage (706, 708 5th-6th), New Life (706, 707), CTT (706)" },
+  { name: "Zeus Ziki", total: 5, apex: 0, ctt: 1, major: 4, list: "Heartland Cup (708), Heritage (706), New Life (706, 707), CTT (706)" },
   { name: "Wraith Cunelly", total: 4, apex: 0, ctt: 1, major: 3, list: "Heritage (708), CTT (706), Solar (706), Armageddon (706)" },
   { name: "Storm Dayniel", total: 4, apex: 0, ctt: 3, major: 1, list: "CTT (703, 704, 705), Solar (704)" },
   { name: "Splash Gradey", total: 4, apex: 1, ctt: 1, major: 2, list: "Apex (700), CTT (701), Descent (700), Malice (701)" },
