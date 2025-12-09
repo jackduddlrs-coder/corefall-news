@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
-import { pastStandings, trophyData, getTeamClass, seasons } from "@/data/corefallData";
+import { pastStandings, trophyData, getTeamClass, seasons, fullMatches } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Trophy } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface PlayerModalProps {
@@ -104,6 +104,89 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     const playerData = seasonData[playerName];
     if (!playerData) return null;
     return { tournaments: tournamentNames[yearStr] || [], results: playerData };
+  };
+
+  // Get player's Apex bracket results for a specific season
+  const getPlayerApexResults = (year: number) => {
+    const yearStr = year.toString();
+    const matches = fullMatches[yearStr];
+    if (!matches) return null;
+    
+    const playerMatches: { round: string; opponent: string; result: 'W' | 'L'; score: string }[] = [];
+    
+    matches.forEach(({ round, match }) => {
+      // Parse match string: "Winner Name (score) vs Loser Name" or with group info
+      const vsIndex = match.indexOf(' vs ');
+      if (vsIndex === -1) return;
+      
+      const leftSide = match.substring(0, vsIndex);
+      const rightSide = match.substring(vsIndex + 4);
+      
+      // Parse left side (winner): "Name (score)" or "Name (score) vs"
+      const scoreMatch = leftSide.match(/^(.+?)\s*\(([^)]+)\)$/);
+      if (!scoreMatch) return;
+      
+      const winner = scoreMatch[1].trim();
+      const score = scoreMatch[2];
+      
+      // Parse right side (loser): "Name" or "Name (Group X)"
+      const loser = rightSide.replace(/\s*\(Group [AB]\)\s*$/, '').trim();
+      
+      if (winner === playerName) {
+        playerMatches.push({
+          round,
+          opponent: loser,
+          result: 'W',
+          score
+        });
+      } else if (loser === playerName) {
+        playerMatches.push({
+          round,
+          opponent: winner,
+          result: 'L',
+          score
+        });
+      }
+    });
+    
+    if (playerMatches.length === 0) return null;
+    
+    // Sort by round order
+    const roundOrder: Record<string, number> = {
+      'Finals': 1,
+      'SF': 2,
+      'QF': 3,
+      'R16': 4,
+      'UBF': 5,
+      'LBF': 6,
+      'UBSF': 7,
+      'LBSF': 8,
+      'LBQF': 9,
+      'UBR1': 10,
+      'LBR1': 11
+    };
+    
+    playerMatches.sort((a, b) => (roundOrder[a.round] || 99) - (roundOrder[b.round] || 99));
+    
+    return playerMatches;
+  };
+
+  // Get round display name
+  const getRoundDisplayName = (round: string) => {
+    const names: Record<string, string> = {
+      'Finals': 'Finals',
+      'SF': 'Semifinal',
+      'QF': 'Quarterfinal',
+      'R16': 'Round of 16',
+      'UBF': 'UB Final',
+      'LBF': 'LB Final',
+      'UBSF': 'UB Semi',
+      'LBSF': 'LB Semi',
+      'LBQF': 'LB Quarter',
+      'UBR1': 'UB Round 1',
+      'LBR1': 'LB Round 1'
+    };
+    return names[round] || round;
   };
 
   const getYearRangeLabel = () => {
@@ -295,45 +378,78 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                         <td className="p-2 md:p-3">{h.points}</td>
                         <td className="p-2 md:p-3 hidden sm:table-cell">{h.ko}</td>
                       </tr>
-                      {isExpanded && tournamentData && (
-                        <tr>
-                          <td colSpan={5} className="p-0 bg-background/50">
-                            <div className="p-2 md:p-4">
-                              <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider mb-2 font-bold">
-                                Tournaments - {h.year}
-                              </div>
-                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 md:gap-2">
-                                {tournamentData.tournaments.map(tournament => {
-                                  const result = tournamentData.results[tournament];
-                                  if (!result) return null;
-                                  
-                                  const isWin = result.finish === "1st";
-                                  const isTop3 = result.finish === "2nd" || result.finish === "3rd";
-                                  
-                                  return (
-                                    <div 
-                                      key={tournament}
-                                      className={`p-1.5 md:p-2 rounded border text-center ${
-                                        isWin ? 'bg-primary/20 border-primary' : 
-                                        isTop3 ? 'bg-secondary/20 border-secondary' : 
-                                        'bg-muted/20 border-border'
-                                      }`}
-                                    >
-                                      <div className="text-[9px] md:text-xs font-bold text-foreground truncate">{tournament}</div>
-                                      <div className={`text-xs md:text-sm font-bold ${isWin ? 'text-primary' : isTop3 ? 'text-secondary' : 'text-muted-foreground'}`}>
-                                        {result.finish}
-                                      </div>
-                                      <div className="text-[9px] md:text-xs text-muted-foreground">
-                                        {result.points}p/{result.kos}k
-                                      </div>
+                      {isExpanded && tournamentData && (() => {
+                        const apexResults = getPlayerApexResults(h.year);
+                        return (
+                          <tr>
+                            <td colSpan={5} className="p-0 bg-background/50">
+                              <div className="p-2 md:p-4">
+                                {/* Apex Results Section */}
+                                {apexResults && apexResults.length > 0 && (
+                                  <div className="mb-4">
+                                    <div className="text-[10px] md:text-xs text-secondary uppercase tracking-wider mb-2 font-bold flex items-center gap-1">
+                                      <Trophy className="w-3 h-3" /> Apex Results - {h.year}
                                     </div>
-                                  );
-                                })}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 md:gap-2">
+                                      {apexResults.map((match, idx) => (
+                                        <div 
+                                          key={idx}
+                                          className={`p-1.5 md:p-2 rounded border ${
+                                            match.result === 'W' ? 'bg-green-500/10 border-green-500/50' : 'bg-red-500/10 border-red-500/50'
+                                          }`}
+                                        >
+                                          <div className="text-[9px] md:text-xs font-bold text-muted-foreground">
+                                            {getRoundDisplayName(match.round)}
+                                          </div>
+                                          <div className="text-xs md:text-sm font-bold text-foreground truncate">
+                                            vs {match.opponent}
+                                          </div>
+                                          <div className={`text-[10px] md:text-xs font-bold ${match.result === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+                                            {match.result === 'W' ? 'Win' : 'Loss'} ({match.score})
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* Regular Tournaments Section */}
+                                <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider mb-2 font-bold">
+                                  Tournaments - {h.year}
+                                </div>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 md:gap-2">
+                                  {tournamentData.tournaments.map(tournament => {
+                                    const result = tournamentData.results[tournament];
+                                    if (!result) return null;
+                                    
+                                    const isWin = result.finish === "1st";
+                                    const isTop3 = result.finish === "2nd" || result.finish === "3rd";
+                                    
+                                    return (
+                                      <div 
+                                        key={tournament}
+                                        className={`p-1.5 md:p-2 rounded border text-center ${
+                                          isWin ? 'bg-primary/20 border-primary' : 
+                                          isTop3 ? 'bg-secondary/20 border-secondary' : 
+                                          'bg-muted/20 border-border'
+                                        }`}
+                                      >
+                                        <div className="text-[9px] md:text-xs font-bold text-foreground truncate">{tournament}</div>
+                                        <div className={`text-xs md:text-sm font-bold ${isWin ? 'text-primary' : isTop3 ? 'text-secondary' : 'text-muted-foreground'}`}>
+                                          {result.finish}
+                                        </div>
+                                        <div className="text-[9px] md:text-xs text-muted-foreground">
+                                          {result.points}p/{result.kos}k
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
+                            </td>
+                          </tr>
+                        );
+                      })()}
                     </React.Fragment>
                   );
                 }) : (
