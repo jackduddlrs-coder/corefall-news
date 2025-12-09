@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        CHAOS REIGNS 708: Pulse Farward Wins Major #1 • Zeus Ziki Leads Season Race • Gastro Dominates Team Standings
+        HERITAGE 708: Wraith Cunelly Wins Major #1 • Zeus Ziki Extends Points Lead • Damage Leads Team Race
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-varcity mb-2 inline-block">Chaos Reigns 708</span>
+          <span className="team-tag team-engery mb-2 inline-block">Heritage 708</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            PULSE FARWARD<br/>CHAOS REIGNS CHAMPION
+            WRAITH CUNELLY<br/>HERITAGE CHAMPION
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Varcity star claims his first career major title, defeating Heal Calofloure in the Chaos Reigns final.
+            The Engery star claims his first career major title, defeating Horse Queanlend in the Heritage final.
           </p>
         </div>
       </div>
@@ -26,34 +26,34 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Team Leader</span>
-          <h3 className="text-white mt-3">Gastro Commands the Race</h3>
+          <span className="team-tag team-damage">Team Leader</span>
+          <h3 className="text-white mt-3">Damage Commands the Race</h3>
           <p className="text-foreground">
-            With <span className="stat-highlight">1700 points</span>, Gastro leads the team standings behind Nothing Sawryr (2nd), Daredevil Gaffe (6th), and Supernova Aloi (T-10th).
+            With <span className="stat-highlight">2000 points</span>, Damage leads the team standings behind Cascade Juner (T-2nd), Bat Bornoil (12th), and Sky Sunyer (15th).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-calhal">Points Leader</span>
-          <h3 className="text-white mt-3">Zeus Ziki Leads Individual Race</h3>
+          <h3 className="text-white mt-3">Zeus Ziki Extends Lead</h3>
           <p className="text-foreground">
-            The Heartland champ stays atop with <span className="stat-highlight">850 points</span> after a 5th-6th finish at Chaos Reigns. 3 KOs through 2 majors.
+            The Heartland champ stays atop with <span className="stat-highlight">1150 points</span> after a 5th-6th finish at Heritage. 5 KOs through 3 majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-varcity">Breakthrough</span>
-          <h3 className="text-white mt-3">Pulse Farward's First Major</h3>
+          <span className="team-tag team-engery">Breakthrough</span>
+          <h3 className="text-white mt-3">Wraith Cunelly's First Major</h3>
           <p className="text-foreground">
-            The 27-year-old Varcity fighter climbs to 3rd with <span className="stat-highlight">750 points</span> and leads the season with 6 KOs after his dominant Chaos Reigns run.
+            The 28-year-old Engery fighter climbs to T-4th with <span className="stat-highlight">850 points</span> after his dominant Heritage run. Now has 4 career titles.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Defending Champ</span>
-          <h3 className="text-white mt-3">Cascade Juner in Top 4</h3>
+          <span className="team-tag team-varcity">Hot Streak</span>
+          <h3 className="text-white mt-3">Pulse Farward Stays Top 3</h3>
           <p className="text-foreground">
-            The reigning Apex champion sits tied 3rd with 750 points after a 3rd place finish at Chaos Reigns. Still the favorite heading forward.
+            The Chaos Reigns champ sits 2nd with <span className="stat-highlight">900 points</span> despite a 13th-16th finish at Heritage. Still leads season with 6 KOs.
           </p>
         </div>
       </div>
