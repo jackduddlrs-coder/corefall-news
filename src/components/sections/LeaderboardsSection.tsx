@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "champ-ages" | "team-points" | "team-championships" | "team-players";
+type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players";
 
 interface PlayerStats {
   name: string;
@@ -126,6 +126,28 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
+    // Best Average Finish (requires at least 2 seasons)
+    const playerRanks: Record<string, number[]> = {};
+    allPlayers.forEach(p => {
+      if (!playerRanks[p.name]) playerRanks[p.name] = [];
+      // We need the rank from pastStandings
+      const seasonData = pastStandings[p.season];
+      const playerData = seasonData?.find(pd => pd.Name === p.name);
+      if (playerData) {
+        playerRanks[p.name].push(playerData.Rank);
+      }
+    });
+    const avgFinish: PlayerStats[] = Object.entries(playerRanks)
+      .filter(([_, ranks]) => ranks.length >= 2) // Minimum 2 seasons
+      .map(([name, ranks]) => ({
+        name,
+        team: getMostPlayedTeam(name),
+        value: Math.round((ranks.reduce((a, b) => a + b, 0) / ranks.length) * 10) / 10, // 1 decimal
+        season: `${ranks.length} seasons`
+      }))
+      .sort((a, b) => a.value - b.value) // Lower is better
+      .slice(0, 50);
+
     // Team Leaderboards
     // Team total points (from pastTeamStandings)
     const teamTotalPoints: Record<string, number> = {};
@@ -222,6 +244,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
+      "avg-finish": avgFinish,
       "champ-ages": champAges,
       "team-points": teamPoints,
       "team-championships": teamChamps,
@@ -236,6 +259,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
+      case "avg-finish": return "Best Average Finish";
       case "champ-ages": return `Champion Ages (${(leaderboards["champ-ages"] as PlayerStats[]).length} titles)`;
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
@@ -246,6 +270,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const getValueLabel = (type: LeaderboardType) => {
     switch (type) {
       case "appearances": return "Seasons";
+      case "avg-finish": return "Avg Rank";
       case "champ-ages": return "Age";
       case "team-points": return "Points";
       case "team-championships": return "Titles";
@@ -325,7 +350,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos";
+    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish";
 
     return (
       <div className="overflow-x-auto">
@@ -489,6 +514,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="appearances" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Appearances
             </TabsTrigger>
+            <TabsTrigger value="avg-finish" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Avg Finish
+            </TabsTrigger>
             <TabsTrigger value="champ-ages" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Champion Ages
             </TabsTrigger>
@@ -527,6 +555,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="appearances" className="mt-0">
             {renderPlayerLeaderboard("appearances")}
+          </TabsContent>
+          <TabsContent value="avg-finish" className="mt-0">
+            {renderPlayerLeaderboard("avg-finish")}
           </TabsContent>
           <TabsContent value="champ-ages" className="mt-0">
             {renderChampAgesLeaderboard()}
