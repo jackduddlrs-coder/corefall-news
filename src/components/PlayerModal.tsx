@@ -384,35 +384,6 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                           <tr>
                             <td colSpan={5} className="p-0 bg-background/50">
                               <div className="p-2 md:p-4">
-                                {/* Apex Results Section */}
-                                {apexResults && apexResults.length > 0 && (
-                                  <div className="mb-4">
-                                    <div className="text-[10px] md:text-xs text-secondary uppercase tracking-wider mb-2 font-bold flex items-center gap-1">
-                                      <Trophy className="w-3 h-3" /> Apex Results - {h.year}
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 md:gap-2">
-                                      {apexResults.map((match, idx) => (
-                                        <div 
-                                          key={idx}
-                                          className={`p-1.5 md:p-2 rounded border ${
-                                            match.result === 'W' ? 'bg-green-500/10 border-green-500/50' : 'bg-red-500/10 border-red-500/50'
-                                          }`}
-                                        >
-                                          <div className="text-[9px] md:text-xs font-bold text-muted-foreground">
-                                            {getRoundDisplayName(match.round)}
-                                          </div>
-                                          <div className="text-xs md:text-sm font-bold text-foreground truncate">
-                                            vs {match.opponent}
-                                          </div>
-                                          <div className={`text-[10px] md:text-xs font-bold ${match.result === 'W' ? 'text-green-400' : 'text-red-400'}`}>
-                                            {match.result === 'W' ? 'Win' : 'Loss'} ({match.score})
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-                                
                                 {/* Regular Tournaments Section */}
                                 <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider mb-2 font-bold">
                                   Tournaments - {h.year}
@@ -445,6 +416,35 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                                     );
                                   })}
                                 </div>
+                                
+                                {/* Apex Results Section */}
+                                {apexResults && apexResults.length > 0 && (
+                                  <div className="mt-4">
+                                    <div className="text-[10px] md:text-xs text-secondary uppercase tracking-wider mb-2 font-bold flex items-center gap-1">
+                                      <Trophy className="w-3 h-3" /> Apex Results - {h.year}
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5 md:gap-2">
+                                      {apexResults.map((match, idx) => (
+                                        <div 
+                                          key={idx}
+                                          className={`p-1.5 md:p-2 rounded border ${
+                                            match.result === 'W' ? 'bg-green-500/10 border-green-500/50' : 'bg-red-500/10 border-red-500/50'
+                                          }`}
+                                        >
+                                          <div className="text-[9px] md:text-xs font-bold text-muted-foreground">
+                                            {getRoundDisplayName(match.round)}
+                                          </div>
+                                          <div className="text-xs md:text-sm font-bold text-foreground truncate">
+                                            vs {match.opponent}
+                                          </div>
+                                          <div className={`text-[10px] md:text-xs font-bold ${match.result === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+                                            {match.result === 'W' ? 'Win' : 'Loss'} ({match.score})
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             </td>
                           </tr>
