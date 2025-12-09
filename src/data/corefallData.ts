@@ -530,7 +530,8 @@ export const trophyData = [
   { name: "Shark Obimovch", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (702)" },
   { name: "Pulse Farward", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (708)" },
   { name: "Bat Bornoil", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (707)" },
-  { name: "Sky Sunyer", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (707)" }
+  { name: "Sky Sunyer", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (707)" },
+  { name: "Mega Hawnnon", total: 1, apex: 0, ctt: 0, major: 1, list: "Descent (708)" }
 ];
 
 // Apex Finals History
