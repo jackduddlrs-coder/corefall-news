@@ -122,12 +122,25 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       const leftSide = match.substring(0, vsIndex);
       const rightSide = match.substring(vsIndex + 4);
       
-      // Parse left side (winner): "Name (score)" or "Name (score) vs"
-      const scoreMatch = leftSide.match(/^(.+?)\s*\(([^)]+)\)$/);
-      if (!scoreMatch) return;
+      // Parse left side (winner): "Name (score)" - find last opening paren for score
+      // Handle nested parens in Grand Finals like "(2-1(4-2,2-4,4-1))"
+      const lastOpenParen = leftSide.lastIndexOf('(');
+      if (lastOpenParen === -1) return;
       
-      const winner = scoreMatch[1].trim();
-      const score = scoreMatch[2];
+      // Check if there are nested parens (Grand Finals format)
+      const firstOpenParen = leftSide.indexOf('(');
+      let winner: string;
+      let score: string;
+      
+      if (firstOpenParen !== lastOpenParen) {
+        // Nested parens - Grand Finals format: "Name (2-1(4-2,2-4,4-1))"
+        winner = leftSide.substring(0, firstOpenParen).trim();
+        score = leftSide.substring(firstOpenParen + 1, leftSide.length - 1);
+      } else {
+        // Simple format: "Name (4-2)"
+        winner = leftSide.substring(0, lastOpenParen).trim();
+        score = leftSide.substring(lastOpenParen + 1, leftSide.length - 1);
+      }
       
       // Parse right side (loser): "Name" or "Name (Group X)"
       const loser = rightSide.replace(/\s*\(Group [AB]\)\s*$/, '').trim();
