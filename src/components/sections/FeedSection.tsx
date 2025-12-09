@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        HERITAGE 708: Wraith Cunelly Wins Major #1 • Zeus Ziki Extends Points Lead • Damage Leads Team Race
+        DESCENT 708: Mega Hawnnon Wins Title #1 • Zeus Ziki Commands Points Lead • Dashlol Takes Team Race Lead
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-engery mb-2 inline-block">Heritage 708</span>
+          <span className="team-tag team-dashlol mb-2 inline-block">Descent 708</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            WRAITH CUNELLY<br/>HERITAGE CHAMPION
+            MEGA HAWNNON<br/>DESCENT CHAMPION
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Engery star claims his first career major title, defeating Horse Queanlend in the Heritage final.
+            The Dashlol star claims his first career major title, defeating Cross Exzona in the Descent final.
           </p>
         </div>
       </div>
@@ -26,10 +26,10 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Team Leader</span>
-          <h3 className="text-white mt-3">Damage Commands the Race</h3>
+          <span className="team-tag team-dashlol">Team Leader</span>
+          <h3 className="text-white mt-3">Dashlol Takes the Lead</h3>
           <p className="text-foreground">
-            With <span className="stat-highlight">2000 points</span>, Damage leads the team standings behind Cascade Juner (T-2nd), Bat Bornoil (12th), and Sky Sunyer (15th).
+            With <span className="stat-highlight">2650 points</span>, Dashlol leads the team standings powered by Mega Hawnnon (T-3rd), Vampire Ortez (T-5th), and Rain Lieryon (19th).
           </p>
         </div>
         
@@ -37,23 +37,23 @@ export function FeedSection() {
           <span className="team-tag team-calhal">Points Leader</span>
           <h3 className="text-white mt-3">Zeus Ziki Extends Lead</h3>
           <p className="text-foreground">
-            The Heartland champ stays atop with <span className="stat-highlight">1150 points</span> after a 5th-6th finish at Heritage. 5 KOs through 3 majors.
+            The Heartland champ leads with <span className="stat-highlight">1400 points</span> after a 7th-8th finish at Descent. 5 KOs through 4 majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-engery">Breakthrough</span>
-          <h3 className="text-white mt-3">Wraith Cunelly's First Major</h3>
+          <span className="team-tag team-dashlol">Breakthrough</span>
+          <h3 className="text-white mt-3">Mega Hawnnon's First Major</h3>
           <p className="text-foreground">
-            The 28-year-old Engery fighter climbs to T-4th with <span className="stat-highlight">850 points</span> after his dominant Heritage run. Now has 4 career titles.
+            The 26-year-old Dashlol fighter climbs to T-3rd with <span className="stat-highlight">1050 points</span> after his dominant Descent run. Now has 1 career title.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-varcity">Hot Streak</span>
-          <h3 className="text-white mt-3">Pulse Farward Stays Top 3</h3>
+          <span className="team-tag team-juniper">Rising Star</span>
+          <h3 className="text-white mt-3">Cross Exzona's Big Run</h3>
           <p className="text-foreground">
-            The Chaos Reigns champ sits 2nd with <span className="stat-highlight">900 points</span> despite a 13th-16th finish at Heritage. Still leads season with 6 KOs.
+            The Juniper fighter surges to 17th with <span className="stat-highlight">700 points</span> after a finals appearance at Descent. 3 KOs in the tournament.
           </p>
         </div>
       </div>
