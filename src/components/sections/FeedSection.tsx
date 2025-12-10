@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        DESCENT 708: Mega Hawnnon Wins Title #1 • Zeus Ziki Commands Points Lead • Dashlol Takes Team Race Lead
+        SOLAR 708: Nothing Sawryr Wins Major Title #1 • Zeus Ziki Leads Points Race • Gastro Takes Team Race Lead
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">Descent 708</span>
+          <span className="team-tag team-gastro mb-2 inline-block">Solar 708</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            MEGA HAWNNON<br/>DESCENT CHAMPION
+            NOTHING SAWRYR<br/>SOLAR CHAMPION
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Dashlol star claims his first career major title, defeating Cross Exzona in the Descent final.
+            The Gastro star claims his first career major title, defeating Daredevil Gaffe in the Solar final.
           </p>
         </div>
       </div>
@@ -26,10 +26,10 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Team Leader</span>
-          <h3 className="text-white mt-3">Dashlol Takes the Lead</h3>
+          <span className="team-tag team-gastro">Team Leader</span>
+          <h3 className="text-white mt-3">Gastro Takes the Lead</h3>
           <p className="text-foreground">
-            With <span className="stat-highlight">2650 points</span>, Dashlol leads the team standings powered by Mega Hawnnon (T-3rd), Vampire Ortez (T-5th), and Rain Lieryon (19th).
+            With <span className="stat-highlight">3650 points</span>, Gastro leads the team standings powered by Nothing Sawryr (2nd), Daredevil Gaffe (7th), and Supernova Aloi (13th).
           </p>
         </div>
         
@@ -37,23 +37,23 @@ export function FeedSection() {
           <span className="team-tag team-calhal">Points Leader</span>
           <h3 className="text-white mt-3">Zeus Ziki Extends Lead</h3>
           <p className="text-foreground">
-            The Heartland champ leads with <span className="stat-highlight">1400 points</span> after a 7th-8th finish at Descent. 5 KOs through 4 majors.
+            The Heartland champ leads with <span className="stat-highlight">1600 points</span> after a 9th-12th finish at Solar. 6 KOs through 5 majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Breakthrough</span>
-          <h3 className="text-white mt-3">Mega Hawnnon's First Major</h3>
+          <span className="team-tag team-gastro">Breakthrough</span>
+          <h3 className="text-white mt-3">Nothing Sawryr's First Major</h3>
           <p className="text-foreground">
-            The 26-year-old Dashlol fighter climbs to T-3rd with <span className="stat-highlight">1050 points</span> after his dominant Descent run. Now has 1 career title.
+            The 27-year-old Gastro fighter climbs to 2nd with <span className="stat-highlight">1500 points</span> after his dominant Solar run. Now has 1 career major title.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-juniper">Rising Star</span>
-          <h3 className="text-white mt-3">Cross Exzona's Big Run</h3>
+          <span className="team-tag team-gastro">Rising Star</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe's Big Run</h3>
           <p className="text-foreground">
-            The Juniper fighter surges to 17th with <span className="stat-highlight">700 points</span> after a finals appearance at Descent. 3 KOs in the tournament.
+            The Gastro fighter surges to 7th with <span className="stat-highlight">1200 points</span> after a finals appearance at Solar. 6 KOs on the season.
           </p>
         </div>
       </div>
