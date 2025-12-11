@@ -8,6 +8,7 @@ interface MajorsSectionProps {
 
 type SortKey = "total" | "apex" | "ctt" | "major" | "name";
 type SortDirection = "asc" | "desc";
+type TrophyType = "all" | "apex" | "ctt" | "major";
 
 const ALL_YEARS = ["700", "701", "702", "703", "704", "705", "706", "707", "708"];
 
@@ -42,6 +43,7 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
   const [sortKey, setSortKey] = useState<SortKey>("total");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(ALL_YEARS));
+  const [selectedType, setSelectedType] = useState<TrophyType>("all");
 
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
@@ -58,30 +60,21 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
   const selectAll = () => setSelectedYears(new Set(ALL_YEARS));
   const clearAll = () => setSelectedYears(new Set());
 
-  // Filter and recalculate trophies based on selected years
+  // Filter and recalculate trophies based on selected years and type
   const filteredTrophies = useMemo(() => {
     return trophyData.map(t => {
       const parsed = parseTrophyList(t.list);
       
-      const filteredApex = parsed.apex.filter(y => selectedYears.has(y)).length;
-      const filteredCtt = parsed.ctt.filter(y => selectedYears.has(y)).length;
-      const filteredMajor = parsed.major.filter(y => selectedYears.has(y)).length;
-      const filteredTotal = filteredApex + filteredCtt + filteredMajor;
+      // Filter by year first
+      const yearFilteredApex = parsed.apex.filter(y => selectedYears.has(y));
+      const yearFilteredCtt = parsed.ctt.filter(y => selectedYears.has(y));
+      const yearFilteredMajor = parsed.major.filter(y => selectedYears.has(y));
       
-      // Filter the list string to only show selected years
-      const filteredList = t.list.split(",").map(part => part.trim()).filter(part => {
-        const yearMatch = part.match(/\((\d{3})\)/);
-        if (yearMatch) {
-          return selectedYears.has(yearMatch[1]);
-        }
-        // Handle entries like "Apex (702, 704)" - need to filter individual years
-        const multiYearMatch = part.match(/\(([^)]+)\)/);
-        if (multiYearMatch) {
-          const years = multiYearMatch[1].split(",").map(y => y.trim());
-          return years.some(y => selectedYears.has(y));
-        }
-        return true;
-      }).join(", ");
+      // Then filter by type
+      const filteredApex = selectedType === "all" || selectedType === "apex" ? yearFilteredApex.length : 0;
+      const filteredCtt = selectedType === "all" || selectedType === "ctt" ? yearFilteredCtt.length : 0;
+      const filteredMajor = selectedType === "all" || selectedType === "major" ? yearFilteredMajor.length : 0;
+      const filteredTotal = filteredApex + filteredCtt + filteredMajor;
       
       return {
         ...t,
@@ -89,10 +82,10 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
         ctt: filteredCtt,
         major: filteredMajor,
         total: filteredTotal,
-        filteredList
+        filteredList: t.list
       };
     }).filter(t => t.total > 0);
-  }, [selectedYears]);
+  }, [selectedYears, selectedType]);
 
   const sortedTrophies = useMemo(() => {
     return [...filteredTrophies].sort((a, b) => {
@@ -129,8 +122,32 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
       <h1 className="text-white">Championship Trophy Room (Since 700)</h1>
       <p className="text-foreground"><strong>Click headers to sort.</strong> Includes Apex Championships, Team Titles (CTT), and Major Tournaments.</p>
 
-      {/* Year Filter */}
-      <div className="bg-panel p-4 rounded-lg mb-6 border border-border">
+      {/* Filters */}
+      <div className="bg-panel p-4 rounded-lg mb-6 border border-border space-y-3">
+        {/* Trophy Type Filter */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground mr-2">Filter by Type:</span>
+          {[
+            { value: "all", label: "All Types", color: "bg-primary" },
+            { value: "apex", label: "Apex Only", color: "bg-[hsl(var(--gold))]" },
+            { value: "ctt", label: "CTT Only", color: "bg-[hsl(var(--silver))]" },
+            { value: "major", label: "Major Only", color: "bg-[hsl(var(--bronze))]" }
+          ].map(type => (
+            <button
+              key={type.value}
+              onClick={() => setSelectedType(type.value as TrophyType)}
+              className={`px-3 py-1 text-xs rounded transition-colors ${
+                selectedType === type.value
+                  ? `${type.color} text-black font-semibold`
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {type.label}
+            </button>
+          ))}
+        </div>
+        
+        {/* Year Filter */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground mr-2">Filter by Year:</span>
           <button
