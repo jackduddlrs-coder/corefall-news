@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        MALICE 708: Zeus Ziki Wins 3rd Major of Season • Cascade Juner Claims 12th Career Title • 2 Majors Remain
+        ARMAGEDDON 708: Cascade Juner Wins 12th Career Title • Zeus Ziki Leads Points Race • 1 Major Remains
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-calhal mb-2 inline-block">Malice 708</span>
+          <span className="team-tag team-damage mb-2 inline-block">Armageddon 708</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            ZEUS ZIKI<br/>MALICE CHAMPION
+            CASCADE JUNER<br/>ARMAGEDDON CHAMPION
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Cal Hal star dominates Malice 708, defeating Bat Bornoil in the final to claim his 3rd major of the season.
+            The Damage star captures his 12th career major title, defeating Vampire Ortez in the Armageddon 708 final.
           </p>
         </div>
       </div>
@@ -27,33 +27,33 @@ export function FeedSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-calhal">Points Leader</span>
-          <h3 className="text-white mt-3">Zeus Extends Lead</h3>
+          <h3 className="text-white mt-3">Zeus Ziki Leads the Race</h3>
           <p className="text-foreground">
-            Zeus leads with <span className="stat-highlight">2900 points</span> after 8 majors. 13 KOs on the season. 7 career major titles!
+            Zeus leads with <span className="stat-highlight">2650 points</span> after 9 majors. 11 KOs on the season. New Life 708 will decide the Season Star!
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Milestone</span>
+          <span className="team-tag team-damage">Champion</span>
           <h3 className="text-white mt-3">Cascade Juner: 12 Titles</h3>
           <p className="text-foreground">
-            Runner-up at Malice earns Cascade a trophy anyway! With his Malice 708 title, he reaches <span className="stat-highlight">12 career championships</span>.
+            The reigning Apex champion wins Armageddon, reaching <span className="stat-highlight">12 career championships</span>. Now 2nd with 2250 points.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Runner-Up</span>
-          <h3 className="text-white mt-3">Bat Bornoil Surges to 2nd</h3>
+          <span className="team-tag team-dashlol">Runner-Up</span>
+          <h3 className="text-white mt-3">Vampire Ortez Rising</h3>
           <p className="text-foreground">
-            The Damage fighter climbs to 2nd with <span className="stat-highlight">2350 points</span> after a finals appearance at Malice. 8 KOs this season.
+            The Dashlol fighter finishes 2nd at Armageddon, climbing to 4th with <span className="stat-highlight">2150 points</span>. 11 KOs leads the league!
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Rising Star</span>
-          <h3 className="text-white mt-3">Vampire Ortez Top 5</h3>
+          <span className="team-tag team-damage">Team Race</span>
+          <h3 className="text-white mt-3">Damage Extends Lead</h3>
           <p className="text-foreground">
-            The Dashlol fighter finishes 3rd at Malice, climbing to 5th with <span className="stat-highlight">2100 points</span>. 11 KOs leads the league!
+            Damage leads with <span className="stat-highlight">5850 points</span>. Gastro 2nd (5250), Dashlol 3rd (5200). CTT title on the line!
           </p>
         </div>
       </div>
