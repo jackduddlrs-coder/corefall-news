@@ -522,7 +522,7 @@ export const trophyData = [
   { name: "Monster Piccoloo", total: 2, apex: 0, ctt: 0, major: 2, list: "Solar (700), Chaos Reigns (701)" },
   { name: "Horse Queanlend", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (707)" },
   { name: "Joy Dafvies", total: 1, apex: 0, ctt: 0, major: 1, list: "Descent (705)" },
-  { name: "Fisher Cerzonal", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (705)" },
+  { name: "Fisher Cerzonal", total: 2, apex: 0, ctt: 0, major: 2, list: "Nightmare (705), Armageddon (708)" },
   { name: "Tempest Niez", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (706)" },
   { name: "Acid Sulgmor", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (706) - Engery Contributor" },
   { name: "Cloud Youug", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (700) - Limium Contributor" },
@@ -745,8 +745,12 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 708, tournament: "Heartland", winner: "Zeus Ziki" },
   { year: 708, tournament: "Chaos Reigns", winner: "Pulse Farward" },
   { year: 708, tournament: "Heritage", winner: "Wraith Cunelly" },
+  { year: 708, tournament: "Descent", winner: "Mega Hawnnon" },
+  { year: 708, tournament: "Solar", winner: "Nothing Sawryr" },
+  { year: 708, tournament: "Nightmare", winner: "Zeus Ziki" },
   { year: 708, tournament: "Wind Breakers", winner: "Bat Bornoil" },
-  { year: 708, tournament: "Malice", winner: "Zeus Ziki" },
+  { year: 708, tournament: "Malice", winner: "Cascade Juner" },
+  { year: 708, tournament: "Armageddon", winner: "Fisher Cerzonal" },
   // Season 707
   { year: 707, tournament: "Apex", winner: "Cascade Juner" },
   { year: 707, tournament: "Heritage", winner: "Rain Lieryon" },
@@ -842,8 +846,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 700, tournament: "Wind Breakers", winner: "Pheonix Oliv" },
   { year: 700, tournament: "Armageddon", winner: "Rain Lieryon" },
   { year: 700, tournament: "New Life", winner: "Hero Valii" },
-  { year: 700, tournament: "Chaos Reigns", winner: "Tiger Griff" },
-  { year: 708, tournament: "Descent", winner: "Mega Hawnnon" }
+  { year: 700, tournament: "Chaos Reigns", winner: "Tiger Griff" }
 ];
 
 // Helper function
