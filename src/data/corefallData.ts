@@ -464,7 +464,7 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
 
 // Season History (679-708)
 export const seasons = [
-  { year: 708, apex: "Heal Calofloure", team: "Limium", apexAge: 30, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
+  { year: 708, apex: "", team: "", apexAge: 0, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
   { year: 707, apex: "Cascade Juner", team: "Damage", apexAge: 28, ctt: "Damage", star: "Cascade Juner", starTeam: "Damage", starAge: 28 },
   { year: 706, apex: "Jungle Unovo", team: "Cal Hal", apexAge: 31, ctt: "Engery", star: "Killa Binbac", starTeam: "Qalf", starAge: 28 },
   { year: 705, apex: "Heal Calofloure", team: "Binish Mar", apexAge: 27, ctt: "Gastro", star: "Heal Calofloure", starTeam: "Binish Mar", starAge: 27 },
@@ -502,12 +502,12 @@ export const trophyData = [
   { name: "Jungle Unovo", total: 12, apex: 2, ctt: 1, major: 9, list: "Apex (703, 706), CTT (701), Armageddon (701, 702, 704), Wind Breakers (704), Descent (702), Solar (702), Nightmare (703), Heritage (705), New Life (701)" },
   
   { name: "Night Corondolo", total: 8, apex: 0, ctt: 4, major: 4, list: "CTT (701, 703, 704, 705), Heartland (700, 704), Malice (702), Armageddon (703)" },
-  { name: "Heal Calofloure", total: 8, apex: 2, ctt: 0, major: 6, list: "Apex (705, 708), Chaos Reigns (707), Chaos Reigns (704), Wind Breakers (705, 706), New Life (705, 708)" },
+  { name: "Heal Calofloure", total: 8, apex: 1, ctt: 0, major: 7, list: "Apex (705), Chaos Reigns (704, 707), Wind Breakers (705, 706), New Life (705, 707, 708)" },
   { name: "Pheonix Oliv", total: 6, apex: 1, ctt: 0, major: 5, list: "Apex (701), Heritage (700), Wind Breakers (700), Descent (701), Solar (701), Nightmare (701)" },
   { name: "Killa Binbac", total: 5, apex: 0, ctt: 1, major: 4, list: "Wind Breakers (707), CTT (702), New Life (703), Armageddon (705), Descent (706)" },
   { name: "Hero Valii", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (702), New Life (700, 702), Heartland (701), Chaos Reigns (703)" },
   { name: "Blood Astur", total: 5, apex: 0, ctt: 3, major: 2, list: "CTT (703, 704, 705), Malice (703), Chaos Reigns (705)" },
-  { name: "Zeus Ziki", total: 7, apex: 0, ctt: 1, major: 6, list: "Heartland Cup (708), Nightmare (708), Malice (708), Heritage (706), New Life (706, 707), CTT (706)" },
+  { name: "Zeus Ziki", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (706), Heartland Cup (708), Nightmare (708), Heritage (706), New Life (706), Season Star (708)" },
   { name: "Cascade Juner", total: 12, apex: 1, ctt: 1, major: 10, list: "Apex (707), CTT (707), Armageddon (707), Descent (703, 707), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
   { name: "Wraith Cunelly", total: 4, apex: 0, ctt: 1, major: 3, list: "Heritage (708), CTT (706), Solar (706), Armageddon (706)" },
   { name: "Storm Dayniel", total: 4, apex: 0, ctt: 3, major: 1, list: "CTT (703, 704, 705), Solar (704)" },
@@ -539,7 +539,7 @@ export const trophyData = [
 
 // Apex Finals History
 export const apexDetailed = [
-  { year: 708, win: "Heal Calofloure", wTeam: "Limium", winAge: 30, lose: "Zeus Ziki", lTeam: "Cal Hal", loseAge: 29 },
+  
   { year: 707, win: "Cascade Juner", wTeam: "Damage", winAge: 28, lose: "Wraith Cunelly", lTeam: "Engery", loseAge: 27 },
   { year: 706, win: "Jungle Unovo", wTeam: "Cal Hal", winAge: 31, lose: "Cascade Juner", lTeam: "Damage", loseAge: 27 },
   { year: 705, win: "Heal Calofloure", wTeam: "Binish Mar", winAge: 27, lose: "Killa Binbac", lTeam: "Qalf", loseAge: 27 },
@@ -754,7 +754,6 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 708, tournament: "Malice", winner: "Cascade Juner" },
   { year: 708, tournament: "Armageddon", winner: "Fisher Cerzonal" },
   { year: 708, tournament: "New Life", winner: "Heal Calofloure" },
-  { year: 708, tournament: "Apex", winner: "Heal Calofloure" },
   // Season 707
   { year: 707, tournament: "Apex", winner: "Cascade Juner" },
   { year: 707, tournament: "Heritage", winner: "Rain Lieryon" },
@@ -765,7 +764,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 707, tournament: "Heartland", winner: "Vampire Ortez" },
   { year: 707, tournament: "Wind Breakers", winner: "Killa Binbac" },
   { year: 707, tournament: "Armageddon", winner: "Cascade Juner" },
-  { year: 707, tournament: "New Life", winner: "Zeus Ziki" },
+  { year: 707, tournament: "New Life", winner: "Heal Calofloure" },
   { year: 707, tournament: "Chaos Reigns", winner: "Heal Calofloure" },
   // Season 706
   { year: 706, tournament: "Apex", winner: "Jungle Unovo" },

@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        SEASON 708 COMPLETE: Heal Calofloure Wins 2nd Apex Title • Zeus Ziki Named Season Star • Damage Wins CTT
+        SEASON 708 COMPLETE: Zeus Ziki Named Season Star • Damage Wins CTT • New Life 708 Wraps Season
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-limium mb-2 inline-block">Apex 708 Champion</span>
+          <span className="team-tag team-calhal mb-2 inline-block">Season Star 708</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            HEAL CALOFLOURE<br/>APEX 708 CHAMPION
+            ZEUS ZIKI<br/>SEASON STAR 708
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Limium legend captures his 2nd Apex title, defeating Zeus Ziki in the Grand Finals to cap a remarkable season.
+            The Cal Hal star dominates Season 708 with 3300 points and 14 KOs to claim Season Star honors.
           </p>
         </div>
       </div>
@@ -34,10 +34,10 @@ export function FeedSection() {
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-limium">Apex Champion</span>
-          <h3 className="text-white mt-3">Heal's Dynasty Continues</h3>
+          <span className="team-tag team-limium">New Life Champion</span>
+          <h3 className="text-white mt-3">Heal Wins New Life 708</h3>
           <p className="text-foreground">
-            Heal Calofloure wins his 2nd Apex title, finishing 2nd overall with <span className="stat-highlight">2750 points</span>. Career 8 total championships!
+            Heal Calofloure wins New Life 708, finishing 2nd overall with <span className="stat-highlight">2750 points</span>. Career 7 total championships!
           </p>
         </div>
         
