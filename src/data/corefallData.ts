@@ -508,7 +508,7 @@ export const trophyData = [
   { name: "Hero Valii", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (702), New Life (700, 702), Heartland (701), Chaos Reigns (703)" },
   { name: "Blood Astur", total: 5, apex: 0, ctt: 3, major: 2, list: "CTT (703, 704, 705), Malice (703), Chaos Reigns (705)" },
   { name: "Zeus Ziki", total: 6, apex: 0, ctt: 1, major: 5, list: "CTT (706), Heartland Cup (708), Nightmare (708), Heritage (706), New Life (706, 707), Season Star (708)" },
-  { name: "Cascade Juner", total: 12, apex: 1, ctt: 1, major: 10, list: "Apex (707), CTT (707), Armageddon (707), Descent (703, 707), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
+  { name: "Cascade Juner", total: 13, apex: 1, ctt: 2, major: 10, list: "Apex (707), CTT (707, 708), Armageddon (707), Descent (703, 707), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
   { name: "Wraith Cunelly", total: 4, apex: 0, ctt: 1, major: 3, list: "Heritage (708), CTT (706), Solar (706), Armageddon (706)" },
   { name: "Storm Dayniel", total: 4, apex: 0, ctt: 3, major: 1, list: "CTT (703, 704, 705), Solar (704)" },
   { name: "Splash Gradey", total: 4, apex: 1, ctt: 1, major: 2, list: "Apex (700), CTT (701), Descent (700), Malice (701)" },
@@ -532,8 +532,8 @@ export const trophyData = [
   { name: "Vampire Ortez", total: 1, apex: 0, ctt: 0, major: 1, list: "Heartland Cup (707)" },
   { name: "Shark Obimovch", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (702)" },
   { name: "Pulse Farward", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (708)" },
-  { name: "Bat Bornoil", total: 2, apex: 0, ctt: 1, major: 1, list: "Wind Breakers (708), CTT (707)" },
-  { name: "Sky Sunyer", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (707)" },
+  { name: "Bat Bornoil", total: 3, apex: 0, ctt: 2, major: 1, list: "Wind Breakers (708), CTT (707, 708)" },
+  { name: "Sky Sunyer", total: 2, apex: 0, ctt: 2, major: 0, list: "CTT (707, 708)" },
   { name: "Mega Hawnnon", total: 1, apex: 0, ctt: 0, major: 1, list: "Descent (708)" }
 ];
 
