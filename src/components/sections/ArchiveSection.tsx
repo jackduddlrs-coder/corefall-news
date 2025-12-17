@@ -16,38 +16,13 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
-  const [expandedBestSeason, setExpandedBestSeason] = useState<string | null>(null);
   
   const seasonOptions = ["707", "706", "705", "704", "703", "702", "701", "700"];
   
   const standings = pastStandings[selectedSeason] || [];
   const teamStandings = pastTeamStandings[selectedSeason] || [];
 
-  // Calculate best season points for each team across all seasons
-  const teamBestSeasonPts = useMemo(() => {
-    const result: Record<string, { points: number; season: string }> = {};
-    
-    Object.entries(pastTeamStandings).forEach(([season, standings]) => {
-      standings.forEach(teamStanding => {
-        if (!result[teamStanding.team] || teamStanding.points > result[teamStanding.team].points) {
-          result[teamStanding.team] = { points: teamStanding.points, season };
-        }
-      });
-    });
-    
-    return result;
-  }, []);
-
-  // Get players for a team in a specific season
-  const getTeamPlayersForSeason = (teamName: string, season: string) => {
-    const seasonStandings = pastStandings[season];
-    if (!seasonStandings) return [];
-    return seasonStandings
-      .filter(p => p.Team === teamName)
-      .sort((a, b) => a.Rank - b.Rank);
-  };
-
-  // Get players for each team in selected season
+  // Get players for each team
   const teamPlayers = useMemo(() => {
     const players: Record<string, { name: string; rank: number; points: number }[]> = {};
     standings.forEach(p => {
@@ -92,13 +67,6 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
 
   const toggleTeamExpand = (teamName: string) => {
     setExpandedTeam(expandedTeam === teamName ? null : teamName);
-    if (expandedBestSeason === teamName) setExpandedBestSeason(null);
-  };
-
-  const toggleBestSeasonExpand = (e: React.MouseEvent, teamName: string) => {
-    e.stopPropagation();
-    setExpandedBestSeason(expandedBestSeason === teamName ? null : teamName);
-    if (expandedTeam === teamName) setExpandedTeam(null);
   };
 
   return (
@@ -109,7 +77,7 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
       <div className="flex flex-wrap gap-4 mb-5">
         <select 
           value={selectedSeason}
-          onChange={e => { setSelectedSeason(e.target.value); setSortKey(null); setExpandedTeam(null); setExpandedBestSeason(null); }}
+          onChange={e => { setSelectedSeason(e.target.value); setSortKey(null); setExpandedTeam(null); }}
           className="p-2.5 bg-[#222] text-white border border-border rounded cursor-pointer w-[200px]"
         >
           {seasonOptions.map(s => (
@@ -187,7 +155,6 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Rank</th>
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-left sticky top-0 z-10">Team</th>
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10">Points</th>
-                  <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10">Best Season</th>
                   <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 w-10"></th>
                 </tr>
               </thead>
@@ -195,15 +162,11 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
                 {teamStandings.map((t, idx) => {
                   const players = teamPlayers[t.team] || [];
                   const isExpanded = expandedTeam === t.team;
-                  const isBestSeasonExpanded = expandedBestSeason === t.team;
-                  const bestSeason = teamBestSeasonPts[t.team];
-                  const bestSeasonPlayers = bestSeason ? getTeamPlayersForSeason(t.team, bestSeason.season) : [];
-                  
                   return (
                     <>
                       <tr 
                         key={t.team} 
-                        className={`border-b border-[#2a2f38] hover:bg-[#2c323d] cursor-pointer ${isExpanded || isBestSeasonExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
+                        className={`border-b border-[#2a2f38] hover:bg-[#2c323d] cursor-pointer ${isExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
                         onClick={() => players.length > 0 && toggleTeamExpand(t.team)}
                       >
                         <td className="p-3 font-bold text-muted-foreground">{idx + 1}</td>
@@ -222,25 +185,6 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
                         </td>
                         <td className="p-3 text-center font-bold text-white">{t.points.toLocaleString()}</td>
                         <td className="p-3 text-center">
-                          {bestSeason ? (
-                            <div 
-                              className="cursor-pointer hover:text-primary transition-colors"
-                              onClick={(e) => toggleBestSeasonExpand(e, t.team)}
-                            >
-                              <div className="font-bold text-amber-400">{bestSeason.points.toLocaleString()}</div>
-                              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-                                <span>({bestSeason.season})</span>
-                                {isBestSeasonExpanded ? 
-                                  <ChevronUp className="h-3 w-3 inline" /> : 
-                                  <ChevronDown className="h-3 w-3 inline" />
-                                }
-                              </div>
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="p-3 text-center">
                           {players.length > 0 && (
                             isExpanded ? 
                               <ChevronUp className="h-4 w-4 text-muted-foreground inline" /> : 
@@ -248,35 +192,10 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
                           )}
                         </td>
                       </tr>
-                      {isBestSeasonExpanded && bestSeasonPlayers.length > 0 && (
-                        <tr key={`${t.team}-best-season`}>
-                          <td colSpan={5} className="p-0 bg-[#1a1f25]">
-                            <div className="p-3 space-y-1">
-                              <div className="text-xs text-muted-foreground mb-2">
-                                Season {bestSeason?.season} Breakdown ({bestSeason?.points.toLocaleString()} total)
-                              </div>
-                              {bestSeasonPlayers.map(p => (
-                                <div 
-                                  key={p.Name} 
-                                  className="flex justify-between items-center text-xs py-1 px-2 hover:bg-[#2c323d] rounded cursor-pointer"
-                                  onClick={(e) => { e.stopPropagation(); onPlayerClick(p.Name); }}
-                                >
-                                  <span className="text-muted-foreground">#{p.Rank}</span>
-                                  <span className="clickable-name flex-1 mx-2">{p.Name}</span>
-                                  <span className="font-semibold text-foreground">{p.Points} pts</span>
-                                </div>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
                       {isExpanded && players.length > 0 && (
                         <tr key={`${t.team}-players`}>
-                          <td colSpan={5} className="p-0 bg-[#1a1f25]">
+                          <td colSpan={4} className="p-0 bg-[#1a1f25]">
                             <div className="p-3 space-y-1">
-                              <div className="text-xs text-muted-foreground mb-2">
-                                Season {selectedSeason} Players
-                              </div>
                               {players.map(p => (
                                 <div 
                                   key={p.name} 

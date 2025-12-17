@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players";
+type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 
 interface PlayerStats {
   name: string;
@@ -23,11 +23,19 @@ interface TeamStats {
   details?: string;
 }
 
+interface TeamSeasonPtsEntry {
+  team: string;
+  points: number;
+  season: string;
+  players: { name: string; rank: number; points: number }[];
+}
+
 export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: LeaderboardsSectionProps) => {
   const [activeTab, setActiveTab] = useState<LeaderboardType>("single-points");
   const allSeasons = Object.keys(pastStandings).sort();
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(allSeasons));
-  const [champAgeSortAsc, setChampAgeSortAsc] = useState<boolean>(true); // true = youngest first
+  const [champAgeSortAsc, setChampAgeSortAsc] = useState<boolean>(true);
+  const [expandedTeamSeason, setExpandedTeamSeason] = useState<string | null>(null);
 
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
@@ -128,7 +136,6 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     const playerRanks: Record<string, number[]> = {};
     allPlayers.forEach(p => {
       if (!playerRanks[p.name]) playerRanks[p.name] = [];
-      // We need the rank from pastStandings
       const seasonData = pastStandings[p.season];
       const playerData = seasonData?.find(pd => pd.Name === p.name);
       if (playerData) {
@@ -136,18 +143,17 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }
     });
     const avgFinish: PlayerStats[] = Object.entries(playerRanks)
-      .filter(([_, ranks]) => ranks.length >= 2) // Minimum 2 seasons
+      .filter(([_, ranks]) => ranks.length >= 2)
       .map(([name, ranks]) => ({
         name,
         team: getMostPlayedTeam(name),
-        value: Math.round((ranks.reduce((a, b) => a + b, 0) / ranks.length) * 10) / 10, // 1 decimal
+        value: Math.round((ranks.reduce((a, b) => a + b, 0) / ranks.length) * 10) / 10,
         season: `${ranks.length} seasons`
       }))
-      .sort((a, b) => a.value - b.value) // Lower is better
+      .sort((a, b) => a.value - b.value)
       .slice(0, 50);
 
     // Team Leaderboards
-    // Team total points (from pastTeamStandings)
     const teamTotalPoints: Record<string, number> = {};
     Object.entries(pastTeamStandings).forEach(([season, teams]) => {
       if (!selectedYears.has(season)) return;
@@ -159,21 +165,18 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(([team, total]) => ({ team, value: total }))
       .sort((a, b) => b.value - a.value);
 
-    // Team championships (Apex, CTT, Star from seasons data - same logic as Team History)
+    // Team championships
     const teamChampionships: Record<string, { apex: number; ctt: number; star: number }> = {};
     seasons.forEach(s => {
       if (!selectedYears.has(s.year.toString())) return;
-      // Apex titles
       if (s.team) {
         if (!teamChampionships[s.team]) teamChampionships[s.team] = { apex: 0, ctt: 0, star: 0 };
         teamChampionships[s.team].apex++;
       }
-      // CTT titles (s.ctt is the team name)
       if (s.ctt) {
         if (!teamChampionships[s.ctt]) teamChampionships[s.ctt] = { apex: 0, ctt: 0, star: 0 };
         teamChampionships[s.ctt].ctt++;
       }
-      // Season Star
       if (s.starTeam) {
         if (!teamChampionships[s.starTeam]) teamChampionships[s.starTeam] = { apex: 0, ctt: 0, star: 0 };
         teamChampionships[s.starTeam].star++;
@@ -197,8 +200,27 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .map(([team, players]) => ({ team, value: players.size }))
       .sort((a, b) => b.value - a.value);
 
-    // Champion Ages (all major/apex winners from majorWinners data)
-    // Build a map of player ages by season from pastStandings
+    // Team best single season points
+    const teamSeasonPts: TeamSeasonPtsEntry[] = [];
+    Object.entries(pastTeamStandings).forEach(([season, teams]) => {
+      if (!selectedYears.has(season)) return;
+      teams.forEach(t => {
+        const seasonPlayers = pastStandings[season]
+          ?.filter(p => p.Team === t.team)
+          .map(p => ({ name: p.Name, rank: p.Rank, points: p.Points }))
+          .sort((a, b) => a.rank - b.rank) || [];
+        
+        teamSeasonPts.push({
+          team: t.team,
+          points: t.points,
+          season,
+          players: seasonPlayers
+        });
+      });
+    });
+    teamSeasonPts.sort((a, b) => b.points - a.points);
+
+    // Champion Ages
     const playerAgesBySeason: Record<string, Record<string, number>> = {};
     Object.entries(pastStandings).forEach(([season, players]) => {
       playerAgesBySeason[season] = {};
@@ -207,24 +229,17 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       });
     });
 
-    // Collect all major/apex wins with ages from majorWinners
     const champAges: PlayerStats[] = [];
-    
     majorWinners.forEach(win => {
       if (!selectedYears.has(win.year.toString())) return;
-      
-      // Get player age for that season
       const seasonAges = playerAgesBySeason[win.year.toString()];
       let age = seasonAges?.[win.winner];
-      
-      // If not in standings, try to infer from apexDetailed
       if (!age) {
         const apexEntry = apexDetailed.find(a => a.year === win.year && (a.win === win.winner || a.lose === win.winner));
         if (apexEntry) {
           age = apexEntry.win === win.winner ? apexEntry.winAge : apexEntry.loseAge;
         }
       }
-      
       if (age && age > 0) {
         champAges.push({
           name: win.winner,
@@ -246,7 +261,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "champ-ages": champAges,
       "team-points": teamPoints,
       "team-championships": teamChamps,
-      "team-players": teamPlayers
+      "team-players": teamPlayers,
+      "team-season-pts": teamSeasonPts
     };
   }, [selectedYears]);
 
@@ -262,6 +278,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
+      case "team-season-pts": return "Best Team Season Points";
     }
   };
 
@@ -273,8 +290,90 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "team-points": return "Points";
       case "team-championships": return "Titles";
       case "team-players": return "Players";
+      case "team-season-pts": return "Points";
       default: return type.includes("points") ? "Points" : "KOs";
     }
+  };
+
+  const renderTeamSeasonPtsLeaderboard = () => {
+    const data = leaderboards["team-season-pts"] as TeamSeasonPtsEntry[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Team</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Season</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.slice(0, 50).map((entry, index) => {
+              const key = `${entry.team}-${entry.season}`;
+              const isExpanded = expandedTeamSeason === key;
+              
+              return (
+                <>
+                  <tr 
+                    key={key} 
+                    className={`border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer ${isExpanded ? 'bg-muted/30' : ''}`}
+                    onClick={() => setExpandedTeamSeason(isExpanded ? null : key)}
+                  >
+                    <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                    <td className="p-2 md:p-3">
+                      <span 
+                        onClick={(e) => { e.stopPropagation(); onTeamClick(entry.team); }}
+                        className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(entry.team)}`}
+                      >
+                        {entry.team}
+                      </span>
+                      <span className="ml-2 text-xs text-muted-foreground sm:hidden">({entry.season})</span>
+                    </td>
+                    <td className="p-2 md:p-3 text-muted-foreground hidden sm:table-cell">{entry.season}</td>
+                    <td className="p-2 md:p-3 text-right font-bold text-foreground">
+                      {entry.points.toLocaleString()}
+                      {entry.players.length > 0 && (
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          ({entry.players.length} players)
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                  {isExpanded && entry.players.length > 0 && (
+                    <tr key={`${key}-expanded`}>
+                      <td colSpan={4} className="p-0 bg-muted/20">
+                        <div className="p-3 space-y-1">
+                          <div className="text-xs text-muted-foreground mb-2">
+                            Season {entry.season} Breakdown
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            {entry.players.map(p => (
+                              <div 
+                                key={p.name}
+                                onClick={(e) => { e.stopPropagation(); onPlayerClick(p.name); }}
+                                className="flex justify-between items-center text-xs py-2 px-3 bg-background/30 rounded border border-border/30 cursor-pointer hover:bg-background/60"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className="text-muted-foreground">#{p.rank}</span>
+                                  <span className="text-primary hover:underline">{p.name}</span>
+                                </div>
+                                <span className="font-semibold text-foreground">{p.points.toLocaleString()} pts</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   const renderChampAgesLeaderboard = () => {
@@ -448,7 +547,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     : Array.from(selectedYears).sort().join(", ");
 
   const isTeamLeaderboard = (type: LeaderboardType) => 
-    type === "team-points" || type === "team-championships" || type === "team-players";
+    type === "team-points" || type === "team-championships" || type === "team-players" || type === "team-season-pts";
 
   return (
     <div className="space-y-6">
@@ -527,6 +626,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="team-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Total Points
             </TabsTrigger>
+            <TabsTrigger value="team-season-pts" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Season Pts
+            </TabsTrigger>
             <TabsTrigger value="team-championships" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Championships
             </TabsTrigger>
@@ -562,6 +664,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="team-points" className="mt-0">
             {renderTeamLeaderboard("team-points")}
+          </TabsContent>
+          <TabsContent value="team-season-pts" className="mt-0">
+            {renderTeamSeasonPtsLeaderboard()}
           </TabsContent>
           <TabsContent value="team-championships" className="mt-0">
             {renderTeamLeaderboard("team-championships")}
