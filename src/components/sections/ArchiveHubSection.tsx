@@ -5,13 +5,14 @@ import { ArchiveSection } from "./ArchiveSection";
 import { SeasonsSection } from "./SeasonsSection";
 import { HallOfImmortalsSection } from "./HallOfImmortalsSection";
 import { RosterMovesSection } from "./RosterMovesSection";
+import { RivalriesSection } from "./RivalriesSection";
 
 interface ArchiveHubSectionProps {
   onPlayerClick: (name: string) => void;
   onTeamClick: (name: string) => void;
 }
 
-type ArchiveTab = "leaderboards" | "standings" | "seasons" | "immortals" | "moves";
+type ArchiveTab = "leaderboards" | "standings" | "seasons" | "immortals" | "moves" | "rivalries";
 
 export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSectionProps) => {
   const [activeTab, setActiveTab] = useState<ArchiveTab>("leaderboards");
@@ -37,6 +38,9 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
           <TabsTrigger value="moves" className="flex-1 text-xs md:text-sm py-2.5">
             Roster Moves
           </TabsTrigger>
+          <TabsTrigger value="rivalries" className="flex-1 text-xs md:text-sm py-2.5">
+            Rivalries
+          </TabsTrigger>
           <TabsTrigger value="immortals" className="flex-1 text-xs md:text-sm py-2.5">
             Immortals
           </TabsTrigger>
@@ -54,6 +58,9 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
           </TabsContent>
           <TabsContent value="moves" className="mt-0">
             <RosterMovesSection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
+          </TabsContent>
+          <TabsContent value="rivalries" className="mt-0">
+            <RivalriesSection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
           </TabsContent>
           <TabsContent value="immortals" className="mt-0">
             <HallOfImmortalsSection onPlayerClick={onPlayerClick} />
