@@ -1,4 +1,4 @@
-// Head-to-head tournament records between players (Apex 700-707)
+// Head-to-head tournament records between players (Apex 700-708)
 export interface H2HRecord {
   fighter: string;
   opponent: string;
@@ -322,6 +322,69 @@ export const h2hRecords: H2HRecord[] = [
   { fighter: "Zeus Ziki", opponent: "Wraith Cunelly", wins: 0, losses: 1 },
   { fighter: "Cascade Juner", opponent: "Wraith Cunelly", wins: 1, losses: 0 },
   { fighter: "Wraith Cunelly", opponent: "Cascade Juner", wins: 0, losses: 1 },
+
+  // Season 708 Apex (Double Elimination)
+  // Group A
+  { fighter: "Zeus Ziki", opponent: "Game Darwonn", wins: 1, losses: 0 },
+  { fighter: "Game Darwonn", opponent: "Zeus Ziki", wins: 0, losses: 1 },
+  { fighter: "Mega Hawnnon", opponent: "Fisher Cerzonal", wins: 1, losses: 0 },
+  { fighter: "Fisher Cerzonal", opponent: "Mega Hawnnon", wins: 0, losses: 1 },
+  { fighter: "Nothing Sawryr", opponent: "Cross Exzona", wins: 1, losses: 0 },
+  { fighter: "Cross Exzona", opponent: "Nothing Sawryr", wins: 0, losses: 1 },
+  { fighter: "Vampire Ortez", opponent: "Whiteout Gar-Kiola", wins: 1, losses: 0 },
+  { fighter: "Whiteout Gar-Kiola", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  { fighter: "Game Darwonn", opponent: "Fisher Cerzonal", wins: 1, losses: 0 },
+  { fighter: "Fisher Cerzonal", opponent: "Game Darwonn", wins: 0, losses: 1 },
+  { fighter: "Cross Exzona", opponent: "Whiteout Gar-Kiola", wins: 1, losses: 0 },
+  { fighter: "Whiteout Gar-Kiola", opponent: "Cross Exzona", wins: 0, losses: 1 },
+  { fighter: "Zeus Ziki", opponent: "Mega Hawnnon", wins: 1, losses: 0 },
+  { fighter: "Mega Hawnnon", opponent: "Zeus Ziki", wins: 0, losses: 1 },
+  { fighter: "Vampire Ortez", opponent: "Nothing Sawryr", wins: 1, losses: 0 },
+  { fighter: "Nothing Sawryr", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  { fighter: "Nothing Sawryr", opponent: "Game Darwonn", wins: 1, losses: 0 },
+  { fighter: "Game Darwonn", opponent: "Nothing Sawryr", wins: 0, losses: 1 },
+  { fighter: "Cross Exzona", opponent: "Mega Hawnnon", wins: 1, losses: 0 },
+  { fighter: "Mega Hawnnon", opponent: "Cross Exzona", wins: 0, losses: 1 },
+  { fighter: "Nothing Sawryr", opponent: "Cross Exzona", wins: 1, losses: 0 },
+  { fighter: "Cross Exzona", opponent: "Nothing Sawryr", wins: 0, losses: 1 },
+  { fighter: "Zeus Ziki", opponent: "Vampire Ortez", wins: 1, losses: 0 },
+  { fighter: "Vampire Ortez", opponent: "Zeus Ziki", wins: 0, losses: 1 },
+  { fighter: "Vampire Ortez", opponent: "Nothing Sawryr", wins: 1, losses: 0 },
+  { fighter: "Nothing Sawryr", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  // Group B
+  { fighter: "Heal Calofloure", opponent: "Jungle Unovo", wins: 1, losses: 0 },
+  { fighter: "Jungle Unovo", opponent: "Heal Calofloure", wins: 0, losses: 1 },
+  { fighter: "Wraith Cunelly", opponent: "Sky Sunyer", wins: 1, losses: 0 },
+  { fighter: "Sky Sunyer", opponent: "Wraith Cunelly", wins: 0, losses: 1 },
+  { fighter: "Cascade Juner", opponent: "Rain Lieryon", wins: 1, losses: 0 },
+  { fighter: "Rain Lieryon", opponent: "Cascade Juner", wins: 0, losses: 1 },
+  { fighter: "Pulse Farward", opponent: "Bat Bornoil", wins: 1, losses: 0 },
+  { fighter: "Bat Bornoil", opponent: "Pulse Farward", wins: 0, losses: 1 },
+  { fighter: "Jungle Unovo", opponent: "Sky Sunyer", wins: 1, losses: 0 },
+  { fighter: "Sky Sunyer", opponent: "Jungle Unovo", wins: 0, losses: 1 },
+  { fighter: "Bat Bornoil", opponent: "Rain Lieryon", wins: 1, losses: 0 },
+  { fighter: "Rain Lieryon", opponent: "Bat Bornoil", wins: 0, losses: 1 },
+  { fighter: "Wraith Cunelly", opponent: "Heal Calofloure", wins: 1, losses: 0 },
+  { fighter: "Heal Calofloure", opponent: "Wraith Cunelly", wins: 0, losses: 1 },
+  { fighter: "Cascade Juner", opponent: "Pulse Farward", wins: 1, losses: 0 },
+  { fighter: "Pulse Farward", opponent: "Cascade Juner", wins: 0, losses: 1 },
+  { fighter: "Pulse Farward", opponent: "Jungle Unovo", wins: 1, losses: 0 },
+  { fighter: "Jungle Unovo", opponent: "Pulse Farward", wins: 0, losses: 1 },
+  { fighter: "Bat Bornoil", opponent: "Heal Calofloure", wins: 1, losses: 0 },
+  { fighter: "Heal Calofloure", opponent: "Bat Bornoil", wins: 0, losses: 1 },
+  { fighter: "Pulse Farward", opponent: "Bat Bornoil", wins: 1, losses: 0 },
+  { fighter: "Bat Bornoil", opponent: "Pulse Farward", wins: 0, losses: 1 },
+  { fighter: "Wraith Cunelly", opponent: "Cascade Juner", wins: 1, losses: 0 },
+  { fighter: "Cascade Juner", opponent: "Wraith Cunelly", wins: 0, losses: 1 },
+  { fighter: "Cascade Juner", opponent: "Pulse Farward", wins: 1, losses: 0 },
+  { fighter: "Pulse Farward", opponent: "Cascade Juner", wins: 0, losses: 1 },
+  // Championship Bracket
+  { fighter: "Cascade Juner", opponent: "Zeus Ziki", wins: 1, losses: 0 },
+  { fighter: "Zeus Ziki", opponent: "Cascade Juner", wins: 0, losses: 1 },
+  { fighter: "Vampire Ortez", opponent: "Wraith Cunelly", wins: 1, losses: 0 },
+  { fighter: "Wraith Cunelly", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  { fighter: "Cascade Juner", opponent: "Vampire Ortez", wins: 1, losses: 0 },
+  { fighter: "Vampire Ortez", opponent: "Cascade Juner", wins: 0, losses: 1 },
 ];
 
 // Helper function to get H2H record between two players

@@ -402,11 +402,11 @@ function ApexBracket({ season }: { season: string }) {
 }
 
 export function FullApexSection() {
-  const [openSeason, setOpenSeason] = useState<string | null>("707");
+  const [openSeason, setOpenSeason] = useState<string | null>("708");
   const [viewModes, setViewModes] = useState<Record<string, "bracket" | "list">>({
     "700": "bracket", "701": "bracket", "702": "bracket", 
     "703": "bracket", "704": "bracket", "705": "bracket",
-    "706": "bracket", "707": "bracket"
+    "706": "bracket", "707": "bracket", "708": "bracket"
   });
 
   const seasonKeys = Object.keys(fullMatches).sort((a, b) => Number(b) - Number(a));
@@ -420,7 +420,7 @@ export function FullApexSection() {
 
   return (
     <div className="animate-fadeIn">
-      <h1 className="text-white">Full Apex Tournament Results (700-707)</h1>
+      <h1 className="text-white">Full Apex Tournament Results (700-708)</h1>
       <p className="text-foreground mb-4">Complete match history for every Apex World Championship.</p>
 
       <div>

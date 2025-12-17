@@ -464,7 +464,7 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
 
 // Season History (679-708)
 export const seasons = [
-  { year: 708, apex: "", team: "", apexAge: 0, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
+  { year: 708, apex: "Cascade Juner", team: "Damage", apexAge: 29, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
   { year: 707, apex: "Cascade Juner", team: "Damage", apexAge: 28, ctt: "Damage", star: "Cascade Juner", starTeam: "Damage", starAge: 28 },
   { year: 706, apex: "Jungle Unovo", team: "Cal Hal", apexAge: 31, ctt: "Engery", star: "Killa Binbac", starTeam: "Qalf", starAge: 28 },
   { year: 705, apex: "Heal Calofloure", team: "Binish Mar", apexAge: 27, ctt: "Gastro", star: "Heal Calofloure", starTeam: "Binish Mar", starAge: 27 },
@@ -508,7 +508,7 @@ export const trophyData = [
   { name: "Hero Valii", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (702), New Life (700, 702), Heartland (701), Chaos Reigns (703)" },
   { name: "Blood Astur", total: 5, apex: 0, ctt: 3, major: 2, list: "CTT (703, 704, 705), Malice (703), Chaos Reigns (705)" },
   { name: "Zeus Ziki", total: 6, apex: 0, ctt: 1, major: 5, list: "CTT (706), Heartland Cup (708), Nightmare (708), Heritage (706), New Life (706, 707), Season Star (708)" },
-  { name: "Cascade Juner", total: 13, apex: 1, ctt: 2, major: 10, list: "Apex (707), CTT (707, 708), Armageddon (707), Descent (703, 707), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
+  { name: "Cascade Juner", total: 14, apex: 2, ctt: 2, major: 10, list: "Apex (707, 708), CTT (707, 708), Armageddon (707), Descent (703, 707), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
   { name: "Wraith Cunelly", total: 4, apex: 0, ctt: 1, major: 3, list: "Heritage (708), CTT (706), Solar (706), Armageddon (706)" },
   { name: "Storm Dayniel", total: 4, apex: 0, ctt: 3, major: 1, list: "CTT (703, 704, 705), Solar (704)" },
   { name: "Splash Gradey", total: 4, apex: 1, ctt: 1, major: 2, list: "Apex (700), CTT (701), Descent (700), Malice (701)" },
@@ -539,7 +539,7 @@ export const trophyData = [
 
 // Apex Finals History
 export const apexDetailed = [
-  
+  { year: 708, win: "Cascade Juner", wTeam: "Damage", winAge: 29, lose: "Vampire Ortez", lTeam: "Dashlol", loseAge: 26 },
   { year: 707, win: "Cascade Juner", wTeam: "Damage", winAge: 28, lose: "Wraith Cunelly", lTeam: "Engery", loseAge: 27 },
   { year: 706, win: "Jungle Unovo", wTeam: "Cal Hal", winAge: 31, lose: "Cascade Juner", lTeam: "Damage", loseAge: 27 },
   { year: 705, win: "Heal Calofloure", wTeam: "Binish Mar", winAge: 27, lose: "Killa Binbac", lTeam: "Qalf", loseAge: 27 },
@@ -573,6 +573,37 @@ export const apexDetailed = [
 
 // Full Match Data
 export const fullMatches: Record<string, { round: string; match: string }[]> = {
+  "708": [
+    { round: "Finals", match: "Cascade Juner (2-0(4-0,4-1)) vs Vampire Ortez" },
+    { round: "SF", match: "Cascade Juner (4-2) vs Zeus Ziki" },
+    { round: "SF", match: "Vampire Ortez (4-2) vs Wraith Cunelly" },
+    { round: "UBR1", match: "Zeus Ziki (4-1) vs Game Darwonn (Group A)" },
+    { round: "UBR1", match: "Mega Hawnnon (4-3) vs Fisher Cerzonal (Group A)" },
+    { round: "UBR1", match: "Nothing Sawryr (4-1) vs Cross Exzona (Group A)" },
+    { round: "UBR1", match: "Vampire Ortez (4-0) vs Whiteout Gar-Kiola (Group A)" },
+    { round: "LBR1", match: "Game Darwonn (4-1) vs Fisher Cerzonal (Group A)" },
+    { round: "LBR1", match: "Cross Exzona (4-1) vs Whiteout Gar-Kiola (Group A)" },
+    { round: "UBSF", match: "Zeus Ziki (4-2) vs Mega Hawnnon (Group A)" },
+    { round: "UBSF", match: "Vampire Ortez (4-3) vs Nothing Sawryr (Group A)" },
+    { round: "LBQF", match: "Nothing Sawryr (4-0) vs Game Darwonn (Group A)" },
+    { round: "LBQF", match: "Cross Exzona (4-1) vs Mega Hawnnon (Group A)" },
+    { round: "LBSF", match: "Nothing Sawryr (4-2) vs Cross Exzona (Group A)" },
+    { round: "UBF", match: "Zeus Ziki (4-1) vs Vampire Ortez (Group A)" },
+    { round: "LBF", match: "Vampire Ortez (4-2) vs Nothing Sawryr (Group A)" },
+    { round: "UBR1", match: "Heal Calofloure (4-1) vs Jungle Unovo (Group B)" },
+    { round: "UBR1", match: "Wraith Cunelly (4-0) vs Sky Sunyer (Group B)" },
+    { round: "UBR1", match: "Cascade Juner (4-3) vs Rain Lieryon (Group B)" },
+    { round: "UBR1", match: "Pulse Farward (4-3) vs Bat Bornoil (Group B)" },
+    { round: "LBR1", match: "Jungle Unovo (4-2) vs Sky Sunyer (Group B)" },
+    { round: "LBR1", match: "Bat Bornoil (4-1) vs Rain Lieryon (Group B)" },
+    { round: "UBSF", match: "Wraith Cunelly (4-2) vs Heal Calofloure (Group B)" },
+    { round: "UBSF", match: "Cascade Juner (4-0) vs Pulse Farward (Group B)" },
+    { round: "LBQF", match: "Pulse Farward (4-2) vs Jungle Unovo (Group B)" },
+    { round: "LBQF", match: "Bat Bornoil (4-3) vs Heal Calofloure (Group B)" },
+    { round: "LBSF", match: "Pulse Farward (4-0) vs Bat Bornoil (Group B)" },
+    { round: "UBF", match: "Wraith Cunelly (4-3) vs Cascade Juner (Group B)" },
+    { round: "LBF", match: "Cascade Juner (4-0) vs Pulse Farward (Group B)" }
+  ],
   "707": [
     { round: "Finals", match: "Cascade Juner (2-1(4-2,2-4,4-1)) vs Wraith Cunelly" },
     { round: "SF", match: "Cascade Juner (4-2) vs Heal Calofloure" },
@@ -744,6 +775,7 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
   // Season 708
+  { year: 708, tournament: "Apex", winner: "Cascade Juner" },
   { year: 708, tournament: "Heartland", winner: "Zeus Ziki" },
   { year: 708, tournament: "Chaos Reigns", winner: "Pulse Farward" },
   { year: 708, tournament: "Heritage", winner: "Wraith Cunelly" },
