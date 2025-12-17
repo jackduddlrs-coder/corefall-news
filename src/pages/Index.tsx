@@ -11,6 +11,7 @@ import { TeamComparisonSection } from "@/components/sections/TeamComparisonSecti
 import { DynastyAnalysisSection } from "@/components/sections/DynastyAnalysisSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties";
 
@@ -39,7 +40,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="bg-header px-3 md:px-8 border-b-[3px] border-primary sticky top-0 z-50 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
-        <div className="flex justify-between items-center h-[50px] md:h-[70px]">
+        <div className="flex justify-between items-center h-[50px] md:h-[70px] gap-2">
           <div 
             className="text-lg md:text-3xl font-extrabold uppercase tracking-wider text-white cursor-pointer shrink-0"
             onClick={() => setActiveSection("home")}
@@ -48,12 +49,12 @@ const Index = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex gap-1">
+          <div className="hidden lg:flex gap-1 flex-1 justify-center">
             {navItems.map(item => (
               <button
                 key={item.id}
                 onClick={() => setActiveSection(item.id)}
-                className={`bg-transparent border-none text-sm px-4 py-2.5 cursor-pointer uppercase font-bold transition-colors whitespace-nowrap border-b-[3px] ${
+                className={`bg-transparent border-none text-sm px-3 py-2.5 cursor-pointer uppercase font-bold transition-colors whitespace-nowrap border-b-[3px] ${
                   activeSection === item.id 
                     ? "text-primary border-primary" 
                     : "text-muted-foreground border-transparent hover:text-white"
@@ -63,6 +64,9 @@ const Index = () => {
               </button>
             ))}
           </div>
+
+          {/* Search */}
+          <GlobalSearch onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         </div>
         
         {/* Mobile Navigation - Scrollable horizontal tabs */}
