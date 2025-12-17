@@ -887,7 +887,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
 // Helper function
 export function getTeamClass(teamName: string): string {
   if (!teamName) return "team-afe";
-  const t = teamName.toLowerCase().replace(" ", "");
+  const t = teamName.toLowerCase().replace(" ", "").replace("-", "");
   if (t.includes("dashlol")) return "team-dashlol";
   if (t.includes("calhal")) return "team-calhal";
   if (t.includes("gastro")) return "team-gastro";
@@ -896,6 +896,7 @@ export function getTeamClass(teamName: string): string {
   if (t.includes("limium")) return "team-limium";
   if (t.includes("engery") || t.includes("energy")) return "team-engery";
   if (t.includes("qalf")) return "team-qalf";
+  if (t.includes("zemigamar")) return "team-zemigamar";
   if (t.includes("zemiga")) return "team-zemiga";
   if (t.includes("rass")) return "team-rass";
   if (t.includes("ovest")) return "team-ovest";
@@ -909,5 +910,6 @@ export function getTeamClass(teamName: string): string {
   if (t.includes("vvv")) return "team-vvv";
   if (t.includes("afe")) return "team-afe";
   if (t.includes("manity")) return "team-manity";
+  if (t.includes("fadee")) return "team-fadee";
   return "team-afe";
 }

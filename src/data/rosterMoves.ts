@@ -83,6 +83,18 @@ export const rosterMoves: RosterMove[] = [
   { player: "Guardian Garlim", oldTeam: "Rilak", newTeam: "AFE", season: "708" },
   { player: "Tox Manahoe", oldTeam: "Varcity", newTeam: "Ovest", season: "708" },
   { player: "Clipper Doznu", oldTeam: "Zemiga", newTeam: "Varcity", season: "708" },
+
+  // Season 709 (moves before 709)
+  { player: "Whiteout Gar-Kiola", oldTeam: "AFE", newTeam: "Juire", season: "709" },
+  { player: "Cross Exzona", oldTeam: "Juniper", newTeam: "Cal Hal", season: "709" },
+  { player: "Sky Sunyer", oldTeam: "Damage", newTeam: "Zemiga-Mar", season: "709" },
+  { player: "Freeze Jagwiab", oldTeam: "Zemiga-Mar", newTeam: "Juniper", season: "709" },
+  { player: "Doctor Cazkilo", oldTeam: "Zemiga-Mar", newTeam: "Damage", season: "709" },
+  { player: "Totality Tryoe", oldTeam: "Zemiga-Mar", newTeam: "Damage", season: "709" },
+  { player: "Harsh Raii", oldTeam: "Nocry", newTeam: "AFE", season: "709" },
+  { player: "Venus Aloi", oldTeam: "Cal Hal", newTeam: "Fadee", season: "709" },
+  { player: "Killa Binbac", oldTeam: "Qalf", newTeam: "Fadee", season: "709" },
+  { player: "Daredevil Gaffe", oldTeam: "Gastro", newTeam: "Qalf", season: "709" },
 ];
 
 // Get all available seasons with roster moves
