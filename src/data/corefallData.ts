@@ -496,6 +496,9 @@ export const seasons = [
   { year: 679, apex: "Rolle Asikov", team: "Limium", apexAge: 30, ctt: "Limium", star: "Six Vasad", starTeam: "Rass", starAge: 25 }
 ];
 
+// Inactive Teams (merged or disbanded)
+export const inactiveTeams = ["Zemiga", "Binish Mar"];
+
 // Trophy Room Data
 export const trophyData = [
   { name: "Rain Lieryon", total: 14, apex: 2, ctt: 0, major: 12, list: "Apex (702, 704), Heritage (701, 702, 704, 707), Descent (704), Malice (704), Nightmare (702), Solar (705), Heartland (706), Wind Breakers (703), Heartland (703), Armageddon (700)" },
