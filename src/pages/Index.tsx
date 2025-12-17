@@ -8,10 +8,11 @@ import { FullApexSection } from "@/components/sections/FullApexSection";
 import { ApexFinalsSection } from "@/components/sections/ApexFinalsSection";
 import { H2HSection } from "@/components/sections/PlayerComparisonSection";
 import { TeamComparisonSection } from "@/components/sections/TeamComparisonSection";
+import { DynastyAnalysisSection } from "@/components/sections/DynastyAnalysisSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 
-type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare";
+type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties";
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: "home", label: "Feed" },
@@ -23,6 +24,7 @@ const navItems: { id: SectionId; label: string }[] = [
   { id: "apex", label: "Finals History" },
   { id: "compare", label: "Player H2H" },
   { id: "team-compare", label: "Team H2H" },
+  { id: "dynasties", label: "Dynasties" },
 ];
 
 const Index = () => {
@@ -101,6 +103,9 @@ const Index = () => {
         )}
         {activeSection === "team-compare" && (
           <TeamComparisonSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+        )}
+        {activeSection === "dynasties" && (
+          <DynastyAnalysisSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
         )}
       </div>
 
