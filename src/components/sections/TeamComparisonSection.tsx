@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { pastStandings, pastTeamStandings, getTeamClass, apexDetailed, seasons, inactiveTeams } from "@/data/corefallData";
-import { Search, X, Swords, Trophy, Users } from "lucide-react";
+import { pastStandings, pastTeamStandings, getTeamClass, apexDetailed, seasons, inactiveTeams, fullMatches } from "@/data/corefallData";
+import { Search, X, Swords, Trophy, Users, Target } from "lucide-react";
 
 interface TeamComparisonSectionProps {
   onPlayerClick: (name: string) => void;
@@ -114,6 +114,14 @@ export const TeamComparisonSection = ({ onPlayerClick, onTeamClick }: TeamCompar
   const stats1 = getTeamStats(team1);
   const stats2 = getTeamStats(team2);
 
+  // Helper to get a player's team for a specific season
+  const getPlayerTeamForSeason = (playerName: string, season: string): string | null => {
+    const seasonData = pastStandings[season];
+    if (!seasonData) return null;
+    const player = seasonData.find(p => p.Name === playerName);
+    return player?.Team || null;
+  };
+
   // Get head-to-head Apex records (Finals matches where teams faced each other)
   const h2hApexRecord = useMemo(() => {
     if (!team1 || !team2) return null;
@@ -148,6 +156,100 @@ export const TeamComparisonSection = ({ onPlayerClick, onTeamClick }: TeamCompar
 
     return { team1Wins, team2Wins, matches: matches.sort((a, b) => b.year - a.year) };
   }, [team1, team2, selectedYears]);
+
+  // Get all Apex bracket matchups between the two teams (all rounds)
+  const allApexMatchups = useMemo(() => {
+    if (!team1 || !team2) return null;
+
+    let team1Wins = 0;
+    let team2Wins = 0;
+    const matchups: { 
+      year: string; 
+      round: string; 
+      winner: string; 
+      loser: string; 
+      winnerTeam: string;
+      loserTeam: string;
+      score: string;
+    }[] = [];
+
+    Object.entries(fullMatches).forEach(([year, matches]) => {
+      if (!selectedYears.has(year)) return;
+
+      matches.forEach(m => {
+        // Parse match string: "Winner Name (score) vs Loser Name"
+        const matchStr = m.match.replace(/\s*\(Group [AB]\)$/, '');
+        const vsIndex = matchStr.indexOf(' vs ');
+        if (vsIndex === -1) return;
+
+        const leftPart = matchStr.substring(0, vsIndex);
+        const loser = matchStr.substring(vsIndex + 4).trim();
+
+        const scoreMatch = leftPart.match(/^(.+?)\s*\(([^)]+)\)$/);
+        if (!scoreMatch) return;
+
+        const winner = scoreMatch[1].trim();
+        const score = scoreMatch[2];
+
+        // Get teams for both players in this season
+        const winnerTeam = getPlayerTeamForSeason(winner, year);
+        const loserTeam = getPlayerTeamForSeason(loser, year);
+
+        if (!winnerTeam || !loserTeam) return;
+
+        // Check if this match is between the two selected teams
+        if ((winnerTeam === team1 && loserTeam === team2) || (winnerTeam === team2 && loserTeam === team1)) {
+          if (winnerTeam === team1) {
+            team1Wins++;
+          } else {
+            team2Wins++;
+          }
+          matchups.push({
+            year,
+            round: m.round,
+            winner,
+            loser,
+            winnerTeam,
+            loserTeam,
+            score
+          });
+        }
+      });
+    });
+
+    if (matchups.length === 0) return null;
+
+    // Sort by year desc, then by round importance
+    const roundOrder = ['Finals', 'SF', 'UBF', 'LBF', 'UBSF', 'LBSF', 'QF', 'UBQF', 'LBQF', 'UBR1', 'LBR1', 'R16'];
+    return {
+      team1Wins,
+      team2Wins,
+      matchups: matchups.sort((a, b) => {
+        const yearDiff = parseInt(b.year) - parseInt(a.year);
+        if (yearDiff !== 0) return yearDiff;
+        return roundOrder.indexOf(a.round) - roundOrder.indexOf(b.round);
+      })
+    };
+  }, [team1, team2, selectedYears]);
+
+  // Get round display name
+  const getRoundName = (round: string) => {
+    const names: Record<string, string> = {
+      'Finals': 'Finals',
+      'SF': 'Semifinals',
+      'QF': 'Quarterfinals',
+      'R16': 'Round of 16',
+      'UBR1': 'Upper R1',
+      'LBR1': 'Lower R1',
+      'UBSF': 'Upper SF',
+      'LBSF': 'Lower SF',
+      'UBQF': 'Upper QF',
+      'LBQF': 'Lower QF',
+      'UBF': 'Upper Final',
+      'LBF': 'Lower Final'
+    };
+    return names[round] || round;
+  };
 
   const filteredTeams1 = allTeams.filter(t => 
     t.toLowerCase().includes(search1.toLowerCase()) && t !== team2
@@ -381,6 +483,78 @@ export const TeamComparisonSection = ({ onPlayerClick, onTeamClick }: TeamCompar
           ) : (
             <p className="text-center text-muted-foreground text-sm">No Apex Finals matches between these teams.</p>
           )}
+        </div>
+      )}
+
+      {/* All Apex Bracket Matchups */}
+      {team1 && team2 && allApexMatchups && (
+        <div className="bg-card rounded-lg border border-border p-4 md:p-6">
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
+            <Target className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+            <h3 className="text-base md:text-lg font-semibold text-foreground">All Apex Matchups ({allApexMatchups.matchups.length})</h3>
+          </div>
+          
+          <div className="flex items-center justify-center gap-4 md:gap-8 mb-4">
+            <div className="text-center">
+              <span className={`block text-xs md:text-sm mb-1 team-tag ${getTeamClass(team1)}`}>
+                {team1}
+              </span>
+              <span className={`text-2xl md:text-4xl font-bold ${allApexMatchups.team1Wins > allApexMatchups.team2Wins ? 'text-green-500' : allApexMatchups.team1Wins < allApexMatchups.team2Wins ? 'text-red-500' : 'text-foreground'}`}>
+                {allApexMatchups.team1Wins}
+              </span>
+            </div>
+            <div className="text-xl md:text-2xl text-muted-foreground font-light">-</div>
+            <div className="text-center">
+              <span className={`block text-xs md:text-sm mb-1 team-tag ${getTeamClass(team2)}`}>
+                {team2}
+              </span>
+              <span className={`text-2xl md:text-4xl font-bold ${allApexMatchups.team2Wins > allApexMatchups.team1Wins ? 'text-green-500' : allApexMatchups.team2Wins < allApexMatchups.team1Wins ? 'text-red-500' : 'text-foreground'}`}>
+                {allApexMatchups.team2Wins}
+              </span>
+            </div>
+          </div>
+          
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {allApexMatchups.matchups.map((match, idx) => {
+              const team1Won = match.winnerTeam === team1;
+              const team1Player = team1Won ? match.winner : match.loser;
+              const team2Player = team1Won ? match.loser : match.winner;
+              
+              return (
+                <div key={idx} className="flex items-center justify-between bg-muted/30 rounded-lg p-2 md:p-3">
+                  <div className="flex items-center gap-1.5 md:gap-2 flex-1 min-w-0">
+                    <span className={`text-xs md:text-sm font-bold shrink-0 ${team1Won ? 'text-green-500' : 'text-red-500'}`}>
+                      {team1Won ? 'W' : 'L'}
+                    </span>
+                    <span 
+                      onClick={() => onPlayerClick(team1Player)}
+                      className="text-xs md:text-sm hover:text-primary cursor-pointer truncate"
+                    >
+                      {team1Player}
+                    </span>
+                  </div>
+                  
+                  <div className="text-center px-2 md:px-4 shrink-0">
+                    <span className="text-[10px] md:text-xs text-muted-foreground block">{getRoundName(match.round)}</span>
+                    <span className="text-xs md:text-sm font-bold text-foreground">{match.year}</span>
+                    <span className="text-[10px] md:text-xs text-muted-foreground block">({match.score})</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5 md:gap-2 flex-1 justify-end min-w-0">
+                    <span 
+                      onClick={() => onPlayerClick(team2Player)}
+                      className="text-xs md:text-sm hover:text-primary cursor-pointer truncate"
+                    >
+                      {team2Player}
+                    </span>
+                    <span className={`text-xs md:text-sm font-bold shrink-0 ${!team1Won ? 'text-green-500' : 'text-red-500'}`}>
+                      {!team1Won ? 'W' : 'L'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
