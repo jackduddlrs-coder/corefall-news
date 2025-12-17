@@ -14,7 +14,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
 
   // Gather all season history first
   const seasonHistory = useMemo(() => {
-    const history: { year: number; team: string; rank: number; points: number; ko: number }[] = [];
+    const history: { year: number; team: string; rank: number; points: number; ko: number; age: number }[] = [];
     Object.keys(pastStandings).forEach(year => {
       const pData = pastStandings[year].find(p => p.Name === playerName);
       if (pData) {
@@ -23,7 +23,8 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
           team: pData.Team,
           rank: pData.Rank,
           points: pData.Points,
-          ko: pData.KOs
+          ko: pData.KOs,
+          age: pData.Age
         });
       }
     });
@@ -358,6 +359,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
               <thead>
                 <tr>
                   <th className="bg-black text-primary uppercase text-[10px] md:text-xs tracking-wider p-2 md:p-3 text-left sticky top-0 z-10">Year</th>
+                  <th className="bg-black text-primary uppercase text-[10px] md:text-xs tracking-wider p-2 md:p-3 text-left sticky top-0 z-10">Age</th>
                   <th className="bg-black text-primary uppercase text-[10px] md:text-xs tracking-wider p-2 md:p-3 text-left sticky top-0 z-10">Team</th>
                   <th className="bg-black text-primary uppercase text-[10px] md:text-xs tracking-wider p-2 md:p-3 text-left sticky top-0 z-10">Rank</th>
                   <th className="bg-black text-primary uppercase text-[10px] md:text-xs tracking-wider p-2 md:p-3 text-left sticky top-0 z-10">Pts</th>
@@ -385,6 +387,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                             {h.year}
                           </div>
                         </td>
+                        <td className="p-2 md:p-3 text-muted-foreground">{h.age}</td>
                         <td className="p-2 md:p-3"><span className={`team-tag text-[10px] md:text-xs ${getTeamClass(h.team)}`}>{h.team}</span></td>
                         <td className="p-2 md:p-3">#{h.rank}</td>
                         <td className="p-2 md:p-3">{h.points}</td>
@@ -394,7 +397,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                         const apexResults = getPlayerApexResults(h.year);
                         return (
                           <tr>
-                            <td colSpan={5} className="p-0 bg-background/50">
+                            <td colSpan={6} className="p-0 bg-background/50">
                               <div className="p-2 md:p-4">
                                 {/* Regular Tournaments Section */}
                                 <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider mb-2 font-bold">
