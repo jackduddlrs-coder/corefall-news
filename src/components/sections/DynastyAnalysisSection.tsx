@@ -103,54 +103,53 @@ export const DynastyAnalysisSection = ({ onPlayerClick, onTeamClick }: DynastyAn
     });
   }, []);
 
-  // Calculate team dynasties (consecutive years as #1)
+  // Calculate team dynasties (consecutive Apex championships from seasons 679-708)
   const dynasties = useMemo(() => {
-    const allYears = Object.keys(pastTeamStandings).sort();
-    const dynastyList: { team: string; startYear: string; endYear: string; years: number; titles: number }[] = [];
+    const sortedSeasons = [...seasons].sort((a, b) => a.year - b.year);
+    const dynastyList: { team: string; startYear: number; endYear: number; years: number; titles: number; players: string[] }[] = [];
     
     let currentTeam = "";
-    let startYear = "";
-    let consecutiveYears = 0;
-    let dynastyTitles = 0;
+    let startYear = 0;
+    let consecutiveTitles = 0;
+    let dynastyPlayers: Set<string> = new Set();
 
-    allYears.forEach((year, idx) => {
-      const standings = pastTeamStandings[year];
-      const topTeam = standings?.[0]?.team;
-      const seasonInfo = seasons.find(s => s.year.toString() === year);
-      const hasTitle = seasonInfo?.team === topTeam;
+    sortedSeasons.forEach((season, idx) => {
+      const champTeam = season.team;
 
-      if (topTeam === currentTeam) {
-        consecutiveYears++;
-        if (hasTitle) dynastyTitles++;
+      if (champTeam === currentTeam) {
+        consecutiveTitles++;
+        dynastyPlayers.add(season.apex);
       } else {
-        if (consecutiveYears >= 2) {
+        if (consecutiveTitles >= 2) {
           dynastyList.push({
             team: currentTeam,
             startYear,
-            endYear: allYears[idx - 1],
-            years: consecutiveYears,
-            titles: dynastyTitles
+            endYear: sortedSeasons[idx - 1].year,
+            years: consecutiveTitles,
+            titles: consecutiveTitles,
+            players: Array.from(dynastyPlayers)
           });
         }
-        currentTeam = topTeam || "";
-        startYear = year;
-        consecutiveYears = 1;
-        dynastyTitles = hasTitle ? 1 : 0;
+        currentTeam = champTeam;
+        startYear = season.year;
+        consecutiveTitles = 1;
+        dynastyPlayers = new Set([season.apex]);
       }
     });
 
     // Don't forget the last streak
-    if (consecutiveYears >= 2) {
+    if (consecutiveTitles >= 2) {
       dynastyList.push({
         team: currentTeam,
         startYear,
-        endYear: allYears[allYears.length - 1],
-        years: consecutiveYears,
-        titles: dynastyTitles
+        endYear: sortedSeasons[sortedSeasons.length - 1].year,
+        years: consecutiveTitles,
+        titles: consecutiveTitles,
+        players: Array.from(dynastyPlayers)
       });
     }
 
-    return dynastyList.sort((a, b) => b.years - a.years);
+    return dynastyList.sort((a, b) => b.titles - a.titles);
   }, []);
 
   // Apex champions by team
@@ -181,33 +180,44 @@ export const DynastyAnalysisSection = ({ onPlayerClick, onTeamClick }: DynastyAn
         <div className="flex items-center gap-2 mb-4">
           <Crown className="w-5 h-5 text-yellow-500" />
           <h3 className="text-lg font-semibold text-foreground">Dynasty Runs</h3>
-          <span className="text-xs text-muted-foreground">(Consecutive #1 Team Finishes)</span>
+          <span className="text-xs text-muted-foreground">(Consecutive Apex Championships, 679-708)</span>
         </div>
         
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {dynasties.map((dynasty, idx) => (
-            <div 
-              key={idx}
-              className="bg-muted/30 rounded-lg p-4 border border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
-              onClick={() => onTeamClick(dynasty.team)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className={`team-tag ${getTeamClass(dynasty.team)}`}>{dynasty.team}</span>
-                <span className="text-xs text-muted-foreground">{dynasty.startYear}-{dynasty.endYear}</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">{dynasty.years}</div>
-                  <div className="text-[10px] text-muted-foreground">Years</div>
+        {dynasties.length > 0 ? (
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {dynasties.map((dynasty, idx) => (
+              <div 
+                key={idx}
+                className="bg-muted/30 rounded-lg p-4 border border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
+                onClick={() => onTeamClick(dynasty.team)}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`team-tag ${getTeamClass(dynasty.team)}`}>{dynasty.team}</span>
+                  <span className="text-xs text-muted-foreground">{dynasty.startYear}-{dynasty.endYear}</span>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-500">{dynasty.titles}</div>
-                  <div className="text-[10px] text-muted-foreground">Titles</div>
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-yellow-500">{dynasty.titles}</div>
+                    <div className="text-[10px] text-muted-foreground">Consecutive Titles</div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {dynasty.players.map((player, pIdx) => (
+                    <button
+                      key={pIdx}
+                      onClick={(e) => { e.stopPropagation(); onPlayerClick(player); }}
+                      className="text-[10px] bg-background/50 border border-border/50 px-1.5 py-0.5 rounded hover:bg-primary/20 hover:border-primary/50 transition-colors"
+                    >
+                      {player.split(' ')[0]}
+                    </button>
+                  ))}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-sm">No dynasty runs (2+ consecutive titles) found.</p>
+        )}
       </div>
 
       {/* Era Timeline */}
