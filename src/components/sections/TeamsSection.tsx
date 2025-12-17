@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { seasons, getTeamClass, pastStandings, inactiveTeams } from "@/data/corefallData";
+import { seasons, getTeamClass, pastStandings, pastTeamStandings, inactiveTeams } from "@/data/corefallData";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface TeamsSectionProps {
@@ -18,13 +18,14 @@ interface TeamAwards {
   star: AwardDetail[];
 }
 
-type SortKey = "name" | "apex" | "ctt" | "star";
+type SortKey = "name" | "apex" | "ctt" | "star" | "seasonPts";
 type SortDir = "asc" | "desc";
 
 export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) {
   const [sortKey, setSortKey] = useState<SortKey>("apex");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
+  const [expandedSeasonPts, setExpandedSeasonPts] = useState<string | null>(null);
 
   // Calculate team stats with details
   const teamStats: Record<string, TeamAwards> = {};
@@ -42,6 +43,30 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
     if (!teamStats[s.starTeam]) teamStats[s.starTeam] = { apex: [], ctt: [], star: [] };
     teamStats[s.starTeam].star.push({ year: s.year, player: s.star });
   });
+
+  // Calculate best season points for each team
+  const teamBestSeasonPts = useMemo(() => {
+    const result: Record<string, { points: number; season: string }> = {};
+    
+    Object.entries(pastTeamStandings).forEach(([season, standings]) => {
+      standings.forEach(teamStanding => {
+        if (!result[teamStanding.team] || teamStanding.points > result[teamStanding.team].points) {
+          result[teamStanding.team] = { points: teamStanding.points, season };
+        }
+      });
+    });
+    
+    return result;
+  }, []);
+
+  // Get players for a team in a specific season
+  const getTeamPlayersForSeason = (teamName: string, season: string) => {
+    const seasonStandings = pastStandings[season];
+    if (!seasonStandings) return [];
+    return seasonStandings
+      .filter(p => p.Team === teamName)
+      .sort((a, b) => a.Rank - b.Rank);
+  };
 
   // Get all-time top players for each team
   const teamTopPlayers = useMemo(() => {
@@ -78,7 +103,8 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
       apexCount: awards.apex.length,
       cttCount: awards.ctt.length,
       starCount: awards.star.length,
-      topPlayers: teamTopPlayers[name] || []
+      topPlayers: teamTopPlayers[name] || [],
+      bestSeasonPts: teamBestSeasonPts[name] || { points: 0, season: "" }
     }))
     .sort((a, b) => {
       let aVal: string | number;
@@ -100,6 +126,10 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
         case "star":
           aVal = a.starCount;
           bVal = b.starCount;
+          break;
+        case "seasonPts":
+          aVal = a.bestSeasonPts.points;
+          bVal = b.bestSeasonPts.points;
           break;
         default:
           return 0;
@@ -143,6 +173,13 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
 
   const toggleTeamExpand = (teamName: string) => {
     setExpandedTeam(expandedTeam === teamName ? null : teamName);
+    if (expandedSeasonPts === teamName) setExpandedSeasonPts(null);
+  };
+
+  const toggleSeasonPtsExpand = (e: React.MouseEvent, teamName: string) => {
+    e.stopPropagation();
+    setExpandedSeasonPts(expandedSeasonPts === teamName ? null : teamName);
+    if (expandedTeam === teamName) setExpandedTeam(null);
   };
 
   return (
@@ -151,7 +188,7 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
       <p className="text-foreground">Comprehensive record of Apex Championships, CTT Titles, and Season Stars for every team.</p>
 
       <div className="overflow-x-auto bg-panel rounded-lg shadow-lg">
-        <table className="w-full border-collapse text-sm min-w-[700px]">
+        <table className="w-full border-collapse text-sm min-w-[800px]">
           <thead>
             <tr>
               <th 
@@ -178,17 +215,26 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
               >
                 Season Stars{getSortIndicator("star")}
               </th>
+              <th 
+                className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 cursor-pointer hover:bg-[#111] hover:text-white"
+                onClick={() => handleSort("seasonPts")}
+              >
+                Best Season Pts{getSortIndicator("seasonPts")}
+              </th>
               <th className="bg-black text-primary uppercase text-xs tracking-wider p-3 text-center sticky top-0 z-10 w-10"></th>
             </tr>
           </thead>
           <tbody>
             {teamList.map(t => {
               const isExpanded = expandedTeam === t.name;
+              const isSeasonPtsExpanded = expandedSeasonPts === t.name;
+              const bestSeasonPlayers = t.bestSeasonPts.season ? getTeamPlayersForSeason(t.name, t.bestSeasonPts.season) : [];
+              
               return (
                 <>
                   <tr 
                     key={t.name} 
-                    className={`border-b border-[#2a2f38] hover:bg-[#2c323d] align-top cursor-pointer ${isExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
+                    className={`border-b border-[#2a2f38] hover:bg-[#2c323d] align-top cursor-pointer ${isExpanded || isSeasonPtsExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
                     onClick={() => t.topPlayers.length > 0 && toggleTeamExpand(t.name)}
                   >
                     <td className="p-3">
@@ -211,6 +257,25 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
                     <td className="p-3 text-center c-ctt">{formatAwards(t.ctt, false)}</td>
                     <td className="p-3 text-center c-major">{formatAwards(t.star, true)}</td>
                     <td className="p-3 text-center">
+                      {t.bestSeasonPts.points > 0 ? (
+                        <div 
+                          className="cursor-pointer hover:text-primary transition-colors"
+                          onClick={(e) => toggleSeasonPtsExpand(e, t.name)}
+                        >
+                          <div className="font-bold">{t.bestSeasonPts.points.toLocaleString()}</div>
+                          <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                            <span>({t.bestSeasonPts.season})</span>
+                            {isSeasonPtsExpanded ? 
+                              <ChevronUp className="h-3 w-3 inline" /> : 
+                              <ChevronDown className="h-3 w-3 inline" />
+                            }
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </td>
+                    <td className="p-3 text-center">
                       {t.topPlayers.length > 0 && (
                         isExpanded ? 
                           <ChevronUp className="h-4 w-4 text-muted-foreground inline" /> : 
@@ -218,9 +283,35 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
                       )}
                     </td>
                   </tr>
+                  {isSeasonPtsExpanded && bestSeasonPlayers.length > 0 && (
+                    <tr key={`${t.name}-season-pts`}>
+                      <td colSpan={6} className="p-0 bg-[#1a1f25]">
+                        <div className="p-3">
+                          <div className="text-xs text-muted-foreground mb-2">
+                            Season {t.bestSeasonPts.season} Points Breakdown ({t.bestSeasonPts.points.toLocaleString()} total)
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            {bestSeasonPlayers.map((p) => (
+                              <div 
+                                key={p.Name} 
+                                className={`flex justify-between items-center text-xs py-2 px-3 bg-background/30 rounded border border-border/30 ${onPlayerClick ? 'cursor-pointer hover:bg-background/60' : ''}`}
+                                onClick={(e) => { e.stopPropagation(); onPlayerClick?.(p.Name); }}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className="text-muted-foreground">#{p.Rank}</span>
+                                  <span className="clickable-name">{p.Name}</span>
+                                </div>
+                                <span className="font-semibold text-foreground">{p.Points.toLocaleString()} pts</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                   {isExpanded && t.topPlayers.length > 0 && (
                     <tr key={`${t.name}-players`}>
-                      <td colSpan={5} className="p-0 bg-[#1a1f25]">
+                      <td colSpan={6} className="p-0 bg-[#1a1f25]">
                         <div className="p-3">
                           <div className="text-xs text-muted-foreground mb-2">Top Historical Players (Since 700)</div>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
