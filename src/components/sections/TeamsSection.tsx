@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { seasons, getTeamClass, pastStandings } from "@/data/corefallData";
+import { seasons, getTeamClass, pastStandings, inactiveTeams } from "@/data/corefallData";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface TeamsSectionProps {
@@ -148,7 +148,7 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
   return (
     <div className="animate-fadeIn">
       <h1 className="text-white">Team Franchise History</h1>
-      <p className="text-foreground">Comprehensive record of Apex Championships, CTT Titles, and Season Stars for every active team.</p>
+      <p className="text-foreground">Comprehensive record of Apex Championships, CTT Titles, and Season Stars for every team.</p>
 
       <div className="overflow-x-auto bg-panel rounded-lg shadow-lg">
         <table className="w-full border-collapse text-sm min-w-[700px]">
@@ -193,12 +193,15 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
                   >
                     <td className="p-3">
                       <span 
-                        className={`team-tag clickable-team ${getTeamClass(t.name)}`} 
+                        className={`team-tag clickable-team ${getTeamClass(t.name)} ${inactiveTeams.includes(t.name) ? 'opacity-60' : ''}`} 
                         onClick={(e) => { e.stopPropagation(); onTeamClick(t.name); }}
                       >
                         {t.name}
                       </span>
-                      {t.topPlayers.length > 0 && (
+                      {inactiveTeams.includes(t.name) && (
+                        <span className="ml-2 text-xs text-muted-foreground italic">(Inactive)</span>
+                      )}
+                      {t.topPlayers.length > 0 && !inactiveTeams.includes(t.name) && (
                         <span className="ml-2 text-xs text-muted-foreground hidden md:inline">
                           ({t.topPlayers.length} top players)
                         </span>
