@@ -50,7 +50,8 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
         kos += s.ko;
         totalRanks += s.rank;
         count++;
-        if (s.rank <= 16) apexApps++;
+        // Exclude 709 from Apex appearances until confirmed
+        if (s.rank <= 16 && s.year !== 709) apexApps++;
       }
     });
 
