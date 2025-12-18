@@ -1,5 +1,12 @@
 // Past Team Standings
 export const pastTeamStandings: Record<string, { team: string; points: number }[]> = {
+  "709": [
+    { team: "Damage", points: 1200 }, { team: "Qalf", points: 750 }, { team: "Dashlol", points: 550 },
+    { team: "Limium", points: 550 }, { team: "Zemiga-Mar", points: 550 }, { team: "Gastro", points: 450 },
+    { team: "Cal Hal", points: 450 }, { team: "Varcity", points: 450 }, { team: "Engery", points: 350 },
+    { team: "Juire", points: 200 }, { team: "Fadee", points: 150 }, { team: "Juniper", points: 150 },
+    { team: "AFE", points: 150 }
+  ],
   "708": [
     { team: "Damage", points: 7100 }, { team: "Dashlol", points: 6600 }, { team: "Gastro", points: 6100 },
     { team: "Cal Hal", points: 5400 }, { team: "Engery", points: 5000 }, { team: "Qalf", points: 4800 },
@@ -82,6 +89,40 @@ export const pastTeamStandings: Record<string, { team: string; points: number }[
 
 // Past Individual Standings - Top 40 for each season from Excel files
 export const pastStandings: Record<string, { Rank: number; Name: string; Team: string; Age: number; Points: number; KOs: number }[]> = {
+  "709": [
+    { Rank: 1, Name: "Daredevil Gaffe", Team: "Qalf", Age: 24, Points: 550, KOs: 0 },
+    { Rank: 2, Name: "Bat Bornoil", Team: "Damage", Age: 27, Points: 450, KOs: 2 },
+    { Rank: 3, Name: "Sky Sunyer", Team: "Zemiga-Mar", Age: 27, Points: 400, KOs: 3 },
+    { Rank: 4, Name: "Titan Aui", Team: "Limium", Age: 26, Points: 350, KOs: 1 },
+    { Rank: 5, Name: "Nothing Sawryr", Team: "Gastro", Age: 28, Points: 300, KOs: 1 },
+    { Rank: 6, Name: "Mega Hawnnon", Team: "Dashlol", Age: 27, Points: 300, KOs: 1 },
+    { Rank: 7, Name: "Zeus Ziki", Team: "Cal Hal", Age: 30, Points: 250, KOs: 3 },
+    { Rank: 8, Name: "Pulse Farward", Team: "Varcity", Age: 28, Points: 250, KOs: 2 },
+    { Rank: 9, Name: "Cascade Juner", Team: "Damage", Age: 30, Points: 200, KOs: 1 },
+    { Rank: 10, Name: "Cross Exzona", Team: "Cal Hal", Age: 26, Points: 200, KOs: 1 },
+    { Rank: 11, Name: "Game Darwonn", Team: "Engery", Age: 29, Points: 200, KOs: 0 },
+    { Rank: 12, Name: "Clipper Doznu", Team: "Varcity", Age: 27, Points: 200, KOs: 0 },
+    { Rank: 13, Name: "Vampire Ortez", Team: "Dashlol", Age: 27, Points: 150, KOs: 1 },
+    { Rank: 14, Name: "Harsh Raii", Team: "AFE", Age: 25, Points: 150, KOs: 1 },
+    { Rank: 15, Name: "Rocket Dalbale", Team: "Zemiga-Mar", Age: 24, Points: 150, KOs: 1 },
+    { Rank: 16, Name: "Rem Asamtoy", Team: "Qalf", Age: 27, Points: 150, KOs: 0 },
+    { Rank: 17, Name: "Wraith Cunelly", Team: "Engery", Age: 29, Points: 100, KOs: 1 },
+    { Rank: 18, Name: "Rain Lieryon", Team: "Dashlol", Age: 34, Points: 100, KOs: 1 },
+    { Rank: 19, Name: "Freeze Jagwiab", Team: "Juniper", Age: 24, Points: 100, KOs: 1 },
+    { Rank: 20, Name: "Heal Calofloure", Team: "Limium", Age: 31, Points: 100, KOs: 0 },
+    { Rank: 21, Name: "Killa Binbac", Team: "Fadee", Age: 31, Points: 100, KOs: 0 },
+    { Rank: 22, Name: "Horse Queanlend", Team: "Juire", Age: 28, Points: 100, KOs: 0 },
+    { Rank: 23, Name: "Joy Dafvies", Team: "Limium", Age: 31, Points: 100, KOs: 0 },
+    { Rank: 24, Name: "Jam Naze", Team: "Gastro", Age: 23, Points: 100, KOs: 0 },
+    { Rank: 25, Name: "Fisher Cerzonal", Team: "Qalf", Age: 29, Points: 50, KOs: 0 },
+    { Rank: 26, Name: "Whiteout Gar-Kiola", Team: "Juire", Age: 31, Points: 50, KOs: 0 },
+    { Rank: 27, Name: "Supernova Aloi", Team: "Gastro", Age: 29, Points: 50, KOs: 0 },
+    { Rank: 28, Name: "Tempest Niez", Team: "Engery", Age: 32, Points: 50, KOs: 0 },
+    { Rank: 29, Name: "Club Faxzin", Team: "Juniper", Age: 26, Points: 50, KOs: 0 },
+    { Rank: 30, Name: "Totality Tryoe", Team: "Damage", Age: 24, Points: 50, KOs: 0 },
+    { Rank: 31, Name: "Venus Aloi", Team: "Fadee", Age: 27, Points: 50, KOs: 0 },
+    { Rank: 32, Name: "Finesse Famse", Team: "Juire", Age: 24, Points: 50, KOs: 0 }
+  ],
   "708": [
     { Rank: 1, Name: "Zeus Ziki", Team: "Cal Hal", Age: 29, Points: 3300, KOs: 14 },
     { Rank: 2, Name: "Heal Calofloure", Team: "Limium", Age: 30, Points: 2750, KOs: 9 },
@@ -537,7 +578,8 @@ export const trophyData = [
   { name: "Pulse Farward", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (708)" },
   { name: "Bat Bornoil", total: 3, apex: 0, ctt: 2, major: 1, list: "Wind Breakers (708), CTT (707, 708)" },
   { name: "Sky Sunyer", total: 2, apex: 0, ctt: 2, major: 0, list: "CTT (707, 708)" },
-  { name: "Mega Hawnnon", total: 1, apex: 0, ctt: 0, major: 1, list: "Descent (708)" }
+  { name: "Mega Hawnnon", total: 1, apex: 0, ctt: 0, major: 1, list: "Descent (708)" },
+  { name: "Daredevil Gaffe", total: 1, apex: 0, ctt: 0, major: 1, list: "Heartland Cup (709)" }
 ];
 
 // Apex Finals History
@@ -777,6 +819,8 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Tournaments: Apex, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
+// Season 709
+  { year: 709, tournament: "Heartland", winner: "Daredevil Gaffe" },
   // Season 708
   { year: 708, tournament: "Apex", winner: "Cascade Juner" },
   { year: 708, tournament: "Heartland", winner: "Zeus Ziki" },
