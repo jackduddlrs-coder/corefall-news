@@ -204,7 +204,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
 
   const getYearRangeLabel = () => {
     if (selectedYears.size === seasonHistory.length) {
-      return `(700-707)`;
+      return `(700-708)`;
     }
     const years = Array.from(selectedYears).sort();
     if (years.length === 1) return `(${years[0]})`;

@@ -8,7 +8,7 @@ interface SeasonsSectionProps {
 export function SeasonsSection({ onPlayerClick, onTeamClick }: SeasonsSectionProps) {
   return (
     <div className="animate-fadeIn">
-      <h1 className="text-white">Complete Season History (679–707)</h1>
+      <h1 className="text-white">Complete Season History (679–708)</h1>
       <p className="text-foreground">A comprehensive archive of the Modern Era, tracking the three pillars of Corefall success: The Apex, The Team Title (CTT), and The Season Star.</p>
 
       <div className="overflow-x-auto bg-panel rounded-lg shadow-lg">

@@ -8,7 +8,7 @@ interface ApexFinalsSectionProps {
 export function ApexFinalsSection({ onPlayerClick, onTeamClick }: ApexFinalsSectionProps) {
   return (
     <div className="animate-fadeIn">
-      <h1 className="text-white">Apex Finals History (679–707)</h1>
+      <h1 className="text-white">Apex Finals History (679–708)</h1>
       <p className="text-foreground">Detailed breakdown of every Grand Finals match in the recorded era.</p>
 
       <div className="overflow-x-auto bg-panel rounded-lg shadow-lg">
