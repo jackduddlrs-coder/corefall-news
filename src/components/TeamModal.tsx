@@ -31,6 +31,11 @@ export function TeamModal({ teamName, onClose, onPlayerClick }: TeamModalProps) 
       const seasonRecord = seasons.find(s => s.year === parseInt(year));
       const notes: string[] = [];
       
+      // Special notes for 709 season
+      if (year === "709" && teamName === "Damage") {
+        notes.push("🏆 Team Trials Winner");
+      }
+      
       if (seasonRecord) {
         if (seasonRecord.ctt === teamName) notes.push("🏆 CTT Champion");
         if (seasonRecord.team === teamName) notes.push("👑 Apex Winner");
