@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        SEASON 708 COMPLETE: Zeus Ziki Named Season Star • Damage Wins CTT • New Life 708 Wraps Season
+        SEASON 709 LIVE: Wraith Cunelly Wins Chaos Reigns 709 • Damage Leads CTT Race • Mega Hawnnon Top Standings
       </div>
 
       <div 
@@ -12,48 +12,48 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-calhal mb-2 inline-block">Season Star 708</span>
+          <span className="team-tag team-engery mb-2 inline-block">Major Winner</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            ZEUS ZIKI<br/>SEASON STAR 708
+            WRAITH CUNELLY<br/>CHAOS REIGNS 709
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Cal Hal star dominates Season 708 with 3300 points and 14 KOs to claim Season Star honors.
+            The Engery veteran claims his 5th career major, defeating Cascade Juner in the finals for Chaos Reigns 709.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 708 Final Standings</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 709 After Chaos Reigns</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Season Star</span>
-          <h3 className="text-white mt-3">Zeus Ziki: Season Star 708</h3>
+          <span className="team-tag team-engery">Chaos Reigns Champion</span>
+          <h3 className="text-white mt-3">Wraith Cunelly Wins Major #5</h3>
           <p className="text-foreground">
-            Zeus earns Season Star with <span className="stat-highlight">3300 points</span>. Led the season despite falling in the Apex Finals. 14 KOs!
+            Wraith defeats Cascade Juner to claim Chaos Reigns 709 with <span className="stat-highlight">650 total points</span>. His 5th career major!
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-limium">New Life Champion</span>
-          <h3 className="text-white mt-3">Heal Wins New Life 708</h3>
+          <span className="team-tag team-dashlol">Points Leader</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Leads Standings</h3>
           <p className="text-foreground">
-            Heal Calofloure wins New Life 708, finishing 2nd overall with <span className="stat-highlight">2750 points</span>. Career 7 total championships!
+            Mega takes the lead with <span className="stat-highlight">700 points</span> after 3rd place Chaos finish. Daredevil Gaffe tied at 700.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">CTT Champions</span>
-          <h3 className="text-white mt-3">Damage Wins CTT</h3>
+          <span className="team-tag team-damage">CTT Leaders</span>
+          <h3 className="text-white mt-3">Damage Leads Team Race</h3>
           <p className="text-foreground">
-            Damage claims CTT with <span className="stat-highlight">7100 points</span>. Dashlol 2nd (6600), Gastro 3rd (6100).
+            Damage leads CTT with <span className="stat-highlight">1800 points</span>. Dashlol 2nd (1250), Qalf 3rd (1200).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-qalf">Top Performers</span>
-          <h3 className="text-white mt-3">Season 708 Standouts</h3>
+          <h3 className="text-white mt-3">Season 709 Standouts</h3>
           <p className="text-foreground">
-            Cascade Juner 3rd (2700), Nothing Sawryr 4th (2700), Vampire Ortez 5th (2500). Competitive season throughout!
+            Cascade Juner 3rd (650), Nothing Sawryr 4th (650), Wraith Cunelly 5th (650). Tight race at the top!
           </p>
         </div>
       </div>
