@@ -10,7 +10,7 @@ type SortKey = "total" | "apex" | "ctt" | "major" | "name";
 type SortDirection = "asc" | "desc";
 type TrophyType = "all" | "apex" | "ctt" | "major";
 
-const ALL_YEARS = ["700", "701", "702", "703", "704", "705", "706", "707", "708"];
+const ALL_YEARS = ["700", "701", "702", "703", "704", "705", "706", "707", "708", "709"];
 
 // Parse trophy list to extract year-specific trophies
 function parseTrophyList(list: string): { apex: string[]; ctt: string[]; major: string[] } {
