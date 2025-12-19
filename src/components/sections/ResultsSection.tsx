@@ -69,7 +69,7 @@ export function ResultsSection({ onPlayerClick, onTeamClick }: ResultsSectionPro
   return (
     <div className="animate-fadeIn">
       <h1 className="text-[hsl(var(--gold))]">Season 709 Standings</h1>
-      <p className="text-foreground">Live standings for <strong>Season 709</strong> after the Heartland Cup. Click column headers to sort.</p>
+      <p className="text-foreground">Live standings for <strong>Season 709</strong> after Chaos Reigns. Click column headers to sort.</p>
 
       <input
         type="text"
