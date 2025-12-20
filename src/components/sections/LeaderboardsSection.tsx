@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { pastStandings, pastTeamStandings, getTeamClass, seasons, majorWinners, apexDetailed } from "@/data/corefallData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -118,9 +118,11 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50);
 
     // Most Apex Appearances (top 16 finishes - the Apex bracket)
+    // Exclude season 709 since Apex hasn't occurred yet
     const playerAppearances: Record<string, number> = {};
     Object.entries(pastStandings).forEach(([season, players]) => {
       if (!selectedYears.has(season)) return;
+      if (season === "709") return; // Exclude 709 - Apex hasn't happened yet
       players.forEach(player => {
         if (player.Rank <= 16) {
           playerAppearances[player.Name] = (playerAppearances[player.Name] || 0) + 1;
@@ -315,9 +317,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
               const isExpanded = expandedTeamSeason === key;
               
               return (
-                <>
+                <React.Fragment key={key}>
                   <tr 
-                    key={key} 
                     className={`border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer ${isExpanded ? 'bg-muted/30' : ''}`}
                     onClick={() => setExpandedTeamSeason(isExpanded ? null : key)}
                   >
@@ -342,7 +343,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                     </td>
                   </tr>
                   {isExpanded && entry.players.length > 0 && (
-                    <tr key={`${key}-expanded`}>
+                    <tr>
                       <td colSpan={4} className="p-0 bg-muted/20">
                         <div className="p-3 space-y-1">
                           <div className="text-xs text-muted-foreground mb-2">
@@ -367,7 +368,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               );
             })}
           </tbody>

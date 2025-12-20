@@ -133,13 +133,13 @@ export const RosterMovesSection = ({ onPlayerClick, onTeamClick }: RosterMovesSe
       return seasons.map(season => ({
         season,
         moves: getMovesBySeason(season),
-        isUpcoming: season === "708"
+        isUpcoming: season === "710"
       }));
     }
     return [{
       season: activeTab,
       moves: getMovesBySeason(activeTab),
-      isUpcoming: activeTab === "708"
+      isUpcoming: activeTab === "710"
     }];
   }, [activeTab, seasons]);
 
@@ -194,7 +194,7 @@ export const RosterMovesSection = ({ onPlayerClick, onTeamClick }: RosterMovesSe
               className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3"
             >
               {season}
-              {season === "708" && (
+              {season === "710" && (
                 <span className="ml-0.5 sm:ml-1 text-[8px] sm:text-[10px] text-primary">★</span>
               )}
             </TabsTrigger>

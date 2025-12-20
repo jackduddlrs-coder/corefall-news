@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { seasons, getTeamClass, pastStandings, inactiveTeams } from "@/data/corefallData";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -185,9 +185,8 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
             {teamList.map(t => {
               const isExpanded = expandedTeam === t.name;
               return (
-                <>
+                <React.Fragment key={t.name}>
                   <tr 
-                    key={t.name} 
                     className={`border-b border-[#2a2f38] hover:bg-[#2c323d] align-top cursor-pointer ${isExpanded ? 'bg-[#2c323d]' : 'even:bg-[#1f242b]'}`}
                     onClick={() => t.topPlayers.length > 0 && toggleTeamExpand(t.name)}
                   >
@@ -219,7 +218,7 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
                     </td>
                   </tr>
                   {isExpanded && t.topPlayers.length > 0 && (
-                    <tr key={`${t.name}-players`}>
+                    <tr>
                       <td colSpan={5} className="p-0 bg-[#1a1f25]">
                         <div className="p-3">
                           <div className="text-xs text-muted-foreground mb-2">Top Historical Players (Since 700)</div>
@@ -242,7 +241,7 @@ export function TeamsSection({ onTeamClick, onPlayerClick }: TeamsSectionProps) 
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               );
             })}
           </tbody>
