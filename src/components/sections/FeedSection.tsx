@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        SEASON 709 LIVE: Vampire Ortez Wins Heritage 709 • Cascade Juner Leads Standings • Damage Dominates CTT
+        SEASON 709 LIVE: Cascade Juner Wins Descent 709 • 11th Career Major • Damage Leads CTT
       </div>
 
       <div 
@@ -12,32 +12,32 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">Major Winner</span>
+          <span className="team-tag team-damage mb-2 inline-block">Major Winner</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            VAMPIRE ORTEZ<br/>HERITAGE 709
+            CASCADE JUNER<br/>DESCENT 709
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Dashlol star claims Heritage 709 for his 2nd career major, defeating Zeus Ziki in the finals.
+            The Damage superstar claims Descent 709 for his 11th career major, defeating Daredevil Gaffe in the finals.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 709 After Heritage</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 709 After Descent</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Heritage Champion</span>
-          <h3 className="text-white mt-3">Vampire Ortez Wins Major #2</h3>
+          <span className="team-tag team-damage">Descent Champion</span>
+          <h3 className="text-white mt-3">Cascade Juner Wins Major #11</h3>
           <p className="text-foreground">
-            Vampire defeats Zeus Ziki to claim Heritage 709 with <span className="stat-highlight">900 total points</span>. His 2nd career major!
+            Cascade defeats Daredevil Gaffe to claim Descent 709 with <span className="stat-highlight">1500 total points</span>. His 11th career major!
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Points Leader</span>
-          <h3 className="text-white mt-3">Cascade Juner Leads Standings</h3>
+          <span className="team-tag team-qalf">Runner-Up</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe 2nd Place</h3>
           <p className="text-foreground">
-            Cascade takes the lead with <span className="stat-highlight">950 points</span>. Vampire Ortez and Mega Hawnnon tied at 900.
+            Daredevil finishes runner-up at Descent with <span className="stat-highlight">1300 points</span>. Sky Sunyer 3rd (1200), Wraith Cunelly 4th (1050).
           </p>
         </div>
         
@@ -45,15 +45,15 @@ export function FeedSection() {
           <span className="team-tag team-damage">CTT Leaders</span>
           <h3 className="text-white mt-3">Damage Dominates Team Race</h3>
           <p className="text-foreground">
-            Damage leads CTT with <span className="stat-highlight">2400 points</span>. Dashlol 2nd (2100), Qalf 3rd (1550).
+            Damage leads CTT with <span className="stat-highlight">3300 points</span>. Qalf 2nd (2600), Dashlol 3rd (2350).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-engery">Top Performers</span>
+          <span className="team-tag team-dashlol">Top Performers</span>
           <h3 className="text-white mt-3">Season 709 Standouts</h3>
           <p className="text-foreground">
-            Wraith Cunelly 4th (850), Daredevil Gaffe 5th (850), Sky Sunyer 6th (800). Tight race at the top!
+            Vampire Ortez 5th (1000), Mega Hawnnon 6th (1000), Nothing Sawryr 7th (1000). Tight race behind the leaders!
           </p>
         </div>
       </div>
