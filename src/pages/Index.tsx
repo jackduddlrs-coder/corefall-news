@@ -9,11 +9,12 @@ import { ApexFinalsSection } from "@/components/sections/ApexFinalsSection";
 import { H2HSection } from "@/components/sections/PlayerComparisonSection";
 import { TeamComparisonSection } from "@/components/sections/TeamComparisonSection";
 import { DynastyAnalysisSection } from "@/components/sections/DynastyAnalysisSection";
+import { ImmaculateGridSection } from "@/components/sections/ImmaculateGridSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 import { GlobalSearch } from "@/components/GlobalSearch";
 
-type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties";
+type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties" | "grid";
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: "home", label: "Feed" },
@@ -26,6 +27,7 @@ const navItems: { id: SectionId; label: string }[] = [
   { id: "compare", label: "Player H2H" },
   { id: "team-compare", label: "Team H2H" },
   { id: "dynasties", label: "Dynasties" },
+  { id: "grid", label: "Grid Game" },
 ];
 
 const Index = () => {
@@ -110,6 +112,9 @@ const Index = () => {
         )}
         {activeSection === "dynasties" && (
           <DynastyAnalysisSection onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+        )}
+        {activeSection === "grid" && (
+          <ImmaculateGridSection onPlayerClick={handlePlayerClick} />
         )}
       </div>
 
