@@ -3,9 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, RotateCcw, Trophy, Users } from "lucide-react";
+import { Check, X, RotateCcw, Trophy, Users, Award, Target } from "lucide-react";
 import { toast } from "sonner";
-import { pastStandings } from "@/data/corefallData";
+import { pastStandings, majorWinners, fullMatches, apexDetailed } from "@/data/corefallData";
 
 interface ImmaculateGridSectionProps {
   onPlayerClick: (name: string) => void;
@@ -16,16 +16,28 @@ interface PlayerData {
   seasons: Set<string>;
   totalPoints: number;
   totalKOs: number;
+  majorWins: number;
+  apexAppearances: number;
+  apexWins: number;
 }
 
-// Build player database dynamically from pastStandings
+// Build player database dynamically from all data sources
 function buildPlayerDatabase(): Record<string, PlayerData> {
   const players: Record<string, PlayerData> = {};
   
+  // Get stats from pastStandings
   Object.entries(pastStandings).forEach(([season, standings]) => {
     standings.forEach(player => {
       if (!players[player.Name]) {
-        players[player.Name] = { teams: new Set(), seasons: new Set(), totalPoints: 0, totalKOs: 0 };
+        players[player.Name] = { 
+          teams: new Set(), 
+          seasons: new Set(), 
+          totalPoints: 0, 
+          totalKOs: 0,
+          majorWins: 0,
+          apexAppearances: 0,
+          apexWins: 0
+        };
       }
       players[player.Name].teams.add(player.Team);
       players[player.Name].seasons.add(season);
@@ -34,29 +46,62 @@ function buildPlayerDatabase(): Record<string, PlayerData> {
     });
   });
   
+  // Count major wins
+  majorWinners.forEach(({ winner }) => {
+    if (!players[winner]) {
+      players[winner] = { 
+        teams: new Set(), 
+        seasons: new Set(), 
+        totalPoints: 0, 
+        totalKOs: 0,
+        majorWins: 0,
+        apexAppearances: 0,
+        apexWins: 0
+      };
+    }
+    players[winner].majorWins++;
+  });
+  
+  // Count Apex appearances from fullMatches
+  Object.values(fullMatches).forEach(matches => {
+    const playersInApex = new Set<string>();
+    matches.forEach(match => {
+      // Extract player names from match strings like "Player1 (4-2) vs Player2"
+      const matchStr = match.match;
+      const nameMatch = matchStr.match(/^([A-Za-z]+ [A-Za-z\-]+)/);
+      if (nameMatch && players[nameMatch[1]]) {
+        playersInApex.add(nameMatch[1]);
+      }
+      // Also extract second player
+      const vsMatch = matchStr.match(/vs ([A-Za-z]+ [A-Za-z\-]+)/);
+      if (vsMatch && players[vsMatch[1]]) {
+        playersInApex.add(vsMatch[1]);
+      }
+    });
+    playersInApex.forEach(name => {
+      if (players[name]) {
+        players[name].apexAppearances++;
+      }
+    });
+  });
+  
+  // Count Apex wins from apexDetailed
+  apexDetailed.forEach(({ win }) => {
+    if (players[win]) {
+      players[win].apexWins++;
+    }
+  });
+  
   return players;
 }
 
-type CategoryType = "team";
+type CategoryType = "team" | "stat";
 
 interface Category {
   type: CategoryType;
   value: string;
   label: string;
-}
-
-// Get all unique teams from the data that have crossover players
-function getTeamCategories(playerDb: Record<string, PlayerData>): Category[] {
-  // Find players who played for multiple teams
-  const multiTeamPlayers = Object.entries(playerDb).filter(([_, p]) => p.teams.size >= 2);
-  const teamsWithCrossover = new Set<string>();
-  multiTeamPlayers.forEach(([_, player]) => {
-    player.teams.forEach(team => teamsWithCrossover.add(team));
-  });
-  
-  return Array.from(teamsWithCrossover)
-    .sort()
-    .map(team => ({ type: "team" as const, value: team, label: team }));
+  check: (player: PlayerData) => boolean;
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -71,7 +116,7 @@ function shuffleArray<T>(array: T[]): T[] {
 function playerMatchesCategory(playerName: string, category: Category, playerDb: Record<string, PlayerData>): boolean {
   const player = playerDb[playerName];
   if (!player) return false;
-  return player.teams.has(category.value);
+  return category.check(player);
 }
 
 function findValidPlayers(rowCat: Category, colCat: Category, playerDb: Record<string, PlayerData>): string[] {
@@ -92,23 +137,79 @@ function isValidGrid(rows: Category[], cols: Category[], playerDb: Record<string
   return true;
 }
 
-function generateGrid(teamCategories: Category[], playerDb: Record<string, PlayerData>): { rows: Category[]; cols: Category[] } {
-  const maxAttempts = 200;
+function generateCategories(playerDb: Record<string, PlayerData>): Category[] {
+  // Get all unique teams from the data
+  const allTeams = new Set<string>();
+  Object.values(playerDb).forEach(player => {
+    player.teams.forEach(team => allTeams.add(team));
+  });
+  
+  const teamCategories: Category[] = Array.from(allTeams).map(team => ({
+    type: "team" as const,
+    value: team,
+    label: team,
+    check: (p: PlayerData) => p.teams.has(team)
+  }));
+  
+  // Stat-based categories
+  const statCategories: Category[] = [
+    { type: "stat", value: "5000pts", label: "5000+ Pts", check: (p) => p.totalPoints >= 5000 },
+    { type: "stat", value: "10000pts", label: "10000+ Pts", check: (p) => p.totalPoints >= 10000 },
+    { type: "stat", value: "20kos", label: "20+ KOs", check: (p) => p.totalKOs >= 20 },
+    { type: "stat", value: "50kos", label: "50+ KOs", check: (p) => p.totalKOs >= 50 },
+    { type: "stat", value: "2majors", label: "2+ Majors", check: (p) => p.majorWins >= 2 },
+    { type: "stat", value: "5majors", label: "5+ Majors", check: (p) => p.majorWins >= 5 },
+    { type: "stat", value: "10majors", label: "10+ Majors", check: (p) => p.majorWins >= 10 },
+    { type: "stat", value: "3apex", label: "3+ Apex App.", check: (p) => p.apexAppearances >= 3 },
+    { type: "stat", value: "5apex", label: "5+ Apex App.", check: (p) => p.apexAppearances >= 5 },
+    { type: "stat", value: "apexwinner", label: "Apex Winner", check: (p) => p.apexWins >= 1 },
+    { type: "stat", value: "2apexwins", label: "2+ Apex Wins", check: (p) => p.apexWins >= 2 },
+  ];
+  
+  // Filter stat categories to only include ones that have players
+  const validStatCategories = statCategories.filter(cat => 
+    Object.values(playerDb).some(p => cat.check(p))
+  );
+  
+  return [...teamCategories, ...validStatCategories];
+}
+
+function generateGrid(allCategories: Category[], playerDb: Record<string, PlayerData>): { rows: Category[]; cols: Category[] } {
+  const maxAttempts = 500;
+  
+  // Separate teams and stats
+  const teamCats = allCategories.filter(c => c.type === "team");
+  const statCats = allCategories.filter(c => c.type === "stat");
   
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const shuffled = shuffleArray(teamCategories);
-    if (shuffled.length < 6) continue;
+    const shuffledTeams = shuffleArray(teamCats);
+    const shuffledStats = shuffleArray(statCats);
     
-    const rows: Category[] = [shuffled[0], shuffled[1], shuffled[2]];
-    const cols: Category[] = [shuffled[3], shuffled[4], shuffled[5]];
+    // Try different configurations: mix of teams and stats
+    const configs = [
+      // 4 teams + 2 stats
+      { rows: [shuffledTeams[0], shuffledTeams[1], shuffledStats[0]], cols: [shuffledTeams[2], shuffledTeams[3], shuffledStats[1]] },
+      // 5 teams + 1 stat
+      { rows: [shuffledTeams[0], shuffledTeams[1], shuffledTeams[2]], cols: [shuffledTeams[3], shuffledTeams[4], shuffledStats[0]] },
+      // 6 teams (fallback)
+      { rows: [shuffledTeams[0], shuffledTeams[1], shuffledTeams[2]], cols: [shuffledTeams[3], shuffledTeams[4], shuffledTeams[5]] },
+      // 3 teams + 3 stats
+      { rows: [shuffledTeams[0], shuffledStats[0], shuffledStats[1]], cols: [shuffledTeams[1], shuffledTeams[2], shuffledStats[2]] },
+    ];
     
-    if (isValidGrid(rows, cols, playerDb)) {
-      return { rows, cols };
+    for (const config of configs) {
+      if (config.rows.every(Boolean) && config.cols.every(Boolean)) {
+        const rows = shuffleArray(config.rows);
+        const cols = shuffleArray(config.cols);
+        if (isValidGrid(rows, cols, playerDb)) {
+          return { rows, cols };
+        }
+      }
     }
   }
   
-  // Fallback: just use first 6 teams
-  const fallbackTeams = teamCategories.slice(0, 6);
+  // Ultimate fallback: just use teams
+  const fallbackTeams = shuffleArray(allCategories.filter(c => c.type === "team")).slice(0, 6);
   return {
     rows: [fallbackTeams[0], fallbackTeams[1], fallbackTeams[2]],
     cols: [fallbackTeams[3], fallbackTeams[4], fallbackTeams[5]],
@@ -125,12 +226,10 @@ interface CellState {
 export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionProps) => {
   // Build player database once
   const playerDb = useMemo(() => buildPlayerDatabase(), []);
-  const teamCategories = useMemo(() => getTeamCategories(playerDb), [playerDb]);
+  const allCategories = useMemo(() => generateCategories(playerDb), [playerDb]);
   const allPlayerNames = useMemo(() => Object.keys(playerDb), [playerDb]);
   
-  const [grid, setGrid] = useState<{ rows: Category[]; cols: Category[] }>(() => 
-    generateGrid(teamCategories, playerDb)
-  );
+  const [grid, setGrid] = useState<{ rows: Category[]; cols: Category[] }>({ rows: [], cols: [] });
   const [cells, setCells] = useState<CellState[][]>([]);
   const [currentInput, setCurrentInput] = useState("");
   const [activeCell, setActiveCell] = useState<{ row: number; col: number } | null>(null);
@@ -139,8 +238,17 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
   const [gameOver, setGameOver] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
+  // Generate initial grid
+  useEffect(() => {
+    if (allCategories.length > 0) {
+      setGrid(generateGrid(allCategories, playerDb));
+    }
+  }, [allCategories, playerDb]);
+
   // Initialize cells when grid changes
   useEffect(() => {
+    if (grid.rows.length === 0 || grid.cols.length === 0) return;
+    
     const newCells: CellState[][] = [];
     for (let r = 0; r < 3; r++) {
       const row: CellState[] = [];
@@ -192,13 +300,13 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
     
     const isCorrect = cell.validAnswers.includes(playerName);
     
-    const newCells = [...cells];
-    newCells[row][col] = {
-      ...cell,
-      guess: playerName,
-      correct: isCorrect,
-      locked: true,
-    };
+    const newCells = cells.map((r, ri) => 
+      r.map((c, ci) => 
+        ri === row && ci === col 
+          ? { ...c, guess: playerName, correct: isCorrect, locked: true }
+          : c
+      )
+    );
     setCells(newCells);
     
     if (isCorrect) {
@@ -220,7 +328,8 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
   };
 
   const resetGame = () => {
-    setGrid(generateGrid(teamCategories, playerDb));
+    const newGrid = generateGrid(allCategories, playerDb);
+    setGrid(newGrid);
     setGuessesRemaining(9);
     setScore(0);
     setGameOver(false);
@@ -228,6 +337,23 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
     setCurrentInput("");
     setSuggestions([]);
   };
+
+  const getCategoryIcon = (category: Category) => {
+    if (category.type === "team") {
+      return <Users className="h-3 w-3 mr-1 shrink-0" />;
+    }
+    if (category.value.includes("apex") || category.value.includes("Apex")) {
+      return <Trophy className="h-3 w-3 mr-1 shrink-0" />;
+    }
+    if (category.value.includes("major")) {
+      return <Award className="h-3 w-3 mr-1 shrink-0" />;
+    }
+    return <Target className="h-3 w-3 mr-1 shrink-0" />;
+  };
+
+  if (grid.rows.length === 0) {
+    return <div className="text-center py-8">Loading grid...</div>;
+  }
 
   return (
     <section className="py-8">
@@ -238,7 +364,7 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
             Corefall Grid
           </CardTitle>
           <p className="text-muted-foreground text-sm">
-            Name a player who has played for both the row and column teams
+            Name a player who matches both the row and column criteria
           </p>
         </CardHeader>
         <CardContent>
@@ -254,18 +380,18 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
             </div>
 
             {/* Grid */}
-            <div className="relative">
+            <div className="relative overflow-x-auto">
               {/* Column headers */}
               <div className="grid grid-cols-4 gap-1 mb-1">
-                <div className="w-20 h-12" /> {/* Empty corner */}
+                <div className="w-24 h-14" /> {/* Empty corner */}
                 {grid.cols.map((col, i) => (
                   <div
                     key={`col-${i}`}
-                    className="w-20 h-12 flex items-center justify-center text-xs font-medium text-foreground bg-muted/50 rounded-md px-1 text-center"
+                    className="w-24 h-14 flex items-center justify-center text-[10px] font-medium text-foreground bg-muted/50 rounded-md px-1 text-center"
                   >
                     <span className="flex items-center">
-                      <Users className="h-3 w-3 mr-1" />
-                      {col.label}
+                      {getCategoryIcon(col)}
+                      <span className="break-words">{col.label}</span>
                     </span>
                   </div>
                 ))}
@@ -275,10 +401,10 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
               {grid.rows.map((row, rowIdx) => (
                 <div key={`row-${rowIdx}`} className="grid grid-cols-4 gap-1 mb-1">
                   {/* Row header */}
-                  <div className="w-20 h-20 flex items-center justify-center text-xs font-medium text-foreground bg-muted/50 rounded-md px-1 text-center">
+                  <div className="w-24 h-24 flex items-center justify-center text-[10px] font-medium text-foreground bg-muted/50 rounded-md px-1 text-center">
                     <span className="flex items-center">
-                      <Users className="h-3 w-3 mr-1" />
-                      {row.label}
+                      {getCategoryIcon(row)}
+                      <span className="break-words">{row.label}</span>
                     </span>
                   </div>
 
@@ -293,7 +419,7 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
                         onClick={() => handleCellClick(rowIdx, colIdx)}
                         disabled={cell?.locked || gameOver}
                         className={`
-                          w-20 h-20 rounded-md border-2 transition-all text-xs font-medium
+                          w-24 h-24 rounded-md border-2 transition-all text-xs font-medium
                           flex items-center justify-center p-1 text-center
                           ${isActive ? "border-primary bg-primary/10" : "border-border"}
                           ${cell?.locked && cell?.correct ? "bg-green-500/20 border-green-500" : ""}
@@ -377,8 +503,14 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
             )}
 
             {/* Legend */}
-            <div className="text-xs text-muted-foreground text-center mt-4">
-              <p>Click a cell, then type a player's name who has played for both teams</p>
+            <div className="text-xs text-muted-foreground text-center mt-4 space-y-1">
+              <p>Click a cell, then type a player's name who fits both criteria</p>
+              <div className="flex items-center justify-center gap-4 flex-wrap">
+                <span className="flex items-center gap-1"><Users className="h-3 w-3" /> Team</span>
+                <span className="flex items-center gap-1"><Trophy className="h-3 w-3" /> Apex</span>
+                <span className="flex items-center gap-1"><Award className="h-3 w-3" /> Majors</span>
+                <span className="flex items-center gap-1"><Target className="h-3 w-3" /> Stats</span>
+              </div>
             </div>
           </div>
         </CardContent>
