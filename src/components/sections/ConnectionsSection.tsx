@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Shuffle, RotateCcw, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { pastStandings, seasons, majorWinners, apexDetailed } from "@/data/corefallData";
+import { pastStandings, seasons, majorWinners, apexDetailed, trophyData, pastTeamStandings } from "@/data/corefallData";
 import { tournamentNames } from "@/data/tournamentResults";
 
 interface Category {
@@ -54,7 +54,9 @@ const getTeamMembers = (seasonId: string, team: string): string[] => {
 const generateCategoryPools = (): { name: string; items: string[]; difficulty: 1 | 2 | 3 | 4 }[] => {
   const pools: { name: string; items: string[]; difficulty: 1 | 2 | 3 | 4 }[] = [];
   
-  // Tournament names (Easy)
+  // === EASY (1) - Basic groupings ===
+  
+  // Tournament names
   const allTournaments = Object.values(tournamentNames).flat();
   const uniqueTournaments = [...new Set(allTournaments)];
   if (uniqueTournaments.length >= 4) {
@@ -65,7 +67,46 @@ const generateCategoryPools = (): { name: string; items: string[]; difficulty: 1
     });
   }
 
-  // Apex Winners (Medium)
+  // Team names (Easy)
+  const allTeams = Object.values(pastTeamStandings).flatMap(s => s.map(t => t.team));
+  const uniqueTeams = [...new Set(allTeams)];
+  pools.push({
+    name: "CTT Team Names",
+    items: uniqueTeams.slice(0, 12),
+    difficulty: 1
+  });
+
+  // First names starting with same letter
+  const allPlayerNames = Object.values(pastStandings).flatMap(s => s.map(p => p.Name));
+  const uniquePlayerNames = [...new Set(allPlayerNames)];
+  
+  // Players with "animal" first names
+  const animalNames = uniquePlayerNames.filter(n => 
+    ["Tiger", "Shark", "Horse", "Bat", "Rhino", "Duck", "Jungle"].some(a => n.startsWith(a))
+  );
+  if (animalNames.length >= 4) {
+    pools.push({
+      name: "Animal First Names",
+      items: animalNames,
+      difficulty: 1
+    });
+  }
+
+  // Weather/Nature first names
+  const weatherNames = uniquePlayerNames.filter(n => 
+    ["Rain", "Snow", "Storm", "Cloud", "Freeze", "Cold", "Tempest", "Whiteout", "Spring"].some(w => n.startsWith(w))
+  );
+  if (weatherNames.length >= 4) {
+    pools.push({
+      name: "Weather First Names",
+      items: weatherNames,
+      difficulty: 1
+    });
+  }
+
+  // === MEDIUM (2) - Achievement-based ===
+
+  // Apex Winners
   const apexWinners = [...new Set(apexDetailed.map(a => a.win))];
   if (apexWinners.length >= 4) {
     pools.push({
@@ -75,102 +116,229 @@ const generateCategoryPools = (): { name: string; items: string[]; difficulty: 1
     });
   }
 
-  // Season Stars (Medium)
-  const seasonStars = seasons.filter(s => s.apex).map(s => s.apex as string);
-  const uniqueSeasonStars = [...new Set(seasonStars)];
-  if (uniqueSeasonStars.length >= 4) {
+  // Apex Finalists (losers)
+  const apexFinalists = [...new Set(apexDetailed.map(a => a.lose))];
+  if (apexFinalists.length >= 4) {
     pools.push({
-      name: "Season Apex Winners",
-      items: uniqueSeasonStars,
+      name: "Apex Finalists (Lost Final)",
+      items: apexFinalists,
       difficulty: 2
     });
   }
 
-  // Team-based categories (Hard)
-  const teams = ["Damage", "Qalf", "Dashlol", "Limium", "Gastro", "Cal Hal", "Engery", "Varcity"];
+  // Season Stars
+  const seasonStars = [...new Set(seasons.map(s => s.star).filter(Boolean))];
+  if (seasonStars.length >= 4) {
+    pools.push({
+      name: "Season Stars",
+      items: seasonStars as string[],
+      difficulty: 2
+    });
+  }
+
+  // CTT Winners (teams that won CTT)
+  const cttWinners = [...new Set(seasons.map(s => s.ctt))];
+  if (cttWinners.length >= 4) {
+    pools.push({
+      name: "CTT Winning Teams",
+      items: cttWinners,
+      difficulty: 2
+    });
+  }
+
+  // Players with 5+ total trophies
+  const multiTrophyPlayers = trophyData.filter(p => p.total >= 5).map(p => p.name);
+  if (multiTrophyPlayers.length >= 4) {
+    pools.push({
+      name: "5+ Career Trophies",
+      items: multiTrophyPlayers,
+      difficulty: 2
+    });
+  }
+
+  // Players with CTT wins
+  const cttPlayerWinners = trophyData.filter(p => p.ctt >= 1).map(p => p.name);
+  if (cttPlayerWinners.length >= 4) {
+    pools.push({
+      name: "CTT Champions",
+      items: cttPlayerWinners,
+      difficulty: 2
+    });
+  }
+
+  // === HARD (3) - Team/Season specific ===
+
+  // Team-based categories for multiple seasons
+  const teams = ["Damage", "Qalf", "Dashlol", "Limium", "Gastro", "Cal Hal", "Engery", "Varcity", "AFE"];
+  const seasonIds = ["708", "707", "706", "705"];
+  
   teams.forEach(team => {
-    const members = getTeamMembers("708", team);
-    if (members.length >= 4) {
+    seasonIds.forEach(seasonId => {
+      const members = getTeamMembers(seasonId, team);
+      if (members.length >= 4) {
+        pools.push({
+          name: `${team} Players (S${seasonId})`,
+          items: members,
+          difficulty: 3
+        });
+      }
+    });
+  });
+
+  // Top 5 finishers per season
+  seasonIds.forEach(seasonId => {
+    const top5 = pastStandings[seasonId]?.slice(0, 5).map(p => p.Name) || [];
+    if (top5.length >= 4) {
       pools.push({
-        name: `${team} Players (S708)`,
-        items: members,
+        name: `Top 5 Season ${seasonId}`,
+        items: top5,
         difficulty: 3
       });
     }
   });
 
-  // Heartland Cup winners (Tricky)
-  const heartlandWinners = majorWinners
-    .filter(m => m.tournament === "Heartland")
-    .map(m => m.winner);
-  const uniqueHeartland = [...new Set(heartlandWinners)];
-  if (uniqueHeartland.length >= 4) {
+  // Players who played for specific team (across seasons)
+  teams.slice(0, 5).forEach(team => {
+    const playersForTeam = new Set<string>();
+    Object.values(pastStandings).forEach(season => {
+      season.filter(p => p.Team === team).forEach(p => playersForTeam.add(p.Name));
+    });
+    if (playersForTeam.size >= 4) {
+      pools.push({
+        name: `Played for ${team}`,
+        items: [...playersForTeam].slice(0, 8),
+        difficulty: 3
+      });
+    }
+  });
+
+  // Players aged 30+ in a season
+  const veteranPlayers = pastStandings["708"]?.filter(p => p.Age >= 30).map(p => p.Name) || [];
+  if (veteranPlayers.length >= 4) {
     pools.push({
-      name: "Heartland Cup Winners",
-      items: uniqueHeartland,
-      difficulty: 4
+      name: "Age 30+ (Season 708)",
+      items: veteranPlayers,
+      difficulty: 3
     });
   }
 
-  // Players with high KOs in a season (Tricky)
+  // Young players (under 25) in a season
+  const youngPlayers = pastStandings["708"]?.filter(p => p.Age <= 24).map(p => p.Name) || [];
+  if (youngPlayers.length >= 4) {
+    pools.push({
+      name: "Under 25 (Season 708)",
+      items: youngPlayers,
+      difficulty: 3
+    });
+  }
+
+  // === TRICKY (4) - Obscure connections ===
+
+  // Tournament-specific winners
+  const tournaments = ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"];
+  tournaments.forEach(tournament => {
+    const winners = majorWinners
+      .filter(m => m.tournament === tournament)
+      .map(m => m.winner);
+    const uniqueWinners = [...new Set(winners)];
+    if (uniqueWinners.length >= 4) {
+      pools.push({
+        name: `${tournament} Winners`,
+        items: uniqueWinners,
+        difficulty: 4
+      });
+    }
+  });
+
+  // Players with high KOs
   const highKOPlayers = pastStandings["708"]?.filter(p => p.KOs >= 10).map(p => p.Name) || [];
   if (highKOPlayers.length >= 4) {
     pools.push({
-      name: "10+ KOs in Season 708",
+      name: "10+ KOs (Season 708)",
       items: highKOPlayers,
       difficulty: 4
     });
   }
 
-  // Top 3 finishers in specific season (Hard)
-  const top3_708 = pastStandings["708"]?.slice(0, 3).map(p => p.Name) || [];
-  const top3_707 = pastStandings["707"]?.slice(0, 3).map(p => p.Name) || [];
-  const top3_706 = pastStandings["706"]?.slice(0, 3).map(p => p.Name) || [];
-  
-  if (top3_708.length === 3) {
+  // Players with multiple Apex wins
+  const multiApexWinners = apexDetailed.reduce((acc, a) => {
+    acc[a.win] = (acc[a.win] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  const twoTimeApex = Object.entries(multiApexWinners).filter(([_, count]) => count >= 2).map(([name]) => name);
+  if (twoTimeApex.length >= 4) {
     pools.push({
-      name: "Top 3 Season 708",
-      items: top3_708,
-      difficulty: 3
-    });
-  }
-  if (top3_707.length === 3) {
-    pools.push({
-      name: "Top 3 Season 707",
-      items: top3_707,
-      difficulty: 3
-    });
-  }
-  if (top3_706.length === 3) {
-    pools.push({
-      name: "Top 3 Season 706",
-      items: top3_706,
-      difficulty: 3
-    });
-  }
-
-  // Chaos tournament winners (Tricky)
-  const chaosWinners = majorWinners
-    .filter(m => m.tournament === "Chaos")
-    .map(m => m.winner);
-  const uniqueChaos = [...new Set(chaosWinners)];
-  if (uniqueChaos.length >= 4) {
-    pools.push({
-      name: "Chaos Tournament Winners",
-      items: uniqueChaos,
+      name: "2+ Apex Titles",
+      items: twoTimeApex,
       difficulty: 4
     });
   }
 
-  // Nightmare winners
-  const nightmareWinners = majorWinners
-    .filter(m => m.tournament === "Nightmare")
-    .map(m => m.winner);
-  const uniqueNightmare = [...new Set(nightmareWinners)];
-  if (uniqueNightmare.length >= 4) {
+  // Players who won Apex for specific teams
+  const damageApexWinners = [...new Set(apexDetailed.filter(a => a.wTeam === "Damage").map(a => a.win))];
+  if (damageApexWinners.length >= 4) {
     pools.push({
-      name: "Nightmare Cup Winners",
-      items: uniqueNightmare,
+      name: "Won Apex for Damage",
+      items: damageApexWinners,
+      difficulty: 4
+    });
+  }
+
+  const engeryApexWinners = [...new Set(apexDetailed.filter(a => a.wTeam === "Engery").map(a => a.win))];
+  if (engeryApexWinners.length >= 4) {
+    pools.push({
+      name: "Won Apex for Engery",
+      items: engeryApexWinners,
+      difficulty: 4
+    });
+  }
+
+  // Players who lost Apex finals
+  const apexLosers = [...new Set(apexDetailed.map(a => a.lose))];
+  if (apexLosers.length >= 4) {
+    pools.push({
+      name: "Lost Apex Finals",
+      items: apexLosers,
+      difficulty: 4
+    });
+  }
+
+  // Players with exactly 1 major win
+  const oneMajorPlayers = trophyData.filter(p => p.major === 1).map(p => p.name);
+  if (oneMajorPlayers.length >= 4) {
+    pools.push({
+      name: "Exactly 1 Major Win",
+      items: oneMajorPlayers,
+      difficulty: 4
+    });
+  }
+
+  // Players with Apex but no CTT
+  const apexNoCTT = trophyData.filter(p => p.apex >= 1 && p.ctt === 0).map(p => p.name);
+  if (apexNoCTT.length >= 4) {
+    pools.push({
+      name: "Apex Champion, No CTT",
+      items: apexNoCTT,
+      difficulty: 4
+    });
+  }
+
+  // Apex winners at young age (under 28)
+  const youngApexWinners = [...new Set(apexDetailed.filter(a => a.winAge < 28).map(a => a.win))];
+  if (youngApexWinners.length >= 4) {
+    pools.push({
+      name: "Won Apex Under Age 28",
+      items: youngApexWinners,
+      difficulty: 4
+    });
+  }
+
+  // Apex winners at older age (30+)
+  const oldApexWinners = [...new Set(apexDetailed.filter(a => a.winAge >= 30).map(a => a.win))];
+  if (oldApexWinners.length >= 4) {
+    pools.push({
+      name: "Won Apex Age 30+",
+      items: oldApexWinners,
       difficulty: 4
     });
   }
