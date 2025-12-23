@@ -10,11 +10,12 @@ import { H2HSection } from "@/components/sections/PlayerComparisonSection";
 import { TeamComparisonSection } from "@/components/sections/TeamComparisonSection";
 import { DynastyAnalysisSection } from "@/components/sections/DynastyAnalysisSection";
 import { GamesSection } from "@/components/sections/GamesSection";
+import { SplashfeedSection } from "@/components/sections/SplashfeedSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 import { GlobalSearch } from "@/components/GlobalSearch";
 
-type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties" | "games";
+type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties" | "games" | "splashfeed";
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: "home", label: "Feed" },
@@ -28,6 +29,7 @@ const navItems: { id: SectionId; label: string }[] = [
   { id: "team-compare", label: "Team H2H" },
   { id: "dynasties", label: "Dynasties" },
   { id: "games", label: "Games" },
+  { id: "splashfeed", label: "Splashfeed" },
 ];
 
 const Index = () => {
@@ -116,6 +118,7 @@ const Index = () => {
         {activeSection === "games" && (
           <GamesSection onPlayerClick={handlePlayerClick} />
         )}
+        {activeSection === "splashfeed" && <SplashfeedSection />}
       </div>
 
       {/* Footer */}
