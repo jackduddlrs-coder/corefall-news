@@ -1,72 +1,43 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Check, X, RotateCcw, Trophy, Users } from "lucide-react";
 import { toast } from "sonner";
+import { pastStandings } from "@/data/corefallData";
 
 interface ImmaculateGridSectionProps {
   onPlayerClick: (name: string) => void;
 }
 
-// Player database with team history
-const playerDatabase: Record<string, { teams: string[]; seasons: string[]; achievements: string[] }> = {
-  // Multi-team legends
-  "Cascade Juner": { teams: ["Qalf", "Damage"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion", "Season Star", "1000+ Points"] },
-  "Legend Reyes": { teams: ["Qalf", "Gastro"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion", "Season Star", "1000+ Points"] },
-  "Brawler Kazi": { teams: ["Gastro", "CTT"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion", "10+ KOs"] },
-  "Viper Montague": { teams: ["Gastro", "Engery", "Damage"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion", "10+ KOs"] },
-  "Storm Valkyr": { teams: ["CTT", "Qalf"], seasons: ["703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion", "Season Star"] },
-  "Blaze Harmon": { teams: ["CTT", "Damage", "AFE"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion", "1000+ Points"] },
-  "Fury Tanaka": { teams: ["AFE", "Gastro"], seasons: ["702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Season Star", "10+ KOs"] },
-  "Ghost Erikson": { teams: ["AFE", "Zemiga-Mar", "Juire"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["Apex Champion"] },
-  "Thunder Okonkwo": { teams: ["Juire", "Damage"], seasons: ["704", "705", "706", "707", "708", "709"], achievements: ["1000+ Points"] },
-  "Phantom Drake": { teams: ["Juire", "Qalf", "CTT"], seasons: ["701", "702", "703", "704", "705", "706"], achievements: ["Apex Champion", "Season Star"] },
-  "Razor Chen": { teams: ["Damage", "CTT", "Gastro"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["10+ KOs"] },
-  "Nova Sterling": { teams: ["Gastro", "Damage", "Engery"], seasons: ["703", "704", "705", "706", "707", "708", "709"], achievements: ["Season Star"] },
-  "Titan Volkov": { teams: ["Engery", "Qalf"], seasons: ["701", "702", "703", "704", "705", "706", "707"], achievements: ["Apex Champion", "1000+ Points"] },
-  "Hawk Mendez": { teams: ["Cal Hal", "AFE", "Damage"], seasons: ["705", "706", "707", "708", "709"], achievements: ["10+ KOs"] },
-  "Bolt Nakamura": { teams: ["Cal Hal", "Zemiga-Mar", "CTT"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708"], achievements: ["Season Star"] },
-  "Ace Williams": { teams: ["Dashlol", "Juire"], seasons: ["701", "702", "703", "704", "705"], achievements: ["Apex Champion"] },
-  "Striker Popov": { teams: ["Dashlol", "AFE", "Gastro"], seasons: ["703", "704", "705", "706", "707", "708", "709"], achievements: ["10+ KOs"] },
-  "Venom Reyes": { teams: ["Zemiga-Mar", "Gastro", "Qalf"], seasons: ["701", "702", "703", "704", "705", "706"], achievements: ["Season Star", "1000+ Points"] },
-  "Shadow Kim": { teams: ["Qalf", "Engery", "Cal Hal"], seasons: ["702", "703", "704", "705", "706", "707", "708"], achievements: ["Apex Champion"] },
-  "Inferno Costa": { teams: ["CTT", "Juire", "Zemiga-Mar"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: ["1000+ Points", "10+ KOs"] },
-  
-  // Additional multi-team players for better grid coverage
-  "Blitz Yamamoto": { teams: ["Qalf", "Gastro", "AFE"], seasons: ["702", "703", "704", "705", "706", "707"], achievements: ["Apex Champion", "10+ KOs"] },
-  "Comet Lindgren": { teams: ["CTT", "Engery", "Dashlol"], seasons: ["703", "704", "705", "706", "707", "708"], achievements: ["Season Star"] },
-  "Dagger Osei": { teams: ["Damage", "Juire", "Cal Hal"], seasons: ["701", "702", "703", "704", "705"], achievements: ["Apex Champion", "1000+ Points"] },
-  "Eclipse Moreau": { teams: ["AFE", "CTT", "Qalf"], seasons: ["704", "705", "706", "707", "708", "709"], achievements: ["10+ KOs"] },
-  "Fang Petrov": { teams: ["Zemiga-Mar", "Damage", "Gastro"], seasons: ["701", "702", "703", "704", "705", "706"], achievements: ["Season Star", "Apex Champion"] },
-  "Granite Torres": { teams: ["Cal Hal", "Engery", "Juire"], seasons: ["705", "706", "707", "708", "709"], achievements: ["1000+ Points"] },
-  "Haze Nilsson": { teams: ["Dashlol", "Qalf", "CTT"], seasons: ["702", "703", "704", "705", "706", "707"], achievements: ["Apex Champion"] },
-  "Ion Vasquez": { teams: ["Gastro", "AFE", "Zemiga-Mar"], seasons: ["703", "704", "705", "706", "707", "708"], achievements: ["10+ KOs", "Season Star"] },
-  "Jinx Kowalski": { teams: ["Engery", "Damage", "Cal Hal"], seasons: ["701", "702", "703", "704", "705"], achievements: ["Apex Champion"] },
-  "Krypton Adeyemi": { teams: ["Juire", "Gastro", "Dashlol"], seasons: ["704", "705", "706", "707", "708", "709"], achievements: ["1000+ Points", "10+ KOs"] },
-  "Lynx Bergman": { teams: ["CTT", "Zemiga-Mar", "AFE"], seasons: ["702", "703", "704", "705", "706"], achievements: ["Season Star"] },
-  "Meteor Singh": { teams: ["Qalf", "Juire", "Engery"], seasons: ["703", "704", "705", "706", "707", "708"], achievements: ["Apex Champion", "1000+ Points"] },
-  "Nebula Fernandez": { teams: ["Damage", "Cal Hal", "Gastro"], seasons: ["701", "702", "703", "704", "705", "706", "707"], achievements: ["10+ KOs"] },
-  "Orbit Johansson": { teams: ["AFE", "Dashlol", "CTT"], seasons: ["705", "706", "707", "708", "709"], achievements: ["Season Star", "Apex Champion"] },
-  "Pulse Nakamura": { teams: ["Zemiga-Mar", "Qalf", "Damage"], seasons: ["702", "703", "704", "705", "706", "707"], achievements: ["1000+ Points"] },
-  "Quake Ivanov": { teams: ["Engery", "Juire", "AFE"], seasons: ["703", "704", "705", "706", "707", "708", "709"], achievements: ["10+ KOs", "Apex Champion"] },
-  "Rift Olsen": { teams: ["Cal Hal", "CTT", "Zemiga-Mar"], seasons: ["701", "702", "703", "704", "705"], achievements: ["Season Star"] },
-  "Spark Kimura": { teams: ["Dashlol", "Gastro", "Engery"], seasons: ["704", "705", "706", "707", "708"], achievements: ["Apex Champion", "1000+ Points"] },
-  "Tempest Dubois": { teams: ["Juire", "Damage", "Qalf"], seasons: ["702", "703", "704", "705", "706", "707"], achievements: ["10+ KOs"] },
-  "Umbra Kovalenko": { teams: ["Gastro", "Cal Hal", "Dashlol"], seasons: ["705", "706", "707", "708", "709"], achievements: ["Season Star", "Apex Champion"] },
-  
-  // Single-team players
-  "Game Darwonn": { teams: ["Engery"], seasons: ["705", "706", "707", "708", "709"], achievements: [] },
-  "Cross Exzona": { teams: ["Cal Hal"], seasons: ["706", "707", "708", "709"], achievements: [] },
-  "Harsh Raii": { teams: ["AFE"], seasons: ["707", "708", "709"], achievements: [] },
-  "Rocket Dalbale": { teams: ["Zemiga-Mar"], seasons: ["708", "709"], achievements: [] },
-  "Horse Queanlend": { teams: ["Juire"], seasons: ["707", "708", "709"], achievements: [] },
-  "Rain Lieryon": { teams: ["Dashlol"], seasons: ["701", "702", "703", "704", "705", "706", "707", "708", "709"], achievements: [] },
-  "Whiteout Gar-Kiola": { teams: ["Juire"], seasons: ["705", "706", "707", "708", "709"], achievements: [] },
-};
+interface PlayerData {
+  teams: Set<string>;
+  seasons: Set<string>;
+  totalPoints: number;
+  totalKOs: number;
+}
 
-type CategoryType = "team" | "achievement";
+// Build player database dynamically from pastStandings
+function buildPlayerDatabase(): Record<string, PlayerData> {
+  const players: Record<string, PlayerData> = {};
+  
+  Object.entries(pastStandings).forEach(([season, standings]) => {
+    standings.forEach(player => {
+      if (!players[player.Name]) {
+        players[player.Name] = { teams: new Set(), seasons: new Set(), totalPoints: 0, totalKOs: 0 };
+      }
+      players[player.Name].teams.add(player.Team);
+      players[player.Name].seasons.add(season);
+      players[player.Name].totalPoints += player.Points;
+      players[player.Name].totalKOs += player.KOs;
+    });
+  });
+  
+  return players;
+}
+
+type CategoryType = "team";
 
 interface Category {
   type: CategoryType;
@@ -74,27 +45,19 @@ interface Category {
   label: string;
 }
 
-const teamCategories: Category[] = [
-  { type: "team", value: "Qalf", label: "Qalf" },
-  { type: "team", value: "Gastro", label: "Gastro" },
-  { type: "team", value: "CTT", label: "CTT" },
-  { type: "team", value: "Damage", label: "Damage" },
-  { type: "team", value: "AFE", label: "AFE" },
-  { type: "team", value: "Juire", label: "Juire" },
-  { type: "team", value: "Engery", label: "Engery" },
-  { type: "team", value: "Cal Hal", label: "Cal Hal" },
-  { type: "team", value: "Zemiga-Mar", label: "Zemiga-Mar" },
-  { type: "team", value: "Dashlol", label: "Dashlol" },
-];
-
-const achievementCategories: Category[] = [
-  { type: "achievement", value: "Apex Champion", label: "Apex Champion" },
-  { type: "achievement", value: "Season Star", label: "Season Star" },
-  { type: "achievement", value: "1000+ Points", label: "1000+ Pts" },
-  { type: "achievement", value: "10+ KOs", label: "10+ KOs" },
-];
-
-const allCategories = [...teamCategories, ...achievementCategories];
+// Get all unique teams from the data that have crossover players
+function getTeamCategories(playerDb: Record<string, PlayerData>): Category[] {
+  // Find players who played for multiple teams
+  const multiTeamPlayers = Object.entries(playerDb).filter(([_, p]) => p.teams.size >= 2);
+  const teamsWithCrossover = new Set<string>();
+  multiTeamPlayers.forEach(([_, player]) => {
+    player.teams.forEach(team => teamsWithCrossover.add(team));
+  });
+  
+  return Array.from(teamsWithCrossover)
+    .sort()
+    .map(team => ({ type: "team" as const, value: team, label: team }));
+}
 
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
@@ -105,11 +68,22 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
-function isValidGrid(rows: Category[], cols: Category[]): boolean {
-  // Check that every cell has at least one valid player
+function playerMatchesCategory(playerName: string, category: Category, playerDb: Record<string, PlayerData>): boolean {
+  const player = playerDb[playerName];
+  if (!player) return false;
+  return player.teams.has(category.value);
+}
+
+function findValidPlayers(rowCat: Category, colCat: Category, playerDb: Record<string, PlayerData>): string[] {
+  return Object.keys(playerDb).filter(name => 
+    playerMatchesCategory(name, rowCat, playerDb) && playerMatchesCategory(name, colCat, playerDb)
+  );
+}
+
+function isValidGrid(rows: Category[], cols: Category[], playerDb: Record<string, PlayerData>): boolean {
   for (let r = 0; r < 3; r++) {
     for (let c = 0; c < 3; c++) {
-      const validPlayers = findValidPlayers(rows[r], cols[c]);
+      const validPlayers = findValidPlayers(rows[r], cols[c], playerDb);
       if (validPlayers.length === 0) {
         return false;
       }
@@ -118,58 +92,27 @@ function isValidGrid(rows: Category[], cols: Category[]): boolean {
   return true;
 }
 
-function generateGrid(): { rows: Category[]; cols: Category[] } {
-  const maxAttempts = 100;
+function generateGrid(teamCategories: Category[], playerDb: Record<string, PlayerData>): { rows: Category[]; cols: Category[] } {
+  const maxAttempts = 200;
   
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const shuffledTeams = shuffleArray(teamCategories);
-    const shuffledAchievements = shuffleArray(achievementCategories);
+    const shuffled = shuffleArray(teamCategories);
+    if (shuffled.length < 6) continue;
     
-    // Try different configurations
-    const rows: Category[] = [
-      shuffledTeams[0],
-      shuffledTeams[1],
-      shuffledAchievements[0] || shuffledTeams[2],
-    ];
+    const rows: Category[] = [shuffled[0], shuffled[1], shuffled[2]];
+    const cols: Category[] = [shuffled[3], shuffled[4], shuffled[5]];
     
-    const cols: Category[] = [
-      shuffledTeams[3],
-      shuffledTeams[4],
-      shuffledAchievements[1] || shuffledTeams[5],
-    ];
-    
-    const finalRows = shuffleArray(rows);
-    const finalCols = shuffleArray(cols);
-    
-    if (isValidGrid(finalRows, finalCols)) {
-      return { rows: finalRows, cols: finalCols };
+    if (isValidGrid(rows, cols, playerDb)) {
+      return { rows, cols };
     }
   }
   
-  // Fallback: use only teams which are more likely to have overlaps
-  const shuffledTeams = shuffleArray(teamCategories);
+  // Fallback: just use first 6 teams
+  const fallbackTeams = teamCategories.slice(0, 6);
   return {
-    rows: [shuffledTeams[0], shuffledTeams[1], shuffledTeams[2]],
-    cols: [shuffledTeams[3], shuffledTeams[4], shuffledTeams[5]],
+    rows: [fallbackTeams[0], fallbackTeams[1], fallbackTeams[2]],
+    cols: [fallbackTeams[3], fallbackTeams[4], fallbackTeams[5]],
   };
-}
-
-function playerMatchesCategory(playerName: string, category: Category): boolean {
-  const player = playerDatabase[playerName];
-  if (!player) return false;
-  
-  if (category.type === "team") {
-    return player.teams.includes(category.value);
-  } else if (category.type === "achievement") {
-    return player.achievements.includes(category.value);
-  }
-  return false;
-}
-
-function findValidPlayers(rowCat: Category, colCat: Category): string[] {
-  return Object.keys(playerDatabase).filter(name => 
-    playerMatchesCategory(name, rowCat) && playerMatchesCategory(name, colCat)
-  );
 }
 
 interface CellState {
@@ -180,7 +123,14 @@ interface CellState {
 }
 
 export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionProps) => {
-  const [grid, setGrid] = useState<{ rows: Category[]; cols: Category[] }>(generateGrid);
+  // Build player database once
+  const playerDb = useMemo(() => buildPlayerDatabase(), []);
+  const teamCategories = useMemo(() => getTeamCategories(playerDb), [playerDb]);
+  const allPlayerNames = useMemo(() => Object.keys(playerDb), [playerDb]);
+  
+  const [grid, setGrid] = useState<{ rows: Category[]; cols: Category[] }>(() => 
+    generateGrid(teamCategories, playerDb)
+  );
   const [cells, setCells] = useState<CellState[][]>([]);
   const [currentInput, setCurrentInput] = useState("");
   const [activeCell, setActiveCell] = useState<{ row: number; col: number } | null>(null);
@@ -199,13 +149,13 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
           guess: "",
           correct: null,
           locked: false,
-          validAnswers: findValidPlayers(grid.rows[r], grid.cols[c]),
+          validAnswers: findValidPlayers(grid.rows[r], grid.cols[c], playerDb),
         });
       }
       newCells.push(row);
     }
     setCells(newCells);
-  }, [grid]);
+  }, [grid, playerDb]);
 
   const handleCellClick = (row: number, col: number) => {
     if (gameOver || cells[row]?.[col]?.locked) return;
@@ -218,10 +168,10 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
     setCurrentInput(value);
     
     if (value.length >= 2) {
-      const matches = Object.keys(playerDatabase).filter(name =>
+      const matches = allPlayerNames.filter(name =>
         name.toLowerCase().includes(value.toLowerCase()) &&
         !cells.flat().some(cell => cell.guess === name)
-      ).slice(0, 5);
+      ).slice(0, 8);
       setSuggestions(matches);
     } else {
       setSuggestions([]);
@@ -270,20 +220,13 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
   };
 
   const resetGame = () => {
-    setGrid(generateGrid());
+    setGrid(generateGrid(teamCategories, playerDb));
     setGuessesRemaining(9);
     setScore(0);
     setGameOver(false);
     setActiveCell(null);
     setCurrentInput("");
     setSuggestions([]);
-  };
-
-  const getCategoryIcon = (category: Category) => {
-    if (category.type === "team") {
-      return <Users className="h-3 w-3 mr-1" />;
-    }
-    return <Trophy className="h-3 w-3 mr-1" />;
   };
 
   return (
@@ -295,7 +238,7 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
             Corefall Grid
           </CardTitle>
           <p className="text-muted-foreground text-sm">
-            Name a player who matches both the row and column criteria
+            Name a player who has played for both the row and column teams
           </p>
         </CardHeader>
         <CardContent>
@@ -321,7 +264,7 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
                     className="w-20 h-12 flex items-center justify-center text-xs font-medium text-foreground bg-muted/50 rounded-md px-1 text-center"
                   >
                     <span className="flex items-center">
-                      {getCategoryIcon(col)}
+                      <Users className="h-3 w-3 mr-1" />
                       {col.label}
                     </span>
                   </div>
@@ -334,7 +277,7 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
                   {/* Row header */}
                   <div className="w-20 h-20 flex items-center justify-center text-xs font-medium text-foreground bg-muted/50 rounded-md px-1 text-center">
                     <span className="flex items-center">
-                      {getCategoryIcon(row)}
+                      <Users className="h-3 w-3 mr-1" />
                       {row.label}
                     </span>
                   </div>
@@ -397,7 +340,7 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
                   autoFocus
                 />
                 {suggestions.length > 0 && (
-                  <div className="bg-card border border-border rounded-md overflow-hidden">
+                  <div className="bg-card border border-border rounded-md overflow-hidden max-h-48 overflow-y-auto">
                     {suggestions.map((name) => (
                       <button
                         key={name}
@@ -434,12 +377,8 @@ export const ImmaculateGridSection = ({ onPlayerClick }: ImmaculateGridSectionPr
             )}
 
             {/* Legend */}
-            <div className="text-xs text-muted-foreground text-center mt-4 space-y-1">
-              <p>Click a cell, then type a player's name who fits both criteria</p>
-              <p className="flex items-center justify-center gap-4">
-                <span className="flex items-center gap-1"><Users className="h-3 w-3" /> = Team</span>
-                <span className="flex items-center gap-1"><Trophy className="h-3 w-3" /> = Achievement</span>
-              </p>
+            <div className="text-xs text-muted-foreground text-center mt-4">
+              <p>Click a cell, then type a player's name who has played for both teams</p>
             </div>
           </div>
         </CardContent>
