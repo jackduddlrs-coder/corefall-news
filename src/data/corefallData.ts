@@ -112,7 +112,7 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
     { Rank: 19, Name: "Cross Exzona", Team: "Cal Hal", Age: 26, Points: 550, KOs: 5 },
     { Rank: 20, Name: "Harsh Raii", Team: "AFE", Age: 25, Points: 550, KOs: 4 },
     { Rank: 21, Name: "Rocket Dalbale", Team: "Zemiga-Mar", Age: 24, Points: 550, KOs: 2 },
-    { Rank: 22, Name: "Game Darwonn", Team: "Engery", Age: 29, Points: 550, KOs: 1 },
+    { Rank: 22, Name: "Game Darwonn", Team: "Engery", Age: 29, Points: 750, KOs: 1 },
     { Rank: 23, Name: "Horse Queanlend", Team: "Juire", Age: 28, Points: 450, KOs: 0 },
     { Rank: 24, Name: "Rain Lieryon", Team: "Dashlol", Age: 34, Points: 350, KOs: 1 },
     { Rank: 25, Name: "Whiteout Gar-Kiola", Team: "Juire", Age: 31, Points: 350, KOs: 1 },
