@@ -80,24 +80,53 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
+function isValidGrid(rows: Category[], cols: Category[]): boolean {
+  // Check that every cell has at least one valid player
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 3; c++) {
+      const validPlayers = findValidPlayers(rows[r], cols[c]);
+      if (validPlayers.length === 0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 function generateGrid(): { rows: Category[]; cols: Category[] } {
-  // Ensure we have a mix - pick 2-3 teams and 0-1 achievements for each axis
+  const maxAttempts = 100;
+  
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const shuffledTeams = shuffleArray(teamCategories);
+    const shuffledAchievements = shuffleArray(achievementCategories);
+    
+    // Try different configurations
+    const rows: Category[] = [
+      shuffledTeams[0],
+      shuffledTeams[1],
+      shuffledAchievements[0] || shuffledTeams[2],
+    ];
+    
+    const cols: Category[] = [
+      shuffledTeams[3],
+      shuffledTeams[4],
+      shuffledAchievements[1] || shuffledTeams[5],
+    ];
+    
+    const finalRows = shuffleArray(rows);
+    const finalCols = shuffleArray(cols);
+    
+    if (isValidGrid(finalRows, finalCols)) {
+      return { rows: finalRows, cols: finalCols };
+    }
+  }
+  
+  // Fallback: use only teams which are more likely to have overlaps
   const shuffledTeams = shuffleArray(teamCategories);
-  const shuffledAchievements = shuffleArray(achievementCategories);
-  
-  const rows: Category[] = [
-    shuffledTeams[0],
-    shuffledTeams[1],
-    shuffledAchievements[0] || shuffledTeams[2],
-  ];
-  
-  const cols: Category[] = [
-    shuffledTeams[3],
-    shuffledTeams[4],
-    shuffledAchievements[1] || shuffledTeams[5],
-  ];
-  
-  return { rows: shuffleArray(rows), cols: shuffleArray(cols) };
+  return {
+    rows: [shuffledTeams[0], shuffledTeams[1], shuffledTeams[2]],
+    cols: [shuffledTeams[3], shuffledTeams[4], shuffledTeams[5]],
+  };
 }
 
 function playerMatchesCategory(playerName: string, category: Category): boolean {
