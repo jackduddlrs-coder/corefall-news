@@ -1,0 +1,4 @@
+project_id = "mwmazqllyolijabiowyo"
+
+[functions.generate-splashfeed]
+verify_jwt = false
