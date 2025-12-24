@@ -15,37 +15,45 @@ COREFALL CONTEXT:
 - CTT: Champion Team Tournament (team-based, not individual major)
 
 TOP PLAYERS WITH ACCURATE STATS:
-- Cascade Juner (Damage, Age 30): 15 total trophies, 2 Apex titles (707, 708), 2 CTT wins, 11 majors. Current Season Star 707 & 708. Won Descent 709. Rising superstar since 707.
-- Rain Lieryon (Dashlol, Age 34): 14 total trophies, 2 Apex titles (702, 704), 0 CTT, 12 majors. Dominated 701-706 era. Declining but still top 25 in 709.
+- Cascade Juner (Damage, Age 30): 16 total trophies, 2 Apex titles (707, 708), 2 CTT wins, 12 majors. Current Season Star 707 & 708. Won Descent 709. Rising superstar since 707. Leading S709 with 1900 pts.
+- Rain Lieryon (Dashlol, Age 34): 14 total trophies, 2 Apex titles (702, 704), 0 CTT, 12 majors. Dominated 701-706 era. Declining but still competitive in 709.
 - Jungle Unovo (Cal Hal, Age 33): 12 total trophies, 2 Apex titles (703, 706), 1 CTT, 9 majors. Elite veteran, retired-ish pace.
 - Night Corondolo (retired): 8 trophies, 0 Apex, 4 CTT, 4 majors. Gastro dynasty member.
 - Heal Calofloure (Limium, Age 31): 7 trophies, 1 Apex (705), 6 majors. Consistent elite player.
 - Zeus Ziki (Cal Hal, Age 30): 6 trophies, 0 Apex, 1 CTT, 5 majors. Season Star 708.
 - Pheonix Oliv (retired): 6 trophies, 1 Apex (701), 5 majors. Early 700s legend.
 - Killa Binbac (Qalf, Age 31): 5 trophies, 0 Apex, 1 CTT, 4 majors.
-- Nothing Sawryr (Gastro, Age 28): 4 trophies, 0 Apex, 0 CTT, 4 majors (Solar 708, 709, Malice 707, Nightmare 706). Rising star, ranked #2 in S709.
+- Nothing Sawryr (Gastro, Age 28): 4 trophies, 0 Apex, 0 CTT, 4 majors (Solar 708, 709, Malice 707, Nightmare 706). Ranked #2 in S709 with 1800 pts.
 - Wraith Cunelly (Engery, Age 29): 5 trophies. Won Chaos Reigns 709.
 - Bat Bornoil (Damage, Age 27): 3 trophies, 2 CTT, 1 major.
-- Vampire Ortez (Dashlol, Age 27): 2 majors. Lost Apex 708 finals.
-- Daredevil Gaffe (Qalf, Age 24): 1 major (Heartland 709). Young rising star ranked #4 in S709.
-- Mega Hawnnon (Dashlol, Age 27): 1 major. Ranked #3 in S709.
+- Vampire Ortez (Dashlol, Age 27): 2 majors (Heritage 709). Lost Apex 708 finals.
+- Daredevil Gaffe (Qalf, Age 24): 1 major (Heartland 709). Young rising star ranked #4 in S709 with 1500 pts.
+- Mega Hawnnon (Dashlol, Age 27): 1 major (Armageddon 709). Ranked #3 in S709 with 1650 pts.
+- Supernova Aloi (Gastro, Age 26): 1 major (Nightmare 709). Won S709's Nightmare with 29 KOs and 1450 total points. Rising star on Gastro.
 
-TEAMS (S709 standings order):
-1. Damage (3850 pts) - Cascade Juner, Bat Bornoil
-2. Qalf (3200 pts) - Daredevil Gaffe, Rem Asamtoy, Fisher Cerzonal
-3. Dashlol (2950 pts) - Mega Hawnnon, Vampire Ortez, Rain Lieryon
-4. Gastro (2800 pts) - Nothing Sawryr, Supernova Aloi
-5. Engery (2250 pts) - Wraith Cunelly, Game Darwonn
-6. Limium (2200 pts) - Heal Calofloure, Titan Aui
-7. Cal Hal (1950 pts) - Zeus Ziki, Cross Exzona
+TEAMS (S709 standings after Nightmare 709):
+1. Damage (4200 pts) - Cascade Juner, Bat Bornoil
+2. Gastro (3500 pts) - Nothing Sawryr, Supernova Aloi
+3. Qalf (3450 pts) - Daredevil Gaffe, Rem Asamtoy, Fisher Cerzonal
+4. Dashlol (3200 pts) - Mega Hawnnon, Vampire Ortez, Rain Lieryon
+5. Engery (2450 pts) - Wraith Cunelly, Game Darwonn
+6. Limium (2350 pts) - Heal Calofloure, Titan Aui
+7. Cal Hal (2100 pts) - Zeus Ziki, Cross Exzona
 
-S709 RECENT EVENTS:
-- Cascade Juner won Descent 709
-- Nothing Sawryr won Solar Summit 709
-- Vampire Ortez won Heritage 709
-- Daredevil Gaffe won Heartland 709
-- Wraith Cunelly won Chaos Reigns 709
-- Cascade Juner leads standings with 1650 pts, Nothing Sawryr 2nd with 1550 pts
+S709 RESULTS (6 majors completed):
+- Nightmare 709: Supernova Aloi (Gastro) - 29 KOs, 1450 pts - WINNER
+- Chaos Reigns 709: Wraith Cunelly (Engery) - WINNER
+- Heartland 709: Daredevil Gaffe (Qalf) - WINNER
+- Descent 709: Cascade Juner (Damage) - WINNER
+- Solar Summit 709: Nothing Sawryr (Gastro) - WINNER
+- Heritage 709: Vampire Ortez (Dashlol) - WINNER
+
+S709 INDIVIDUAL STANDINGS (after Nightmare):
+1. Cascade Juner (Damage) - 1900 pts, 38 KOs
+2. Nothing Sawryr (Gastro) - 1800 pts, 35 KOs
+3. Mega Hawnnon (Dashlol) - 1650 pts, 32 KOs
+4. Daredevil Gaffe (Qalf) - 1500 pts, 30 KOs
+5. Supernova Aloi (Gastro) - 1450 pts, 29 KOs
 
 APEX HISTORY (most prestigious tournament):
 - 708: Cascade Juner beat Vampire Ortez
@@ -116,12 +124,14 @@ const replySystemPrompt = `You are a Splashfeed reply thread generator. Given an
 
 Use the same COREFALL CONTEXT as the main thread - only reference accurate stats and facts.
 
-COREFALL QUICK REFERENCE:
-- Cascade Juner: 15 trophies, 2 Apex (707, 708), current #1
+COREFALL QUICK REFERENCE (S709 after Nightmare):
+- Cascade Juner: 16 trophies, 2 Apex (707, 708), leading S709 with 1900 pts
+- Nothing Sawryr: 4 trophies, #2 in S709 with 1800 pts, rising star
+- Mega Hawnnon: 1 major, #3 in S709 with 1650 pts
+- Supernova Aloi: 1 major (Nightmare 709 winner), #5 with 1450 pts
 - Rain Lieryon: 14 trophies, 2 Apex (702, 704), declining
-- Nothing Sawryr: 4 trophies, #2 in S709, rising star
 - Jungle Unovo: 12 trophies, 2 Apex (703, 706)
-- Current Season: 709
+- Current Season: 709, 6 majors completed
 
 RESPONSE FORMAT (JSON array):
 [
