@@ -80,9 +80,25 @@ RESPONSE FORMAT (JSON array):
     "reposts": 234,
     "replies": 45,
     "isReply": false,
-    "replyTo": null
+    "replyTo": null,
+    "poll": null
   }
 ]
+
+POLL FORMAT (include 1-2 polls per thread when the topic suits debate/voting):
+{
+  "poll": {
+    "question": "Who wins Apex 709?",
+    "options": [
+      { "text": "Cascade Juner", "votes": 4521 },
+      { "text": "Nothing Sawryr", "votes": 2134 },
+      { "text": "Vampire Ortez", "votes": 1876 },
+      { "text": "Dark horse pick", "votes": 892 }
+    ],
+    "totalVotes": 9423,
+    "hoursLeft": 18
+  }
+}
 
 CRITICAL GUIDELINES:
 - ONLY reference stats, wins, and facts that are in the context above
@@ -92,7 +108,38 @@ CRITICAL GUIDELINES:
 - Include 1-2 reply chains for drama
 - Mix serious analysis with casual fan banter
 - Keep posts 1-3 sentences each
+- Include 1-2 POLLS when the topic invites community voting (GOAT debates, predictions, opinions)
+- Polls should have 2-4 options with realistic vote distributions
 - The prompt from the user should be the MAIN TOPIC of discussion - stay focused on it`;
+
+const replySystemPrompt = `You are a Splashfeed reply thread generator. Given an original post, generate 3-5 realistic reply posts that respond to it.
+
+Use the same COREFALL CONTEXT as the main thread - only reference accurate stats and facts.
+
+COREFALL QUICK REFERENCE:
+- Cascade Juner: 15 trophies, 2 Apex (707, 708), current #1
+- Rain Lieryon: 14 trophies, 2 Apex (702, 704), declining
+- Nothing Sawryr: 4 trophies, #2 in S709, rising star
+- Jungle Unovo: 12 trophies, 2 Apex (703, 706)
+- Current Season: 709
+
+RESPONSE FORMAT (JSON array):
+[
+  {
+    "handle": "@username",
+    "displayName": "Display Name",
+    "verified": false,
+    "content": "Reply content",
+    "likes": 234,
+    "reposts": 12,
+    "replies": 5,
+    "isReply": true,
+    "replyTo": "@originalHandle",
+    "poll": null
+  }
+]
+
+Make replies feel authentic - some agreeing, some disagreeing, some joking. Mix fan accounts with analyst accounts.`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -100,14 +147,29 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt } = await req.json();
+    const { prompt, generateReplies, originalPost } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    console.log('Generating Splashfeed thread for prompt:', prompt);
+    const isReplyGeneration = generateReplies && originalPost;
+    
+    console.log(isReplyGeneration 
+      ? `Generating replies to post by ${originalPost.handle}` 
+      : `Generating Splashfeed thread for prompt: ${prompt}`
+    );
+
+    const messages = isReplyGeneration 
+      ? [
+          { role: 'system', content: replySystemPrompt },
+          { role: 'user', content: `Generate replies to this post:\n\nFrom: ${originalPost.displayName} (${originalPost.handle})\nContent: "${originalPost.content}"` }
+        ]
+      : [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `Generate a Splashfeed thread about: ${prompt}` }
+        ];
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -117,10 +179,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Generate a Splashfeed thread about: ${prompt}` }
-        ],
+        messages,
         temperature: 0.9,
       }),
     });

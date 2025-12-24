@@ -3,9 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Send, RefreshCw, Heart, Repeat2, MessageCircle, CheckCircle2 } from "lucide-react";
+import { Loader2, Send, RefreshCw, Heart, Repeat2, MessageCircle, CheckCircle2, ChevronDown, ChevronUp, BarChart3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Progress } from "@/components/ui/progress";
+
+interface PollOption {
+  text: string;
+  votes: number;
+}
+
+interface Poll {
+  question: string;
+  options: PollOption[];
+  totalVotes: number;
+  hoursLeft: number;
+}
 
 interface SplashPost {
   handle: string;
@@ -17,6 +30,7 @@ interface SplashPost {
   replies: number;
   isReply: boolean;
   replyTo: string | null;
+  poll?: Poll | null;
 }
 
 const getAvatarColor = (handle: string) => {
@@ -40,10 +54,17 @@ const formatNumber = (num: number) => {
   return num.toString();
 };
 
+interface PostWithReplies extends SplashPost {
+  generatedReplies?: SplashPost[];
+  showReplies?: boolean;
+  loadingReplies?: boolean;
+}
+
 export const SplashfeedSection = () => {
   const [prompt, setPrompt] = useState("");
-  const [posts, setPosts] = useState<SplashPost[]>([]);
+  const [posts, setPosts] = useState<PostWithReplies[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [votedPolls, setVotedPolls] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const generateThread = async () => {
@@ -58,6 +79,7 @@ export const SplashfeedSection = () => {
 
     setIsGenerating(true);
     setPosts([]);
+    setVotedPolls(new Set());
 
     try {
       const { data, error } = await supabase.functions.invoke('generate-splashfeed', {
@@ -69,7 +91,7 @@ export const SplashfeedSection = () => {
       }
 
       if (data?.posts && Array.isArray(data.posts)) {
-        setPosts(data.posts);
+        setPosts(data.posts.map((post: SplashPost) => ({ ...post, generatedReplies: [], showReplies: false })));
         toast({
           title: "Thread generated!",
           description: `${data.posts.length} posts created`,
@@ -89,11 +111,218 @@ export const SplashfeedSection = () => {
     }
   };
 
+  const generateReplies = async (postIndex: number) => {
+    const post = posts[postIndex];
+    
+    // Toggle if already loaded
+    if (post.generatedReplies && post.generatedReplies.length > 0) {
+      setPosts(prev => prev.map((p, i) => 
+        i === postIndex ? { ...p, showReplies: !p.showReplies } : p
+      ));
+      return;
+    }
+
+    // Set loading state
+    setPosts(prev => prev.map((p, i) => 
+      i === postIndex ? { ...p, loadingReplies: true } : p
+    ));
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-splashfeed', {
+        body: { 
+          generateReplies: true,
+          originalPost: {
+            handle: post.handle,
+            displayName: post.displayName,
+            content: post.content
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.posts && Array.isArray(data.posts)) {
+        setPosts(prev => prev.map((p, i) => 
+          i === postIndex 
+            ? { ...p, generatedReplies: data.posts, showReplies: true, loadingReplies: false }
+            : p
+        ));
+      }
+    } catch (error: any) {
+      console.error('Error generating replies:', error);
+      toast({
+        title: "Failed to load replies",
+        description: error.message || "Could not generate replies",
+        variant: "destructive",
+      });
+      setPosts(prev => prev.map((p, i) => 
+        i === postIndex ? { ...p, loadingReplies: false } : p
+      ));
+    }
+  };
+
+  const handleVote = (postIndex: number, optionIndex: number) => {
+    const pollKey = `${postIndex}`;
+    if (votedPolls.has(pollKey)) return;
+
+    setVotedPolls(prev => new Set([...prev, pollKey]));
+    
+    // Update vote count locally
+    setPosts(prev => prev.map((post, pIdx) => {
+      if (pIdx === postIndex && post.poll) {
+        const newOptions = post.poll.options.map((opt, oIdx) => 
+          oIdx === optionIndex ? { ...opt, votes: opt.votes + 1 } : opt
+        );
+        return {
+          ...post,
+          poll: {
+            ...post.poll,
+            options: newOptions,
+            totalVotes: post.poll.totalVotes + 1
+          }
+        };
+      }
+      return post;
+    }));
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isGenerating) {
       generateThread();
     }
   };
+
+  const renderPoll = (poll: Poll, postIndex: number) => {
+    const hasVoted = votedPolls.has(`${postIndex}`);
+    
+    return (
+      <div className="mt-3 border border-border rounded-lg p-3 bg-muted/20">
+        <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
+          <BarChart3 className="w-4 h-4" />
+          <span>{poll.hoursLeft}h left</span>
+        </div>
+        <div className="space-y-2">
+          {poll.options.map((option, optionIndex) => {
+            const percentage = poll.totalVotes > 0 
+              ? Math.round((option.votes / poll.totalVotes) * 100) 
+              : 0;
+            
+            return (
+              <button
+                key={optionIndex}
+                onClick={() => handleVote(postIndex, optionIndex)}
+                disabled={hasVoted}
+                className={`w-full text-left rounded-lg border transition-all ${
+                  hasVoted 
+                    ? 'border-border bg-muted/30 cursor-default' 
+                    : 'border-primary/30 hover:border-primary hover:bg-primary/10 cursor-pointer'
+                }`}
+              >
+                <div className="relative p-2.5 overflow-hidden">
+                  {hasVoted && (
+                    <div 
+                      className="absolute inset-0 bg-primary/20 transition-all duration-500"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  )}
+                  <div className="relative flex items-center justify-between">
+                    <span className="font-medium text-sm">{option.text}</span>
+                    {hasVoted && (
+                      <span className="text-sm text-muted-foreground font-medium">{percentage}%</span>
+                    )}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-muted-foreground mt-2">
+          {formatNumber(poll.totalVotes)} votes
+        </p>
+      </div>
+    );
+  };
+
+  const renderPost = (post: PostWithReplies, index: number, isReplyPost = false) => (
+    <article 
+      key={`${isReplyPost ? 'reply-' : ''}${index}`} 
+      className={`p-4 bg-card hover:bg-muted/30 transition-colors border-b border-border last:border-b-0 ${
+        post.isReply || isReplyPost ? 'pl-8 bg-muted/10' : ''
+      }`}
+    >
+      {(post.isReply || isReplyPost) && post.replyTo && (
+        <p className="text-xs text-muted-foreground mb-2">
+          Replying to <span className="text-primary">{post.replyTo}</span>
+        </p>
+      )}
+      
+      <div className="flex gap-3">
+        {/* Avatar */}
+        <div className={`w-10 h-10 rounded-full ${getAvatarColor(post.handle)} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
+          {post.displayName.charAt(0).toUpperCase()}
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          {/* Header */}
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="font-bold text-foreground">{post.displayName}</span>
+            {post.verified && (
+              <CheckCircle2 className="w-4 h-4 text-primary fill-primary/20" />
+            )}
+            <span className="text-muted-foreground text-sm">{post.handle}</span>
+            <span className="text-muted-foreground text-sm">· {getTimeAgo(index)}</span>
+          </div>
+          
+          {/* Content */}
+          <p className="mt-1 text-foreground whitespace-pre-wrap break-words">
+            {post.content.split(/(#\w+|@\w+)/g).map((part, i) => {
+              if (part.startsWith('#') || part.startsWith('@')) {
+                return <span key={i} className="text-primary">{part}</span>;
+              }
+              return part;
+            })}
+          </p>
+
+          {/* Poll */}
+          {post.poll && renderPoll(post.poll, index)}
+          
+          {/* Engagement */}
+          <div className="flex items-center gap-6 mt-3 text-muted-foreground text-sm">
+            {!isReplyPost && !post.isReply && (
+              <button 
+                onClick={() => generateReplies(index)}
+                className="flex items-center gap-1.5 hover:text-primary transition-colors group"
+                disabled={post.loadingReplies}
+              >
+                {post.loadingReplies ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : post.showReplies ? (
+                  <ChevronUp className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                ) : (
+                  <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                )}
+                <span>{post.generatedReplies?.length || post.replies}</span>
+              </button>
+            )}
+            {(isReplyPost || post.isReply) && (
+              <button className="flex items-center gap-1.5 hover:text-primary transition-colors group">
+                <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>{formatNumber(post.replies)}</span>
+              </button>
+            )}
+            <button className="flex items-center gap-1.5 hover:text-green-500 transition-colors group">
+              <Repeat2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>{formatNumber(post.reposts)}</span>
+            </button>
+            <button className="flex items-center gap-1.5 hover:text-red-500 transition-colors group">
+              <Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>{formatNumber(post.likes)}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -169,65 +398,20 @@ export const SplashfeedSection = () => {
 
       {/* Posts Feed */}
       {posts.length > 0 && (
-        <div className="space-y-0 border border-border rounded-lg overflow-hidden">
+        <div className="border border-border rounded-lg overflow-hidden">
           {posts.map((post, index) => (
-            <article 
-              key={index} 
-              className={`p-4 bg-card hover:bg-muted/30 transition-colors ${
-                index !== posts.length - 1 ? 'border-b border-border' : ''
-              } ${post.isReply ? 'pl-8 bg-muted/10' : ''}`}
-            >
-              {post.isReply && post.replyTo && (
-                <p className="text-xs text-muted-foreground mb-2">
-                  Replying to <span className="text-primary">{post.replyTo}</span>
-                </p>
-              )}
+            <div key={index}>
+              {renderPost(post, index)}
               
-              <div className="flex gap-3">
-                {/* Avatar */}
-                <div className={`w-10 h-10 rounded-full ${getAvatarColor(post.handle)} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                  {post.displayName.charAt(0).toUpperCase()}
+              {/* Generated Replies */}
+              {post.showReplies && post.generatedReplies && post.generatedReplies.length > 0 && (
+                <div className="border-l-2 border-primary/30 ml-6">
+                  {post.generatedReplies.map((reply, replyIndex) => 
+                    renderPost({ ...reply, generatedReplies: [], showReplies: false }, replyIndex, true)
+                  )}
                 </div>
-                
-                <div className="flex-1 min-w-0">
-                  {/* Header */}
-                  <div className="flex items-center gap-1 flex-wrap">
-                    <span className="font-bold text-foreground">{post.displayName}</span>
-                    {post.verified && (
-                      <CheckCircle2 className="w-4 h-4 text-primary fill-primary/20" />
-                    )}
-                    <span className="text-muted-foreground text-sm">{post.handle}</span>
-                    <span className="text-muted-foreground text-sm">· {getTimeAgo(index)}</span>
-                  </div>
-                  
-                  {/* Content */}
-                  <p className="mt-1 text-foreground whitespace-pre-wrap break-words">
-                    {post.content.split(/(#\w+|@\w+)/g).map((part, i) => {
-                      if (part.startsWith('#') || part.startsWith('@')) {
-                        return <span key={i} className="text-primary">{part}</span>;
-                      }
-                      return part;
-                    })}
-                  </p>
-                  
-                  {/* Engagement */}
-                  <div className="flex items-center gap-6 mt-3 text-muted-foreground text-sm">
-                    <button className="flex items-center gap-1.5 hover:text-primary transition-colors group">
-                      <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                      <span>{formatNumber(post.replies)}</span>
-                    </button>
-                    <button className="flex items-center gap-1.5 hover:text-green-500 transition-colors group">
-                      <Repeat2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                      <span>{formatNumber(post.reposts)}</span>
-                    </button>
-                    <button className="flex items-center gap-1.5 hover:text-red-500 transition-colors group">
-                      <Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                      <span>{formatNumber(post.likes)}</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </article>
+              )}
+            </div>
           ))}
         </div>
       )}
