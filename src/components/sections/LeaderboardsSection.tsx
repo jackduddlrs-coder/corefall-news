@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 
 interface PlayerStats {
   name: string;
@@ -31,7 +31,7 @@ interface TeamSeasonPtsEntry {
 }
 
 export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: LeaderboardsSectionProps) => {
-  const [activeTab, setActiveTab] = useState<LeaderboardType>("single-points");
+  const [activeTab, setActiveTab] = useState<LeaderboardType>("legacy-score");
   const allSeasons = Object.keys(pastStandings).sort();
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(allSeasons));
   const [champAgeSortAsc, setChampAgeSortAsc] = useState<boolean>(true);
@@ -253,7 +253,33 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }
     });
 
+    // Legacy Score calculation
+    const playerLegacyMap: Record<string, { points: number; elite: number; apex: number; majors: number }> = {};
+
+    allPlayers.forEach(p => {
+      if (!playerLegacyMap[p.name]) playerLegacyMap[p.name] = { points: 0, elite: 0, apex: 0, majors: 0 };
+      playerLegacyMap[p.name].points += p.points;
+      if (p.points >= 2000) playerLegacyMap[p.name].elite++;
+    });
+
+    majorWinners.forEach(win => {
+      if (!selectedYears.has(win.year.toString())) return;
+      if (!playerLegacyMap[win.winner]) playerLegacyMap[win.winner] = { points: 0, elite: 0, apex: 0, majors: 0 };
+      if (win.tournament === "Apex") playerLegacyMap[win.winner].apex++;
+      else playerLegacyMap[win.winner].majors++;
+    });
+
+    const legacyRankings: PlayerStats[] = Object.entries(playerLegacyMap)
+      .map(([name, stats]) => ({
+        name,
+        team: getMostPlayedTeam(name),
+        value: stats.points + (stats.elite * 50) + (stats.majors * 100) + (stats.apex * 500)
+      }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
     return {
+      "legacy-score": legacyRankings,
       "single-points": singleSeasonPoints,
       "all-time-points": allTimePoints,
       "single-kos": singleSeasonKOs,
@@ -270,6 +296,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const getTitle = (type: LeaderboardType) => {
     switch (type) {
+      case "legacy-score": return "All-Time Legacy Rankings";
       case "single-points": return "Most Single Season Points";
       case "all-time-points": return "All-Time Career Points";
       case "single-kos": return "Most Single Season KOs";
@@ -286,6 +313,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const getValueLabel = (type: LeaderboardType) => {
     switch (type) {
+      case "legacy-score": return "Legacy Score";
       case "appearances": return "Seasons";
       case "avg-finish": return "Avg Rank";
       case "champ-ages": return "Age";
@@ -597,6 +625,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         <div className="space-y-2">
           <p className="text-xs text-muted-foreground font-medium">Player Stats</p>
           <TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
+            <TabsTrigger value="legacy-score" className="flex-1 min-w-[100px] text-xs md:text-sm py-2 font-bold text-secondary">
+              Legacy Score
+            </TabsTrigger>
             <TabsTrigger value="single-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Season Pts
             </TabsTrigger>
@@ -642,6 +673,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         <div className="mt-4 bg-card rounded-lg border border-border p-2 md:p-4">
           <h3 className="text-lg md:text-xl font-semibold mb-4 text-foreground">{getTitle(activeTab)}</h3>
           
+          <TabsContent value="legacy-score" className="mt-0">
+            {renderPlayerLeaderboard("legacy-score")}
+          </TabsContent>
           <TabsContent value="single-points" className="mt-0">
             {renderPlayerLeaderboard("single-points")}
           </TabsContent>
