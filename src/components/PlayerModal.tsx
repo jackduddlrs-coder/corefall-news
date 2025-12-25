@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { pastStandings, trophyData, getTeamClass, seasons, fullMatches } from "@/data/corefallData";
+import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight, Trophy } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -38,31 +38,40 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
 
   // Calculate career totals based on selected years
   const careerTotals = useMemo(() => {
-    let points = 0;
+    let careerPoints = 0;
     let kos = 0;
     let totalRanks = 0;
     let apexApps = 0;
+    let eliteSeasons = 0;
     let count = 0;
 
     seasonHistory.forEach(s => {
       if (selectedYears.has(s.year)) {
-        points += s.points;
+        careerPoints += s.points;
         kos += s.ko;
         totalRanks += s.rank;
         count++;
+        if (s.points >= 2000) eliteSeasons++;
         // Exclude 709 from Apex appearances until confirmed
         if (s.rank <= 16 && s.year !== 709) apexApps++;
       }
     });
 
+    // Calculate Legacy Score
+    const wins = majorWinners.filter(w => w.winner === playerName && selectedYears.has(w.year));
+    const apexCount = wins.filter(w => w.tournament === "Apex").length;
+    const majorCount = wins.filter(w => w.tournament !== "Apex").length;
+    const legacyScore = careerPoints + (eliteSeasons * 50) + (majorCount * 100) + (apexCount * 500);
+
     return {
-      points,
+      points: careerPoints,
       kos,
       avgFinish: count > 0 ? (totalRanks / count).toFixed(1) : '-',
       apexApps,
-      yearsActive: count
+      yearsActive: count,
+      legacyScore
     };
-  }, [seasonHistory, selectedYears]);
+  }, [seasonHistory, selectedYears, playerName]);
 
   const isActive = seasonHistory.some(s => s.year === 707);
   const trophies = trophyData.find(t => t.name === playerName);
@@ -267,6 +276,20 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             ) : (
               <span className="text-muted-foreground text-xs md:text-sm">No recorded major titles since 700.</span>
             )}
+          </div>
+
+          {/* Legacy Rating Badge */}
+          <div className="bg-gradient-to-br from-primary/20 to-background border border-primary/30 p-4 rounded-xl mb-6 flex justify-between items-center">
+            <div>
+              <div className="text-[10px] text-primary uppercase font-black tracking-widest">Legacy Rating</div>
+              <div className="text-4xl font-black text-white italic">{careerTotals.legacyScore.toLocaleString()}</div>
+            </div>
+            <div className="text-right hidden sm:block">
+              <div className="text-[10px] text-muted-foreground uppercase font-bold">Historical Tier</div>
+              <div className="text-sm font-bold text-secondary">
+                {careerTotals.legacyScore > 10000 ? "S-Tier Legend" : careerTotals.legacyScore > 5000 ? "A-Tier Pro" : "Active Competitor"}
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center justify-between border-b border-border pb-2 mb-3">
