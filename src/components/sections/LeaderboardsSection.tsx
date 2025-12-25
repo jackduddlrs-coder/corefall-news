@@ -680,3 +680,73 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     </div>
   );
 };
+// 1. Update the LeaderboardType union
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+
+// 2. Add calculation inside the useMemo block (around line 50)
+const leaderboards = useMemo(() => {
+    // ... existing allPlayers logic ...
+
+    // Legacy Score Calculation
+    const playerLegacyData: Record<string, { points: number; elite: number; apex: number; major: number }> = {};
+    
+    // Process Points and Elite Seasons (2000+)
+    allPlayers.forEach(p => {
+      if (!playerLegacyData[p.name]) playerLegacyData[p.name] = { points: 0, elite: 0, apex: 0, major: 0 };
+      playerLegacyData[p.name].points += p.points;
+      if (p.points >= 2000) playerLegacyData[p.name].elite++;
+    });
+
+    // Process Wins (Apex vs Major)
+    majorWinners.forEach(win => {
+      if (!selectedYears.has(win.year.toString())) return;
+      if (!playerLegacyData[win.winner]) playerLegacyData[win.winner] = { points: 0, elite: 0, apex: 0, major: 0 };
+      
+      if (win.tournament === "Apex") playerLegacyData[win.winner].apex++;
+      else playerLegacyData[win.winner].major++;
+    });
+
+    const legacyScoreRankings: PlayerStats[] = Object.entries(playerLegacyData)
+      .map(([name, data]) => ({
+        name,
+        team: getMostPlayedTeam(name),
+        // Formula: Points + (Elite*50) + (Majors*100) + (Apex*500)
+        value: data.points + (data.elite * 50) + (data.major * 100) + (data.apex * 500)
+      }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
+    // ... return updated object ...
+    return {
+      "legacy-score": legacyScoreRankings,
+      "single-points": singleSeasonPoints,
+      // ... rest of existing properties
+    };
+}, [selectedYears]);
+
+// 3. Update Title and Label helpers
+const getTitle = (type: LeaderboardType) => {
+  if (type === "legacy-score") return "All-Time Legacy Rankings";
+  // ... rest of switch
+};
+
+const getValueLabel = (type: LeaderboardType) => {
+  if (type === "legacy-score") return "Legacy Score";
+  // ... rest of switch
+};
+
+// 4. Update the JSX TabsList (around line 300)
+<TabsList className="w-full flex flex-wrap h-auto gap-1 bg-muted/50 p-1">
+  <TabsTrigger value="legacy-score" className="flex-1 min-w-[100px] text-xs md:text-sm py-2 font-bold text-secondary">
+    Legacy Score
+  </TabsTrigger>
+  <TabsTrigger value="single-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+    Single Season
+  </TabsTrigger>
+  {/* ... other triggers ... */}
+</TabsList>
+
+// 5. Add the TabsContent
+<TabsContent value="legacy-score" className="mt-0">
+  {renderPlayerLeaderboard("legacy-score")}
+</TabsContent>
