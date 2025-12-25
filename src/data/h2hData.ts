@@ -385,6 +385,37 @@ export const h2hRecords: H2HRecord[] = [
   { fighter: "Wraith Cunelly", opponent: "Vampire Ortez", wins: 0, losses: 1 },
   { fighter: "Cascade Juner", opponent: "Vampire Ortez", wins: 1, losses: 0 },
   { fighter: "Vampire Ortez", opponent: "Cascade Juner", wins: 0, losses: 1 },
+  // Season 707 Heartland Cup (Majors)
+  { fighter: "Vampire Ortez", opponent: "Killa Binbac", wins: 1, losses: 0 },
+  { fighter: "Killa Binbac", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  { fighter: "Killa Binbac", opponent: "Bat Bornoil", wins: 1, losses: 0 },
+  { fighter: "Bat Bornoil", opponent: "Killa Binbac", wins: 0, losses: 1 },
+  { fighter: "Vampire Ortez", opponent: "Bat Bornoil", wins: 1, losses: 0 },
+  { fighter: "Bat Bornoil", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  { fighter: "Bat Bornoil", opponent: "Pulse Farward", wins: 1, losses: 0 },
+  { fighter: "Pulse Farward", opponent: "Bat Bornoil", wins: 0, losses: 1 },
+  { fighter: "Vampire Ortez", opponent: "Killa Binbac", wins: 1, losses: 0 },
+  { fighter: "Killa Binbac", opponent: "Vampire Ortez", wins: 0, losses: 1 },
+  { fighter: "Zeus Ziki", opponent: "Killa Binbac", wins: 0, losses: 1 },
+  { fighter: "Killa Binbac", opponent: "Zeus Ziki", wins: 1, losses: 0 },
+  { fighter: "Zeus Ziki", opponent: "Pulse Farward", wins: 1, losses: 0 },
+  { fighter: "Pulse Farward", opponent: "Zeus Ziki", wins: 0, losses: 1 },
+  { fighter: "Cascade Juner", opponent: "Killa Binbac", wins: 0, losses: 1 },
+  { fighter: "Killa Binbac", opponent: "Cascade Juner", wins: 1, losses: 0 },
+  { fighter: "Cascade Juner", opponent: "Wraith Cunelly", wins: 1, losses: 0 },
+  { fighter: "Wraith Cunelly", opponent: "Cascade Juner", wins: 0, losses: 1 },
+
+  // Season 707 Chaos Reigns (Majors)
+  { fighter: "Heal Calofloure", opponent: "Nothing Sawryr", wins: 1, losses: 0 },
+  { fighter: "Nothing Sawryr", opponent: "Heal Calofloure", wins: 0, losses: 1 },
+  { fighter: "Nothing Sawryr", opponent: "Joy Dafvies", wins: 1, losses: 0 },
+  { fighter: "Joy Dafvies", opponent: "Nothing Sawryr", wins: 0, losses: 1 },
+  { fighter: "Heal Calofloure", opponent: "Nothing Sawryr", wins: 1, losses: 0 },
+  { fighter: "Nothing Sawryr", opponent: "Heal Calofloure", wins: 0, losses: 1 },
+  { fighter: "Nothing Sawryr", opponent: "Horse Queanlend", wins: 1, losses: 0 },
+  { fighter: "Horse Queanlend", opponent: "Nothing Sawryr", wins: 0, losses: 1 },
+  { fighter: "Heal Calofloure", opponent: "Jungle Unovo", wins: 1, losses: 0 },
+  { fighter: "Jungle Unovo", opponent: "Heal Calofloure", wins: 0, losses: 1 },
 ];
 
 // Helper function to get H2H record between two players
@@ -392,17 +423,17 @@ export const getH2HRecord = (player1: string, player2: string): { wins: number; 
   // Aggregate all matches between the two players
   let wins = 0;
   let losses = 0;
-  
-  h2hRecords.forEach(record => {
+
+  h2hRecords.forEach((record) => {
     if (record.fighter === player1 && record.opponent === player2) {
       wins += record.wins;
       losses += record.losses;
     }
   });
-  
+
   if (wins === 0 && losses === 0) {
     return null;
   }
-  
+
   return { wins, losses };
 };
