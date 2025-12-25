@@ -91,13 +91,64 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     };
   }, [seasonHistory, selectedYears, playerName]);
 
-  const isActive = seasonHistory.some(s => s.year === 707);
+  const isActive = seasonHistory.some(s => s.year === 709);
   const trophies = trophyData.find(t => t.name === playerName);
   
   // Get Season Star awards
   const seasonStars = useMemo(() => {
     return seasons.filter(s => s.star === playerName).map(s => s.year);
   }, [playerName]);
+
+  // Calculate all players' legacy scores to determine ranking
+  const legacyRank = useMemo(() => {
+    const allSeasons = Object.keys(pastStandings);
+    const playerLegacyMap: Record<string, number> = {};
+
+    // Calculate points and elite seasons for all players
+    Object.entries(pastStandings).forEach(([, players]) => {
+      players.forEach(player => {
+        if (!playerLegacyMap[player.Name]) playerLegacyMap[player.Name] = 0;
+        playerLegacyMap[player.Name] += player.Points;
+        if (player.Points >= 2000) playerLegacyMap[player.Name] += 100; // Elite bonus
+      });
+    });
+
+    // Add tournament wins
+    majorWinners.forEach(win => {
+      if (!playerLegacyMap[win.winner]) playerLegacyMap[win.winner] = 0;
+      if (win.tournament === "Apex") playerLegacyMap[win.winner] += 1200;
+      else if (win.tournament === "CTT") playerLegacyMap[win.winner] += 50;
+      else playerLegacyMap[win.winner] += 200;
+    });
+
+    // Add Season Star
+    seasons.forEach(s => {
+      if (s.star && playerLegacyMap[s.star] !== undefined) {
+        playerLegacyMap[s.star] += 400;
+      } else if (s.star) {
+        playerLegacyMap[s.star] = 400;
+      }
+    });
+
+    // Add Apex Finals appearances
+    apexDetailed.forEach(apex => {
+      if (apex.win) playerLegacyMap[apex.win] = (playerLegacyMap[apex.win] || 0) + 200;
+      if (apex.lose) playerLegacyMap[apex.lose] = (playerLegacyMap[apex.lose] || 0) + 200;
+    });
+
+    // Sort and find rank
+    const sorted = Object.entries(playerLegacyMap)
+      .sort((a, b) => b[1] - a[1]);
+    
+    const rank = sorted.findIndex(([name]) => name === playerName) + 1;
+    return rank > 0 ? rank : 999;
+  }, [playerName]);
+
+  const getHistoricalTier = () => {
+    if (legacyRank <= 10) return "S-Tier Legend";
+    if (legacyRank <= 25) return "A-Tier Pro";
+    return isActive ? "Active Competitor" : "Retired";
+  };
 
   const toggleYear = (year: number) => {
     const newSelected = new Set(selectedYears);
@@ -310,7 +361,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                   <div className="text-right hidden sm:block">
                     <div className="text-[10px] text-muted-foreground uppercase font-bold">Historical Tier</div>
                     <div className="text-sm font-bold text-secondary">
-                      {careerTotals.legacyScore > 10000 ? "S-Tier Legend" : careerTotals.legacyScore > 5000 ? "A-Tier Pro" : "Active Competitor"}
+                      {getHistoricalTier()} {legacyRank <= 25 && `(#${legacyRank})`}
                     </div>
                   </div>
                 </div>
