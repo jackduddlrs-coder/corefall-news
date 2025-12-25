@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners } from "@/data/corefallData";
+import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners, apexDetailed } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight, Trophy, Info } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
@@ -61,8 +61,19 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     // Calculate Legacy Score
     const wins = majorWinners.filter(w => w.winner === playerName && selectedYears.has(w.year));
     const apexCount = wins.filter(w => w.tournament === "Apex").length;
-    const majorCount = wins.filter(w => w.tournament !== "Apex").length;
-    const legacyScore = careerPoints + (eliteSeasons * 50) + (majorCount * 100) + (apexCount * 500);
+    const cttCount = wins.filter(w => w.tournament === "CTT").length;
+    const majorCount = wins.filter(w => w.tournament !== "Apex" && w.tournament !== "CTT").length;
+    
+    // Season Star count
+    const starCount = seasons.filter(s => s.star === playerName && selectedYears.has(s.year)).length;
+    
+    // Apex Finals appearances (both wins and losses)
+    const apexFinalsCount = apexDetailed.filter(a => 
+      selectedYears.has(a.year) && (a.win === playerName || a.lose === playerName)
+    ).length;
+    
+    // Legacy Score: points + (elite * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
+    const legacyScore = careerPoints + (eliteSeasons * 100) + (cttCount * 50) + (majorCount * 200) + (starCount * 400) + (apexFinalsCount * 200) + (apexCount * 1200);
 
     return {
       points: careerPoints,
@@ -73,7 +84,10 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       legacyScore,
       eliteSeasons,
       apexWins: apexCount,
-      majorWins: majorCount
+      majorWins: majorCount,
+      cttWins: cttCount,
+      starCount,
+      apexFinalsCount
     };
   }, [seasonHistory, selectedYears, playerName]);
 
@@ -310,15 +324,27 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                   </div>
                   <div className="flex justify-between gap-4">
                     <span className="text-muted-foreground">Elite Seasons (2000+ pts):</span>
-                    <span className="font-mono">{careerTotals.eliteSeasons} × 50 = +{careerTotals.eliteSeasons * 50}</span>
+                    <span className="font-mono">{careerTotals.eliteSeasons} × 100 = +{careerTotals.eliteSeasons * 100}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">CTT Wins:</span>
+                    <span className="font-mono">{careerTotals.cttWins} × 50 = +{careerTotals.cttWins * 50}</span>
                   </div>
                   <div className="flex justify-between gap-4">
                     <span className="text-muted-foreground">Major Wins:</span>
-                    <span className="font-mono">{careerTotals.majorWins} × 100 = +{careerTotals.majorWins * 100}</span>
+                    <span className="font-mono">{careerTotals.majorWins} × 200 = +{careerTotals.majorWins * 200}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Season Star:</span>
+                    <span className="font-mono">{careerTotals.starCount} × 400 = +{careerTotals.starCount * 400}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Apex Finals:</span>
+                    <span className="font-mono">{careerTotals.apexFinalsCount} × 200 = +{careerTotals.apexFinalsCount * 200}</span>
                   </div>
                   <div className="flex justify-between gap-4">
                     <span className="text-muted-foreground">Apex Wins:</span>
-                    <span className="font-mono">{careerTotals.apexWins} × 500 = +{careerTotals.apexWins * 500}</span>
+                    <span className="font-mono">{careerTotals.apexWins} × 1200 = +{careerTotals.apexWins * 1200}</span>
                   </div>
                   <div className="border-t border-border pt-1.5 mt-1.5 flex justify-between gap-4 font-bold">
                     <span>Total:</span>
