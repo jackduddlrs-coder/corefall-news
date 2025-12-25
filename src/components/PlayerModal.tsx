@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
-import { ChevronDown, ChevronRight, Trophy } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { ChevronDown, ChevronRight, Trophy, Info } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PlayerModalProps {
   playerName: string;
@@ -69,7 +70,10 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       avgFinish: count > 0 ? (totalRanks / count).toFixed(1) : '-',
       apexApps,
       yearsActive: count,
-      legacyScore
+      legacyScore,
+      eliteSeasons,
+      apexWins: apexCount,
+      majorWins: majorCount
     };
   }, [seasonHistory, selectedYears, playerName]);
 
@@ -279,18 +283,51 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
           </div>
 
           {/* Legacy Rating Badge */}
-          <div className="bg-gradient-to-br from-primary/20 to-background border border-primary/30 p-4 rounded-xl mb-6 flex justify-between items-center">
-            <div>
-              <div className="text-[10px] text-primary uppercase font-black tracking-widest">Legacy Rating</div>
-              <div className="text-4xl font-black text-white italic">{careerTotals.legacyScore.toLocaleString()}</div>
-            </div>
-            <div className="text-right hidden sm:block">
-              <div className="text-[10px] text-muted-foreground uppercase font-bold">Historical Tier</div>
-              <div className="text-sm font-bold text-secondary">
-                {careerTotals.legacyScore > 10000 ? "S-Tier Legend" : careerTotals.legacyScore > 5000 ? "A-Tier Pro" : "Active Competitor"}
-              </div>
-            </div>
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="bg-gradient-to-br from-primary/20 to-background border border-primary/30 p-4 rounded-xl mb-6 flex justify-between items-center cursor-help">
+                  <div>
+                    <div className="text-[10px] text-primary uppercase font-black tracking-widest flex items-center gap-1">
+                      Legacy Rating <Info className="w-3 h-3 opacity-60" />
+                    </div>
+                    <div className="text-4xl font-black text-white italic">{careerTotals.legacyScore.toLocaleString()}</div>
+                  </div>
+                  <div className="text-right hidden sm:block">
+                    <div className="text-[10px] text-muted-foreground uppercase font-bold">Historical Tier</div>
+                    <div className="text-sm font-bold text-secondary">
+                      {careerTotals.legacyScore > 10000 ? "S-Tier Legend" : careerTotals.legacyScore > 5000 ? "A-Tier Pro" : "Active Competitor"}
+                    </div>
+                  </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-background border border-border p-3 max-w-xs">
+                <div className="text-xs space-y-1.5">
+                  <div className="font-bold text-primary mb-2">Legacy Score Breakdown</div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Career Points:</span>
+                    <span className="font-mono">{careerTotals.points.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Elite Seasons (2000+ pts):</span>
+                    <span className="font-mono">{careerTotals.eliteSeasons} × 50 = +{careerTotals.eliteSeasons * 50}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Major Wins:</span>
+                    <span className="font-mono">{careerTotals.majorWins} × 100 = +{careerTotals.majorWins * 100}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Apex Wins:</span>
+                    <span className="font-mono">{careerTotals.apexWins} × 500 = +{careerTotals.apexWins * 500}</span>
+                  </div>
+                  <div className="border-t border-border pt-1.5 mt-1.5 flex justify-between gap-4 font-bold">
+                    <span>Total:</span>
+                    <span className="text-primary font-mono">{careerTotals.legacyScore.toLocaleString()}</span>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           <div className="flex items-center justify-between border-b border-border pb-2 mb-3">
             <div className="text-primary text-xs md:text-sm uppercase font-bold tracking-wider">
@@ -359,7 +396,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                     <XAxis dataKey="year" stroke="#888" fontSize={10} />
                     <YAxis yAxisId="left" stroke="#00d4ff" fontSize={10} width={35} />
                     <YAxis yAxisId="right" orientation="right" stroke="#ff6b6b" fontSize={10} reversed domain={[1, 40]} width={25} />
-                    <Tooltip 
+                    <RechartsTooltip 
                       contentStyle={{ backgroundColor: '#1a1f25', border: '1px solid #333', borderRadius: '8px', fontSize: '11px' }}
                       labelStyle={{ color: '#fff' }}
                     />
