@@ -53,8 +53,13 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
         totalRanks += s.rank;
         count++;
         if (s.points >= 2000) eliteSeasons++;
-        // Exclude 709 from Apex appearances until confirmed
-        if (s.rank <= 16 && s.year !== 709) apexApps++;
+        // For 709, check the qualified array; for other years check rank <= 16
+        if (s.year === 709) {
+          const apex709 = apexDetailed.find(a => a.year === 709);
+          if (apex709?.qualified?.includes(playerName)) apexApps++;
+        } else if (s.rank <= 16) {
+          apexApps++;
+        }
       }
     });
 
