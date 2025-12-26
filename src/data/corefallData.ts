@@ -635,6 +635,11 @@ export const apexDetailed = [
 
 // Full Match Data
 export const fullMatches: Record<string, { round: string; match: string }[]> = {
+  "709": [
+    { round: "Finals", match: "Nothing Sawryr (2-0(4-1,4-2)) vs Mega Hawnnon" },
+    { round: "SF", match: "Nothing Sawryr (4-1) vs Heal Calofloure" },
+    { round: "SF", match: "Mega Hawnnon (4-2) vs Sky Sunyer" }
+  ],
   "708": [
     { round: "Finals", match: "Cascade Juner (2-0(4-0,4-1)) vs Vampire Ortez" },
     { round: "SF", match: "Cascade Juner (4-2) vs Zeus Ziki" },
@@ -837,6 +842,7 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
 // Season 709
+  { year: 709, tournament: "Apex", winner: "Nothing Sawryr" },
   { year: 709, tournament: "Solar", winner: "Nothing Sawryr" },
   { year: 709, tournament: "Descent", winner: "Cascade Juner" },
   { year: 709, tournament: "Heritage", winner: "Vampire Ortez" },
