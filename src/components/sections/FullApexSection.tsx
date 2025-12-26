@@ -402,11 +402,12 @@ function ApexBracket({ season }: { season: string }) {
 }
 
 export function FullApexSection() {
-  const [openSeason, setOpenSeason] = useState<string | null>("708");
+  const [openSeason, setOpenSeason] = useState<string | null>("709");
   const [viewModes, setViewModes] = useState<Record<string, "bracket" | "list">>({
     "700": "bracket", "701": "bracket", "702": "bracket", 
     "703": "bracket", "704": "bracket", "705": "bracket",
-    "706": "bracket", "707": "bracket", "708": "bracket"
+    "706": "bracket", "707": "bracket", "708": "bracket",
+    "709": "bracket"
   });
 
   const seasonKeys = Object.keys(fullMatches).sort((a, b) => Number(b) - Number(a));

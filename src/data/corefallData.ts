@@ -576,7 +576,7 @@ export const trophyData = [
   { name: "Nemesis Owanash", total: 3, apex: 0, ctt: 0, major: 3, list: "Wind Breakers (701, 702), Heritage (703)" },
   { name: "Justice Karoawaki", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (700), Solar Summit (703)" },
   { name: "Whiteout Gar-Kiola", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (702), Malice (705)" },
-  { name: "Nothing Sawryr", total: 4, apex: 0, ctt: 0, major: 4, list: "Solar (708, 709), Malice (707), Nightmare (706)" },
+  { name: "Nothing Sawryr", total: 5, apex: 1, ctt: 0, major: 4, list: "Apex (709), Solar (708, 709), Malice (707), Nightmare (706)" },
   { name: "Supernova Aloi", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (709)" },
   { name: "Tiger Griff", total: 2, apex: 0, ctt: 0, major: 2, list: "Chaos Reigns (700), Nightmare (700)" },
   { name: "Monster Piccoloo", total: 2, apex: 0, ctt: 0, major: 2, list: "Solar (700), Chaos Reigns (701)" },
@@ -600,7 +600,7 @@ export const trophyData = [
 
 // Apex Finals History
 export const apexDetailed = [
-  { year: 709, win: "TBD", wTeam: "TBD", winAge: 0, lose: "TBD", lTeam: "TBD", loseAge: 0, qualified: ["Cascade Juner", "Vampire Ortez", "Mega Hawnnon", "Daredevil Gaffe", "Sky Sunyer", "Heal Calofloure", "Zeus Ziki", "Nothing Sawryr", "Wraith Cunelly", "Rem Asamtoy", "Supernova Aloi", "Bat Bornoil", "Pulse Farward", "Fisher Cerzonal", "Harsh Raii", "Clipper Doznu"] },
+  { year: 709, win: "Nothing Sawryr", wTeam: "Gastro", winAge: 28, lose: "Mega Hawnnon", lTeam: "Dashlol", loseAge: 27, qualified: ["Cascade Juner", "Vampire Ortez", "Mega Hawnnon", "Daredevil Gaffe", "Sky Sunyer", "Heal Calofloure", "Zeus Ziki", "Nothing Sawryr", "Wraith Cunelly", "Rem Asamtoy", "Supernova Aloi", "Bat Bornoil", "Pulse Farward", "Fisher Cerzonal", "Harsh Raii", "Clipper Doznu"] },
   { year: 708, win: "Cascade Juner", wTeam: "Damage", winAge: 29, lose: "Vampire Ortez", lTeam: "Dashlol", loseAge: 26 },
   { year: 707, win: "Cascade Juner", wTeam: "Damage", winAge: 28, lose: "Wraith Cunelly", lTeam: "Engery", loseAge: 27 },
   { year: 706, win: "Jungle Unovo", wTeam: "Cal Hal", winAge: 31, lose: "Cascade Juner", lTeam: "Damage", loseAge: 27 },
@@ -638,7 +638,35 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
   "709": [
     { round: "Finals", match: "Nothing Sawryr (2-0(4-1,4-2)) vs Mega Hawnnon" },
     { round: "SF", match: "Nothing Sawryr (4-1) vs Heal Calofloure" },
-    { round: "SF", match: "Mega Hawnnon (4-2) vs Sky Sunyer" }
+    { round: "SF", match: "Mega Hawnnon (4-2) vs Sky Sunyer" },
+    // Group A - Double Elimination
+    { round: "UBR1", match: "Nothing Sawryr (4-2) vs Bat Bornoil (Group A)" },
+    { round: "UBR1", match: "Sky Sunyer (4-3) vs Pulse Farward (Group A)" },
+    { round: "UBR1", match: "Cascade Juner (4-2) vs Wraith Cunelly (Group A)" },
+    { round: "UBR1", match: "Daredevil Gaffe (4-3) vs Clipper Doznu (Group A)" },
+    { round: "LBR1", match: "Bat Bornoil (4-3) vs Pulse Farward (Group A)" },
+    { round: "LBR1", match: "Wraith Cunelly (4-1) vs Clipper Doznu (Group A)" },
+    { round: "UBSF", match: "Nothing Sawryr (4-2) vs Sky Sunyer (Group A)" },
+    { round: "UBSF", match: "Cascade Juner (4-3) vs Daredevil Gaffe (Group A)" },
+    { round: "LBQF", match: "Sky Sunyer (4-2) vs Bat Bornoil (Group A)" },
+    { round: "LBQF", match: "Daredevil Gaffe (4-3) vs Wraith Cunelly (Group A)" },
+    { round: "LBSF", match: "Sky Sunyer (4-2) vs Daredevil Gaffe (Group A)" },
+    { round: "UBF", match: "Nothing Sawryr (4-2) vs Cascade Juner (Group A)" },
+    { round: "LBF", match: "Sky Sunyer (4-2) vs Cascade Juner (Group A)" },
+    // Group B - Double Elimination
+    { round: "UBR1", match: "Mega Hawnnon (4-2) vs Vampire Ortez (Group B)" },
+    { round: "UBR1", match: "Heal Calofloure (4-3) vs Zeus Ziki (Group B)" },
+    { round: "UBR1", match: "Supernova Aloi (4-1) vs Fisher Cerzonal (Group B)" },
+    { round: "UBR1", match: "Rem Asamtoy (4-2) vs Harsh Raii (Group B)" },
+    { round: "LBR1", match: "Vampire Ortez (4-3) vs Zeus Ziki (Group B)" },
+    { round: "LBR1", match: "Fisher Cerzonal (4-3) vs Harsh Raii (Group B)" },
+    { round: "UBSF", match: "Mega Hawnnon (4-1) vs Heal Calofloure (Group B)" },
+    { round: "UBSF", match: "Supernova Aloi (4-2) vs Rem Asamtoy (Group B)" },
+    { round: "LBQF", match: "Heal Calofloure (4-1) vs Vampire Ortez (Group B)" },
+    { round: "LBQF", match: "Rem Asamtoy (4-2) vs Fisher Cerzonal (Group B)" },
+    { round: "LBSF", match: "Heal Calofloure (4-3) vs Rem Asamtoy (Group B)" },
+    { round: "UBF", match: "Mega Hawnnon (4-1) vs Supernova Aloi (Group B)" },
+    { round: "LBF", match: "Heal Calofloure (4-2) vs Supernova Aloi (Group B)" }
   ],
   "708": [
     { round: "Finals", match: "Cascade Juner (2-0(4-0,4-1)) vs Vampire Ortez" },
