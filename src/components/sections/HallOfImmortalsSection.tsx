@@ -26,7 +26,8 @@ const inducteeNames = [
   "Prince Jonkan",
   "Vibrant Yaul",
   "Ring Hawlikaw",
-  "Rolle Asikov"
+  "Rolle Asikov",
+  "Rain Lieryon"
 ];
 
 // Historical Apex titles data with years
@@ -39,7 +40,8 @@ const apexTitlesData: Record<string, { count: number; years: number[] }> = {
   "Prince Jonkan": { count: 2, years: [680, 681] },
   "Vibrant Yaul": { count: 1, years: [685] },
   "Ring Hawlikaw": { count: 1, years: [682] },
-  "Rolle Asikov": { count: 1, years: [679] }
+  "Rolle Asikov": { count: 1, years: [679] },
+  "Rain Lieryon": { count: 1, years: [703] }
 };
 
 // Season Star awards data with years
@@ -64,7 +66,8 @@ const primaryTeamOverrides: Record<string, string> = {
   "Spade Faxzin": "Gastro",
   "Vibrant Yaul": "Ovest/Limium",
   "Rolle Asikov": "Limium",
-  "Ring Hawlikaw": "Rass"
+  "Ring Hawlikaw": "Rass",
+  "Rain Lieryon": "Dashlol"
 };
 
 export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) => {

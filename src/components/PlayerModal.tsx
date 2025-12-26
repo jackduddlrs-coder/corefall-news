@@ -327,6 +327,14 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             Career Honors
           </div>
           <div className="mb-6 md:mb-8 flex flex-wrap gap-1">
+            {/* Hall of Immortals Badge */}
+            {[
+              "Pheonix Oliv", "Mountain Granton", "Snow Masogoto", "Soler Varo", 
+              "Spade Faxzin", "Prince Jonkan", "Vibrant Yaul", "Ring Hawlikaw", 
+              "Rolle Asikov", "Rain Lieryon"
+            ].includes(playerName) && (
+              <span className="award-badge bg-gradient-to-r from-amber-500/20 to-amber-600/20 border border-amber-500/50 text-amber-400 text-xs">👑 Hall of Immortals</span>
+            )}
             {(trophies || seasonStars.length > 0) ? (
               <>
                 {trophies && Array(trophies.apex).fill(0).map((_, i) => (
