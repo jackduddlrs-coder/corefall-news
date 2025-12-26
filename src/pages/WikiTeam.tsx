@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronLeft, Trophy, Users, TrendingUp, Calendar, Shield } from "lucide-react";
+import { ChevronLeft, Trophy, Users, TrendingUp, Calendar, Shield, MapPin, User, Heart, DollarSign } from "lucide-react";
 import { pastTeamStandings, pastStandings, seasons, getTeamClass } from "@/data/corefallData";
-import { teamBios } from "@/data/wikiData";
+import { teamBios, teamInfo, contractData } from "@/data/wikiData";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const WikiTeam = () => {
@@ -93,6 +93,30 @@ const WikiTeam = () => {
       .sort((a, b) => a.Rank - b.Rank);
   }, [decodedName]);
 
+  // Team info (location, coach, popularity)
+  const info = teamInfo[decodedName];
+
+  // Get contracts for current roster
+  const rosterContracts = useMemo(() => {
+    return currentRoster.map(p => ({
+      ...p,
+      contract: contractData[p.Name]
+    }));
+  }, [currentRoster]);
+
+  // Team payroll
+  const teamPayroll = useMemo(() => {
+    let total = 0;
+    currentRoster.forEach(p => {
+      const c = contractData[p.Name];
+      if (c) {
+        const amount = parseFloat(c.amount.replace(/[^0-9.]/g, ''));
+        total += amount;
+      }
+    });
+    return total;
+  }, [currentRoster]);
+
   if (!decodedName || history.length === 0) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -146,6 +170,45 @@ const WikiTeam = () => {
             </div>
           </div>
         </div>
+
+        {/* Team Info Card */}
+        {info && (
+          <section className="mb-8">
+            <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+              <Shield className="h-5 w-5" /> Team Info
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-panel border border-border rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Location</span>
+                </div>
+                <div className="text-sm font-medium text-white">{info.location}</div>
+              </div>
+              <div className="bg-panel border border-border rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <User className="h-4 w-4 text-primary" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Head Coach</span>
+                </div>
+                <div className="text-sm font-medium text-white">{info.coach}</div>
+              </div>
+              <div className="bg-panel border border-border rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Heart className="h-4 w-4 text-primary" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Popularity</span>
+                </div>
+                <div className="text-sm font-medium text-white">#{info.popularity}</div>
+              </div>
+              <div className="bg-panel border border-border rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="h-4 w-4 text-green-400" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Payroll</span>
+                </div>
+                <div className="text-sm font-medium text-green-400">{teamPayroll.toFixed(1)}M</div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Description */}
         {bio?.description && (
@@ -290,28 +353,42 @@ const WikiTeam = () => {
         {currentRoster.length > 0 && (
           <section className="mb-8">
             <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-              <Users className="h-5 w-5" /> Current Roster (709)
+              <Users className="h-5 w-5" /> Current Roster & Contracts (709)
             </h2>
             <div className="bg-panel border border-border rounded-xl overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
-                {currentRoster.map(p => (
-                  <Link
-                    key={p.Name}
-                    to={`/wiki/player/${encodeURIComponent(p.Name)}`}
-                    className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-muted-foreground">#{p.Rank}</span>
-                      <span className="font-medium text-foreground group-hover:text-primary transition-colors">
-                        {p.Name}
-                      </span>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {p.Points.toLocaleString()} pts • {p.KOs} KOs
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-black">
+                    <th className="text-left p-3 text-primary uppercase text-xs">Rank</th>
+                    <th className="text-left p-3 text-primary uppercase text-xs">Player</th>
+                    <th className="text-left p-3 text-primary uppercase text-xs">Points</th>
+                    <th className="text-left p-3 text-primary uppercase text-xs hidden md:table-cell">Salary</th>
+                    <th className="text-left p-3 text-primary uppercase text-xs hidden md:table-cell">Through</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rosterContracts.map(p => (
+                    <tr key={p.Name} className="border-t border-border hover:bg-muted/30">
+                      <td className="p-3 text-muted-foreground">#{p.Rank}</td>
+                      <td className="p-3">
+                        <Link 
+                          to={`/wiki/player/${encodeURIComponent(p.Name)}`}
+                          className="text-foreground hover:text-primary transition-colors font-medium"
+                        >
+                          {p.Name}
+                        </Link>
+                      </td>
+                      <td className="p-3">{p.Points.toLocaleString()}</td>
+                      <td className="p-3 text-green-400 hidden md:table-cell">
+                        {p.contract?.amount || "—"}
+                      </td>
+                      <td className={`p-3 hidden md:table-cell ${p.contract?.contractThrough && p.contract.contractThrough <= 709 ? "text-amber-400" : ""}`}>
+                        {p.contract?.contractThrough || "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
         )}

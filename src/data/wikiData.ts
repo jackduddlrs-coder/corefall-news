@@ -114,6 +114,61 @@ export const fighterBios: Record<string, {
   }
 };
 
+// Team info from Team_Info.xlsx
+export const teamInfo: Record<string, {
+  location: string;
+  coach: string;
+  popularity: number;
+}> = {
+  "Damage": { location: "Jaxston, Auren", coach: "Soler Varo", popularity: 1 },
+  "Engery": { location: "Jaxston, Auren", coach: "Ball Raytor", popularity: 2 },
+  "Dashlol": { location: "Lou, Thane", coach: "Thunder Toria", popularity: 3 },
+  "Cal Hal": { location: "Dodster, Auren", coach: "Splash Gradey", popularity: 4 },
+  "Gastro": { location: "Omaidara, Thane", coach: "Nemesis Owanash", popularity: 5 },
+  "Limium": { location: "Oscrar, Dureya", coach: "Cold Varuth", popularity: 6 },
+  "Qalf": { location: "Dimonco, Vorell", coach: "Astro Daslo", popularity: 7 },
+  "Varcity": { location: "Jaxston, Auren", coach: "Monster Piccoloo", popularity: 8 },
+  "Zemiga-Mar": { location: "Andur, Dureya", coach: "Bulldoser Banwich", popularity: 9 },
+  "AFE": { location: "Daneyse, Vorell", coach: "Legacy Maryinez", popularity: 10 },
+  "Juire": { location: "Dimonco, Vorell", coach: "Shark Obimovch", popularity: 11 },
+  "Juniper": { location: "Sente, Thane", coach: "Sword Vacane", popularity: 12 },
+  "Fadee": { location: "Lou, Thane", coach: "Light Brog", popularity: 13 }
+};
+
+// Contract data from Contract_Data.xlsx (709 season)
+export const contractData: Record<string, {
+  team: string;
+  age: number;
+  amount: string;
+  contractThrough: number;
+}> = {
+  "Cascade Juner": { team: "Damage", age: 30, amount: "8.2 Million", contractThrough: 711 },
+  "Nothing Sawryr": { team: "Gastro", age: 28, amount: "6.8 Million", contractThrough: 710 },
+  "Mega Hawnnon": { team: "Dashlol", age: 27, amount: "4.4 Million", contractThrough: 709 },
+  "Daredevil Gaffe": { team: "Qalf", age: 24, amount: "4.8 Million", contractThrough: 711 },
+  "Bat Bornoil": { team: "Damage", age: 27, amount: "5.1 Million", contractThrough: 710 },
+  "Zeus Ziki": { team: "Cal Hal", age: 30, amount: "7.3 Million", contractThrough: 711 },
+  "Wraith Cunelly": { team: "Engery", age: 29, amount: "6.1 Million", contractThrough: 712 },
+  "Sky Sunyer": { team: "Zemiga-Mar", age: 27, amount: "5.3 Million", contractThrough: 711 },
+  "Vampire Ortez": { team: "Dashlol", age: 27, amount: "5.6 Million", contractThrough: 711 },
+  "Heal Calofloure": { team: "Limium", age: 31, amount: "5.7 Million", contractThrough: 709 },
+  "Pulse Farward": { team: "Varcity", age: 28, amount: "3.5 Million", contractThrough: 709 },
+  "Rem Asamtoy": { team: "Qalf", age: 27, amount: "1.3 Million", contractThrough: 710 },
+  "Titan Aui": { team: "Limium", age: 26, amount: "1.5 Million", contractThrough: 709 },
+  "Clipper Doznu": { team: "Varcity", age: 27, amount: "1.1 Million", contractThrough: 709 },
+  "Supernova Aloi": { team: "Gastro", age: 29, amount: "3.2 Million", contractThrough: 710 },
+  "Game Darwonn": { team: "Engery", age: 29, amount: "2.7 Million", contractThrough: 710 },
+  "Fisher Cerzonal": { team: "Qalf", age: 29, amount: "4.7 Million", contractThrough: 709 },
+  "Freeze Jagwiab": { team: "Juniper", age: 24, amount: "1.2 Million", contractThrough: 711 },
+  "Killa Binbac": { team: "Fadee", age: 31, amount: "3.5 Million", contractThrough: 710 },
+  "Harsh Raii": { team: "AFE", age: 25, amount: "1.2 Million", contractThrough: 711 },
+  "Horse Queanlend": { team: "Juire", age: 28, amount: "4.3 Million", contractThrough: 712 },
+  "Cross Exzona": { team: "Cal Hal", age: 26, amount: "4.7 Million", contractThrough: 712 },
+  "Rocket Dalbale": { team: "Zemiga-Mar", age: 24, amount: "1.1 Million", contractThrough: 711 },
+  "Whiteout Gar-Kiola": { team: "Juire", age: 31, amount: "3.8 Million", contractThrough: 710 },
+  "Rain Lieryon": { team: "Dashlol", age: 34, amount: "5 Million", contractThrough: 709 }
+};
+
 // Team bios and extended info
 export const teamBios: Record<string, {
   founded?: string;
@@ -206,6 +261,13 @@ export const teamBios: Record<string, {
     description: "Formed from the merger of historic franchise Zemiga and Binish Mar, this new team combines legacy with fresh talent. Sky Sunyer leads the current roster. Zemiga's Break Xinziki Apex 686 legacy lives on.",
     notableAlumni: ["Break Xinziki", "Sky Sunyer", "Bronze Sarolm", "Heal Calofloure (Binish Mar era)"],
     rivalTeams: ["Nocry", "Fadee"]
+  },
+  "Fadee": {
+    founded: "Pre-700 Era",
+    colors: "Crimson & Black",
+    description: "A rebuilding franchise looking to return to prominence. Currently home to veteran Killa Binbac who brings experience and championship pedigree to the young roster.",
+    notableAlumni: ["Killa Binbac", "Friction Zalzabi", "Venus Aloi"],
+    rivalTeams: ["Juniper", "Zemiga-Mar"]
   }
 };
 

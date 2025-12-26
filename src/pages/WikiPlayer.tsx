@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronLeft, Trophy, Target, Calendar, TrendingUp, Swords, Star } from "lucide-react";
+import { ChevronLeft, Trophy, Target, Calendar, TrendingUp, Swords, Star, DollarSign } from "lucide-react";
 import { pastStandings, trophyData, seasons, apexDetailed, majorWinners, getTeamClass } from "@/data/corefallData";
-import { fighterBios } from "@/data/wikiData";
+import { fighterBios, contractData } from "@/data/wikiData";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const WikiPlayer = () => {
@@ -66,6 +66,9 @@ const WikiPlayer = () => {
 
   // Major wins
   const majorWins = majorWinners.filter(w => w.winner === decodedName);
+
+  // Contract info
+  const contract = contractData[decodedName];
 
   // Current team (most recent season)
   const currentTeam = seasonHistory.length > 0 
@@ -137,6 +140,37 @@ const WikiPlayer = () => {
             </div>
           </div>
         </div>
+
+        {/* Contract Info */}
+        {contract && (
+          <section className="mb-8">
+            <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+              <DollarSign className="h-5 w-5" /> Contract Details
+            </h2>
+            <div className="bg-gradient-to-r from-green-500/10 to-background border border-green-500/30 rounded-xl p-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Salary</div>
+                  <div className="text-xl font-bold text-green-400">{contract.amount}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Contract Through</div>
+                  <div className="text-xl font-bold text-white">{contract.contractThrough}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Years Remaining</div>
+                  <div className="text-xl font-bold text-white">{contract.contractThrough - 709}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Status</div>
+                  <div className={`text-sm font-bold ${contract.contractThrough <= 709 ? "text-amber-400" : "text-green-400"}`}>
+                    {contract.contractThrough <= 709 ? "Expiring" : "Under Contract"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Bio Section */}
         {bio && (
