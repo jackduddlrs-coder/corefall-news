@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        SEASON 709 COMPLETE: Vampire Ortez Wins New Life 709 • Cascade Juner & Vampire Ortez Tie for Season Leader • Qalf Wins CTT
+        🏆 APEX 709 CHAMPION: NOTHING SAWRYR • Season 709 Complete • Cascade Juner & Vampire Ortez Tie for Season Leader • Qalf Wins CTT
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">Major Winner</span>
+          <span className="team-tag team-gastro mb-2 inline-block">APEX 709 WORLD CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            VAMPIRE ORTEZ<br/>NEW LIFE 709
+            NOTHING SAWRYR<br/>APEX 709 CHAMPION
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Dashlol star claims New Life 709 for his 3rd career major, capping off an incredible season.
+            The Gastro star defeats Mega Hawnnon 2-1 in the Finals to claim his first Apex title and 5th career trophy.
           </p>
         </div>
       </div>
