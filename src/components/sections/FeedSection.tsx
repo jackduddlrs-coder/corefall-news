@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        SEASON 709 LIVE: Supernova Aloi Wins Nightmare 709 • 1st Career Major • Damage Leads CTT
+        SEASON 709 LIVE: Zeus Ziki Wins Armageddon 709 • Cascade Juner Leads Individual Race • Qalf Dominates CTT
       </div>
 
       <div 
@@ -12,40 +12,40 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-gastro mb-2 inline-block">Major Winner</span>
+          <span className="team-tag team-qalf mb-2 inline-block">Major Winner</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            SUPERNOVA ALOI<br/>NIGHTMARE 709
+            ZEUS ZIKI<br/>ARMAGEDDON 709
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Gastro star claims Nightmare 709 for his 1st career major, defeating Vampire Ortez in the finals.
+            The Qalf star claims Armageddon 709 for his 5th career major, continuing his legendary run.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 709 After Nightmare</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 709 After Armageddon</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Nightmare Champion</span>
-          <h3 className="text-white mt-3">Supernova Aloi Wins Major #1</h3>
+          <span className="team-tag team-qalf">Armageddon Champion</span>
+          <h3 className="text-white mt-3">Zeus Ziki Wins Major #5</h3>
           <p className="text-foreground">
-            Supernova defeats Vampire Ortez to claim Nightmare 709 with <span className="stat-highlight">1450 total points</span>. His 1st career major!
+            Zeus claims Armageddon 709, his <span className="stat-highlight">5th career major</span>. Qalf continues their dominant season.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Runner-Up</span>
-          <h3 className="text-white mt-3">Vampire Ortez 2nd Place</h3>
+          <span className="team-tag team-damage">Malice Cup Champion</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Claims Malice Cup</h3>
           <p className="text-foreground">
-            Vampire Ortez finishes runner-up at Nightmare with <span className="stat-highlight">1500 points</span>. Harsh Raii 3rd (1100), Cross Exzona 4th (950).
+            Mega wins Malice Cup 709 for his <span className="stat-highlight">3rd career major</span>. Damage stays in the hunt.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">CTT Leaders</span>
-          <h3 className="text-white mt-3">Damage Dominates Team Race</h3>
+          <span className="team-tag team-qalf">Wind Breakers Champion</span>
+          <h3 className="text-white mt-3">Sky Sunyer Wins Wind Breakers</h3>
           <p className="text-foreground">
-            Damage leads CTT with <span className="stat-highlight">4200 points</span>. Dashlol 2nd (3700), Gastro 3rd (3700).
+            Sky takes Wind Breakers 709 for his <span className="stat-highlight">1st career major</span>. A breakthrough win!
           </p>
         </div>
         
@@ -53,7 +53,23 @@ export function FeedSection() {
           <span className="team-tag team-damage">Season Leader</span>
           <h3 className="text-white mt-3">Cascade Juner Leads S709</h3>
           <p className="text-foreground">
-            Cascade Juner leads with <span className="stat-highlight">1900 points</span>. Nothing Sawryr 2nd (1700), Mega Hawnnon 3rd (1550).
+            Cascade Juner leads with <span className="stat-highlight">2600 points</span>. Nothing Sawryr 2nd (2350), Zeus Ziki 3rd (2250).
+          </p>
+        </div>
+        
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-qalf">CTT Leaders</span>
+          <h3 className="text-white mt-3">Qalf Dominates Team Race</h3>
+          <p className="text-foreground">
+            Qalf leads CTT with <span className="stat-highlight">5800 points</span>. Damage 2nd (5600), Dashlol 3rd (5200).
+          </p>
+        </div>
+        
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-gastro">Earlier This Season</span>
+          <h3 className="text-white mt-3">Supernova Aloi Won Nightmare</h3>
+          <p className="text-foreground">
+            Supernova claimed Nightmare 709 for his <span className="stat-highlight">1st career major</span>, defeating Vampire Ortez in finals.
           </p>
         </div>
       </div>
