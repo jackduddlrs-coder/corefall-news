@@ -329,12 +329,12 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }
     });
 
-    // Legacy Score: points + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
+    // Legacy Score: (points * 0.8) + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
     const legacyRankings: PlayerStats[] = Object.entries(playerLegacyMap)
       .map(([name, stats]) => ({
         name,
         team: getMostPlayedTeam(name),
-        value: stats.points + (stats.kos * 10) + (stats.elite * 100) + (stats.apexApps * 100) + (stats.ctt * 50) + (stats.majors * 200) + (stats.star * 400) + (stats.apexFinals * 200) + (stats.apex * 1200)
+        value: Math.round(stats.points * 0.8) + (stats.kos * 10) + (stats.elite * 100) + (stats.apexApps * 100) + (stats.ctt * 50) + (stats.majors * 200) + (stats.star * 400) + (stats.apexFinals * 200) + (stats.apex * 1200)
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
