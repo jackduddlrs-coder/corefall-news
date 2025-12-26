@@ -262,17 +262,39 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     });
 
     // Legacy Score calculation
-    const playerLegacyMap: Record<string, { points: number; elite: number; apex: number; majors: number; ctt: number; star: number; apexFinals: number }> = {};
+    const playerLegacyMap: Record<string, { points: number; kos: number; elite: number; apexApps: number; apex: number; majors: number; ctt: number; star: number; apexFinals: number }> = {};
 
     allPlayers.forEach(p => {
-      if (!playerLegacyMap[p.name]) playerLegacyMap[p.name] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+      if (!playerLegacyMap[p.name]) playerLegacyMap[p.name] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
       playerLegacyMap[p.name].points += p.points;
+      playerLegacyMap[p.name].kos += p.kos;
       if (p.points >= 2000) playerLegacyMap[p.name].elite++;
+    });
+
+    // Apex appearances (top 16 finishes or qualified for 709)
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      if (season === "709") {
+        const apex709 = apexDetailed.find(a => a.year === 709);
+        if (apex709?.qualified) {
+          apex709.qualified.forEach(name => {
+            if (!playerLegacyMap[name]) playerLegacyMap[name] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+            playerLegacyMap[name].apexApps++;
+          });
+        }
+      } else {
+        players.forEach(player => {
+          if (player.Rank <= 16) {
+            if (!playerLegacyMap[player.Name]) playerLegacyMap[player.Name] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+            playerLegacyMap[player.Name].apexApps++;
+          }
+        });
+      }
     });
 
     majorWinners.forEach(win => {
       if (!selectedYears.has(win.year.toString())) return;
-      if (!playerLegacyMap[win.winner]) playerLegacyMap[win.winner] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+      if (!playerLegacyMap[win.winner]) playerLegacyMap[win.winner] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
       if (win.tournament === "Apex") playerLegacyMap[win.winner].apex++;
       else playerLegacyMap[win.winner].majors++;
     });
@@ -281,7 +303,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     seasons.forEach(s => {
       if (!selectedYears.has(s.year.toString())) return;
       if (s.star) {
-        if (!playerLegacyMap[s.star]) playerLegacyMap[s.star] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+        if (!playerLegacyMap[s.star]) playerLegacyMap[s.star] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
         playerLegacyMap[s.star].star++;
       }
     });
@@ -289,7 +311,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     // CTT wins from trophyData (individual CTT contributions)
     trophyData.forEach(trophy => {
       if (trophy.ctt > 0) {
-        if (!playerLegacyMap[trophy.name]) playerLegacyMap[trophy.name] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+        if (!playerLegacyMap[trophy.name]) playerLegacyMap[trophy.name] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
         playerLegacyMap[trophy.name].ctt += trophy.ctt;
       }
     });
@@ -298,21 +320,21 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     apexDetailed.forEach(apex => {
       if (!selectedYears.has(apex.year.toString())) return;
       if (apex.win) {
-        if (!playerLegacyMap[apex.win]) playerLegacyMap[apex.win] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+        if (!playerLegacyMap[apex.win]) playerLegacyMap[apex.win] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
         playerLegacyMap[apex.win].apexFinals++;
       }
       if (apex.lose) {
-        if (!playerLegacyMap[apex.lose]) playerLegacyMap[apex.lose] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+        if (!playerLegacyMap[apex.lose]) playerLegacyMap[apex.lose] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
         playerLegacyMap[apex.lose].apexFinals++;
       }
     });
 
-    // Legacy Score: points + (elite * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
+    // Legacy Score: points + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
     const legacyRankings: PlayerStats[] = Object.entries(playerLegacyMap)
       .map(([name, stats]) => ({
         name,
         team: getMostPlayedTeam(name),
-        value: stats.points + (stats.elite * 100) + (stats.ctt * 50) + (stats.majors * 200) + (stats.star * 400) + (stats.apexFinals * 200) + (stats.apex * 1200)
+        value: stats.points + (stats.kos * 10) + (stats.elite * 100) + (stats.apexApps * 100) + (stats.ctt * 50) + (stats.majors * 200) + (stats.star * 400) + (stats.apexFinals * 200) + (stats.apex * 1200)
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
