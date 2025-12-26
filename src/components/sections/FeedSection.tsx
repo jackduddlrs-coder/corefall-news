@@ -17,7 +17,7 @@ export function FeedSection() {
             ZEUS ZIKI<br/>ARMAGEDDON 709
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Qalf star claims Armageddon 709 for his 5th career major, continuing his legendary run.
+            The Qalf star claims Armageddon 709 for his 6th career major, continuing his legendary run.
           </p>
         </div>
       </div>
@@ -27,9 +27,9 @@ export function FeedSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-qalf">Armageddon Champion</span>
-          <h3 className="text-white mt-3">Zeus Ziki Wins Major #5</h3>
+          <h3 className="text-white mt-3">Zeus Ziki Wins Major #6</h3>
           <p className="text-foreground">
-            Zeus claims Armageddon 709, his <span className="stat-highlight">5th career major</span>. Qalf continues their dominant season.
+            Zeus claims Armageddon 709, his <span className="stat-highlight">6th career major</span>. Qalf continues their dominant season.
           </p>
         </div>
         
