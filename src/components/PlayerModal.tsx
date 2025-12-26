@@ -80,8 +80,8 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       selectedYears.has(a.year) && (a.win === playerName || a.lose === playerName)
     ).length;
     
-    // Legacy Score: points + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
-    const legacyScore = careerPoints + (kos * 10) + (eliteSeasons * 100) + (apexApps * 100) + (cttCount * 50) + (majorCount * 200) + (starCount * 400) + (apexFinalsCount * 200) + (apexCount * 1200);
+    // Legacy Score: (points * 0.8) + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
+    const legacyScore = Math.round(careerPoints * 0.8) + (kos * 10) + (eliteSeasons * 100) + (apexApps * 100) + (cttCount * 50) + (majorCount * 200) + (starCount * 400) + (apexFinalsCount * 200) + (apexCount * 1200);
 
     return {
       points: careerPoints,
