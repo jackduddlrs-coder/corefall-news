@@ -518,6 +518,7 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
 
 // Season History (679-708)
 export const seasons = [
+  { year: 709, apex: "TBD", team: "TBD", apexAge: 0, ctt: "Qalf", star: "Cascade Juner", starTeam: "Damage", starAge: 30 },
   { year: 708, apex: "Cascade Juner", team: "Damage", apexAge: 29, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
   { year: 707, apex: "Cascade Juner", team: "Damage", apexAge: 28, ctt: "Damage", star: "Cascade Juner", starTeam: "Damage", starAge: 28 },
   { year: 706, apex: "Jungle Unovo", team: "Cal Hal", apexAge: 31, ctt: "Engery", star: "Killa Binbac", starTeam: "Qalf", starAge: 28 },
@@ -565,7 +566,7 @@ export const trophyData = [
   { name: "Hero Valii", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (702), New Life (700, 702), Heartland (701), Chaos Reigns (703)" },
   { name: "Blood Astur", total: 5, apex: 0, ctt: 3, major: 2, list: "CTT (703, 704, 705), Malice (703), Chaos Reigns (705)" },
   { name: "Zeus Ziki", total: 7, apex: 0, ctt: 1, major: 6, list: "CTT (706), Heartland Cup (708), Nightmare (708), Heritage (706), New Life (706, 707), Armageddon (709)" },
-  { name: "Cascade Juner", total: 15, apex: 2, ctt: 2, major: 11, list: "Apex (707, 708), CTT (707, 708), Armageddon (707), Descent (703, 707, 709), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
+  { name: "Cascade Juner", total: 16, apex: 2, ctt: 2, major: 11, list: "Apex (707, 708), CTT (707, 708), Armageddon (707), Descent (703, 707, 709), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708), Season Star (709)" },
   { name: "Wraith Cunelly", total: 5, apex: 0, ctt: 1, major: 4, list: "Chaos Reigns (709), Heritage (708), CTT (706), Solar (706), Armageddon (706)" },
   { name: "Storm Dayniel", total: 4, apex: 0, ctt: 3, major: 1, list: "CTT (703, 704, 705), Solar (704)" },
   { name: "Splash Gradey", total: 4, apex: 1, ctt: 1, major: 2, list: "Apex (700), CTT (701), Descent (700), Malice (701)" },
@@ -581,7 +582,7 @@ export const trophyData = [
   { name: "Monster Piccoloo", total: 2, apex: 0, ctt: 0, major: 2, list: "Solar (700), Chaos Reigns (701)" },
   { name: "Horse Queanlend", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (707)" },
   { name: "Joy Dafvies", total: 1, apex: 0, ctt: 0, major: 1, list: "Descent (705)" },
-  { name: "Fisher Cerzonal", total: 2, apex: 0, ctt: 0, major: 2, list: "Nightmare (705), Armageddon (708)" },
+  { name: "Fisher Cerzonal", total: 3, apex: 0, ctt: 1, major: 2, list: "Nightmare (705), Armageddon (708), CTT (709)" },
   { name: "Tempest Niez", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (706)" },
   { name: "Acid Sulgmor", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (706) - Engery Contributor" },
   { name: "Cloud Youug", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (700) - Limium Contributor" },
@@ -593,11 +594,13 @@ export const trophyData = [
   { name: "Bat Bornoil", total: 3, apex: 0, ctt: 2, major: 1, list: "Wind Breakers (708), CTT (707, 708)" },
   { name: "Sky Sunyer", total: 3, apex: 0, ctt: 2, major: 1, list: "CTT (707, 708), Wind Breakers (709)" },
   { name: "Mega Hawnnon", total: 2, apex: 0, ctt: 0, major: 2, list: "Descent (708), Malice (709)" },
-  { name: "Daredevil Gaffe", total: 1, apex: 0, ctt: 0, major: 1, list: "Heartland Cup (709)" }
+  { name: "Daredevil Gaffe", total: 2, apex: 0, ctt: 1, major: 1, list: "Heartland Cup (709), CTT (709)" },
+  { name: "Rem Asamtoy", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (709)" }
 ];
 
 // Apex Finals History
 export const apexDetailed = [
+  { year: 709, win: "TBD", wTeam: "TBD", winAge: 0, lose: "TBD", lTeam: "TBD", loseAge: 0, qualified: ["Cascade Juner", "Vampire Ortez", "Mega Hawnnon", "Daredevil Gaffe", "Sky Sunyer", "Heal Calofloure", "Zeus Ziki", "Nothing Sawryr", "Wraith Cunelly", "Rem Asamtoy", "Supernova Aloi", "Bat Bornoil", "Pulse Farward", "Fisher Cerzonal", "Harsh Raii", "Clipper Doznu"] },
   { year: 708, win: "Cascade Juner", wTeam: "Damage", winAge: 29, lose: "Vampire Ortez", lTeam: "Dashlol", loseAge: 26 },
   { year: 707, win: "Cascade Juner", wTeam: "Damage", winAge: 28, lose: "Wraith Cunelly", lTeam: "Engery", loseAge: 27 },
   { year: 706, win: "Jungle Unovo", wTeam: "Cal Hal", winAge: 31, lose: "Cascade Juner", lTeam: "Damage", loseAge: 27 },
