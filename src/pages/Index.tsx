@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { FeedSection } from "@/components/sections/FeedSection";
 import { ResultsSection } from "@/components/sections/ResultsSection";
 import { ArchiveHubSection } from "@/components/sections/ArchiveHubSection";
@@ -14,6 +15,7 @@ import { SplashfeedSection } from "@/components/sections/SplashfeedSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import { BookOpen } from "lucide-react";
 
 type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "dynasties" | "games" | "splashfeed";
 
@@ -69,8 +71,17 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Search */}
-          <GlobalSearch onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+          {/* Wiki Link + Search */}
+          <div className="flex items-center gap-2">
+            <Link 
+              to="/wiki" 
+              className="hidden md:flex items-center gap-1.5 text-sm font-bold text-muted-foreground hover:text-primary transition-colors px-3 py-2"
+            >
+              <BookOpen className="h-4 w-4" />
+              Wiki
+            </Link>
+            <GlobalSearch onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
+          </div>
         </div>
         
         {/* Mobile Navigation - Scrollable horizontal tabs */}
