@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { pastStandings, pastTeamStandings, getTeamClass, seasons, majorWinners, apexDetailed } from "@/data/corefallData";
+import { pastStandings, pastTeamStandings, getTeamClass, seasons, majorWinners, apexDetailed, trophyData } from "@/data/corefallData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface LeaderboardsSectionProps {
@@ -266,16 +266,23 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       if (!selectedYears.has(win.year.toString())) return;
       if (!playerLegacyMap[win.winner]) playerLegacyMap[win.winner] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
       if (win.tournament === "Apex") playerLegacyMap[win.winner].apex++;
-      else if (win.tournament === "CTT") playerLegacyMap[win.winner].ctt++;
       else playerLegacyMap[win.winner].majors++;
     });
 
-    // Season Star awards
+    // Season Star awards and CTT wins from trophyData
     seasons.forEach(s => {
       if (!selectedYears.has(s.year.toString())) return;
       if (s.star) {
         if (!playerLegacyMap[s.star]) playerLegacyMap[s.star] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
         playerLegacyMap[s.star].star++;
+      }
+    });
+
+    // CTT wins from trophyData (individual CTT contributions)
+    trophyData.forEach(trophy => {
+      if (trophy.ctt > 0) {
+        if (!playerLegacyMap[trophy.name]) playerLegacyMap[trophy.name] = { points: 0, elite: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
+        playerLegacyMap[trophy.name].ctt += trophy.ctt;
       }
     });
 

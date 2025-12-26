@@ -61,8 +61,11 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     // Calculate Legacy Score
     const wins = majorWinners.filter(w => w.winner === playerName && selectedYears.has(w.year));
     const apexCount = wins.filter(w => w.tournament === "Apex").length;
-    const cttCount = wins.filter(w => w.tournament === "CTT").length;
-    const majorCount = wins.filter(w => w.tournament !== "Apex" && w.tournament !== "CTT").length;
+    const majorCount = wins.filter(w => w.tournament !== "Apex").length;
+    
+    // CTT wins from trophyData
+    const playerTrophy = trophyData.find(t => t.name === playerName);
+    const cttCount = playerTrophy?.ctt || 0;
     
     // Season Star count
     const starCount = seasons.filter(s => s.star === playerName && selectedYears.has(s.year)).length;
