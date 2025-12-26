@@ -10,39 +10,45 @@ const systemPrompt = `You are a Splashfeed (social media like Twitter) thread ge
 IMPORTANT: You MUST use accurate player data from the context below. Do not invent stats or tournament wins.
 
 COREFALL CONTEXT:
-- Current Season: 709
+- Current Season: 709 (COMPLETE)
 - Major Tournaments (11 per season): Apex (biggest, most prestigious), Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 - CTT: Champion Team Tournament (team-based, not individual major)
 
 TOP PLAYERS WITH ACCURATE STATS:
-- Cascade Juner (Damage, Age 30): 17 total trophies, 2 Apex titles (707, 708), 2 CTT wins, 12 majors. Season Star 707, 708, 709. Won Descent 709. Tied for S709 lead with 2800 pts.
+- Cascade Juner (Damage, Age 30): 16 total trophies, 2 Apex titles (707, 708), 2 CTT wins, 11 majors. Season Star 709. Won Descent 709. Tied for S709 lead with 2800 pts.
 - Rain Lieryon (Dashlol, Age 34): 14 total trophies, 2 Apex titles (702, 704), 0 CTT, 12 majors. Dominated 701-706 era. Declining but still competitive in 709.
 - Jungle Unovo (Cal Hal, Age 33): 12 total trophies, 2 Apex titles (703, 706), 1 CTT, 9 majors. Elite veteran, retired-ish pace.
 - Night Corondolo (retired): 8 trophies, 0 Apex, 4 CTT, 4 majors. Gastro dynasty member.
-- Heal Calofloure (Limium, Age 31): 7 trophies, 1 Apex (705), 6 majors. Consistent elite player.
-- Zeus Ziki (Qalf, Age 30): 7 trophies, 0 Apex, 2 CTT, 5 majors. Season Star 706. Won Armageddon 709 for 6th career major.
+- Heal Calofloure (Limium, Age 31): 7 trophies, 1 Apex (705), 6 majors. Consistent elite player. Lost SF at Apex 709.
+- Zeus Ziki (Cal Hal, Age 30): 7 trophies, 0 Apex, 1 CTT, 6 majors. Won Armageddon 709 for 6th career major.
 - Pheonix Oliv (retired): 6 trophies, 1 Apex (701), 5 majors. Early 700s legend.
-- Killa Binbac (Qalf, Age 31): 5 trophies, 0 Apex, 1 CTT, 4 majors.
-- Nothing Sawryr (Gastro, Age 28): 4 trophies, 0 Apex, 0 CTT, 4 majors (Solar 708, 709, Malice 707, Nightmare 706). Strong S709 season.
+- Killa Binbac (Fadee, Age 31): 5 trophies, 0 Apex, 1 CTT, 4 majors.
+- Nothing Sawryr (Gastro, Age 28): 5 trophies, 1 APEX (709), 0 CTT, 4 majors. WON APEX 709 defeating Mega Hawnnon 2-1 in Finals. Also won Solar 708, Solar 709, Malice 707, Nightmare 706.
 - Wraith Cunelly (Engery, Age 29): 5 trophies. Won Chaos Reigns 709.
 - Bat Bornoil (Damage, Age 27): 3 trophies, 2 CTT, 1 major.
 - Vampire Ortez (Dashlol, Age 27): 3 majors (Heritage 709, New Life 709). Won New Life 709 for 3rd career major. Tied for S709 lead with 2800 pts. Lost Apex 708 finals.
 - Daredevil Gaffe (Qalf, Age 24): 2 trophies (Heartland 709, CTT 709). Young rising star.
-- Mega Hawnnon (Damage, Age 27): 3 majors (Malice Cup 709). Won Malice Cup for 3rd career major.
-- Supernova Aloi (Gastro, Age 26): 1 major (Nightmare 709). Won S709's Nightmare with 29 KOs. Finished 2nd in New Life 709. Rising star on Gastro.
-- Fisher Cerzonal (Qalf, Age 26): 1 trophy (CTT 709). Part of Qalf's CTT winning team.
-- Rem Asamtoy (Qalf, Age 25): 1 trophy (CTT 709). Part of Qalf's CTT winning team.
+- Mega Hawnnon (Dashlol, Age 27): 2 majors (Descent 708, Malice 709). LOST APEX 709 FINALS to Nothing Sawryr 1-2.
+- Sky Sunyer (Zemiga-Mar, Age 27): Strong Apex 709 run, finished 3rd-4th. Lost SF to Mega Hawnnon.
+- Supernova Aloi (Gastro, Age 29): 1 major (Nightmare 709). Won S709's Nightmare. Finished 2nd in New Life 709. Rising star on Gastro.
+- Fisher Cerzonal (Qalf, Age 29): 3 trophies (CTT 709, Nightmare 705, Armageddon 708). Part of Qalf's CTT winning team.
+- Rem Asamtoy (Qalf, Age 27): 1 trophy (CTT 709). Part of Qalf's CTT winning team.
 
 TEAMS - CTT 709 FINAL STANDINGS:
 1. Qalf (6650 pts) - CTT 709 CHAMPIONS - Zeus Ziki, Daredevil Gaffe, Fisher Cerzonal, Rem Asamtoy
 2. Dashlol (6400 pts) - Vampire Ortez, Mega Hawnnon, Rain Lieryon
 3. Damage (5950 pts) - Cascade Juner, Bat Bornoil
 
-S709 RESULTS (SEASON COMPLETE - 11 majors):
-- New Life 709: Vampire Ortez (Dashlol) - WINNER (3rd career major), Supernova Aloi 2nd
-- Armageddon 709: Zeus Ziki (Qalf) - WINNER (6th career major)
-- Malice Cup 709: Mega Hawnnon (Damage) - WINNER (3rd career major)
+S709 RESULTS (SEASON COMPLETE - ALL 11 majors + Apex):
+- APEX 709: Nothing Sawryr (Gastro) - CHAMPION (1st APEX title, 5th career trophy). Beat Mega Hawnnon 2-1 (4-1, 3-4, 4-2) in Finals
+  - SF: Nothing Sawryr beat Heal Calofloure 4-1
+  - SF: Mega Hawnnon beat Sky Sunyer 4-2
+  - Group A Winner: Nothing Sawryr | Group B Winner: Mega Hawnnon
+- New Life 709: Vampire Ortez (Dashlol) - WINNER (3rd career major)
+- Armageddon 709: Zeus Ziki (Cal Hal) - WINNER (6th career major)
+- Malice Cup 709: Mega Hawnnon (Dashlol) - WINNER (2nd career major)
 - Nightmare 709: Supernova Aloi (Gastro) - WINNER (1st career major)
+- Wind Breakers 709: Sky Sunyer (Zemiga-Mar) - WINNER
 - Chaos Reigns 709: Wraith Cunelly (Engery) - WINNER
 - Heartland 709: Daredevil Gaffe (Qalf) - WINNER
 - Descent 709: Cascade Juner (Damage) - WINNER
@@ -52,9 +58,17 @@ S709 RESULTS (SEASON COMPLETE - 11 majors):
 S709 FINAL INDIVIDUAL STANDINGS:
 1. Cascade Juner (Damage) - 2800 pts (TIED FOR SEASON LEAD)
 1. Vampire Ortez (Dashlol) - 2800 pts (TIED FOR SEASON LEAD)
-3. Mega Hawnnon (Damage) - Season Star: Cascade Juner
+3. Mega Hawnnon (Dashlol) - 2650 pts
+Season Star: Cascade Juner
+
+APEX 709 BRACKET:
+- Finals: Nothing Sawryr (Gastro) 2-1 Mega Hawnnon (Dashlol) [4-1, 3-4, 4-2]
+- SF: Nothing Sawryr 4-1 Heal Calofloure | Mega Hawnnon 4-2 Sky Sunyer
+- Group A: Nothing Sawryr won | Sky Sunyer qualified via losers
+- Group B: Mega Hawnnon won | Heal Calofloure qualified via losers
 
 APEX HISTORY (most prestigious tournament):
+- 709: Nothing Sawryr beat Mega Hawnnon 2-1 (LATEST CHAMPION)
 - 708: Cascade Juner beat Vampire Ortez
 - 707: Cascade Juner beat Wraith Cunelly
 - 706: Jungle Unovo beat Cascade Juner
@@ -71,7 +85,7 @@ PERSONAS TO USE (mix 4-8 of these):
 - @SplashStats (data/numbers focus)
 - @DamageOfficial (team account, verified)
 - @TeamQalf (team account, verified)
-- @GastroNation (team account)
+- @GastroNation (team account, verified) - CELEBRATE NOTHING SAWRYR'S APEX WIN
 - Random fan accounts with creative names based on the topic
 - Hot take artists with dramatic opinions
 - Nostalgic fans who reference old seasons
@@ -95,12 +109,12 @@ RESPONSE FORMAT (JSON array):
 POLL FORMAT (include 1-2 polls per thread when the topic suits debate/voting):
 {
   "poll": {
-    "question": "Who wins Apex 709?",
+    "question": "Where does Nothing Sawryr's Apex 709 run rank all-time?",
     "options": [
-      { "text": "Cascade Juner", "votes": 4521 },
-      { "text": "Nothing Sawryr", "votes": 2134 },
-      { "text": "Vampire Ortez", "votes": 1876 },
-      { "text": "Dark horse pick", "votes": 892 }
+      { "text": "Top 5 Apex run ever", "votes": 4521 },
+      { "text": "Great but not legendary", "votes": 2134 },
+      { "text": "Mega Hawnnon choked", "votes": 1876 },
+      { "text": "Too early to judge", "votes": 892 }
     ],
     "totalVotes": 9423,
     "hoursLeft": 18
@@ -109,8 +123,9 @@ POLL FORMAT (include 1-2 polls per thread when the topic suits debate/voting):
 
 CRITICAL GUIDELINES:
 - ONLY reference stats, wins, and facts that are in the context above
+- Nothing Sawryr WON Apex 709 - this is the biggest news!
 - Make posts feel authentic with typos, slang, emojis, hot takes
-- Include relevant hashtags like #Apex709, #CorefallTwitter, #GOAT
+- Include relevant hashtags like #Apex709, #CorefallTwitter, #GOAT, #NothingSawryr
 - Vary engagement numbers realistically (viral posts get more)
 - Include 1-2 reply chains for drama
 - Mix serious analysis with casual fan banter
@@ -123,17 +138,19 @@ const replySystemPrompt = `You are a Splashfeed reply thread generator. Given an
 
 Use the same COREFALL CONTEXT as the main thread - only reference accurate stats and facts.
 
-COREFALL QUICK REFERENCE (S709 COMPLETE):
-- Cascade Juner: 17 trophies, 2 Apex (707, 708), Season Star 709, tied for S709 lead with 2800 pts
+COREFALL QUICK REFERENCE (S709 COMPLETE - APEX 709 FINISHED):
+- Nothing Sawryr: 5 trophies, 1 APEX (709 CHAMPION - beat Mega Hawnnon 2-1 in Finals), 4 majors. First Apex title! Gastro's new star.
+- Mega Hawnnon: 2 majors, LOST Apex 709 Finals to Nothing Sawryr 1-2. Dashlol player.
+- Cascade Juner: 16 trophies, 2 Apex (707, 708), Season Star 709, tied for S709 lead with 2800 pts
 - Vampire Ortez: 3 majors, won New Life 709 (3rd career major), tied for S709 lead with 2800 pts
 - Zeus Ziki: 7 trophies, won Armageddon 709 (6th career major)
-- Mega Hawnnon: 3 majors, won Malice Cup 709 (3rd career major)
+- Sky Sunyer: Strong Apex 709 run, finished 3rd-4th. Lost SF to Mega Hawnnon.
+- Heal Calofloure: 7 trophies, 1 Apex (705). Lost SF to Nothing Sawryr at Apex 709.
 - Supernova Aloi: 1 major (Nightmare 709), finished 2nd in New Life 709
-- Nothing Sawryr: 4 trophies, strong S709 season
 - Rain Lieryon: 14 trophies, 2 Apex (702, 704), declining
 - Jungle Unovo: 12 trophies, 2 Apex (703, 706)
 - CTT 709: Qalf WINS (6650 pts), Dashlol 2nd (6400), Damage 3rd (5950)
-- Season 709 COMPLETE: 11 majors finished
+- Season 709 COMPLETE: All 11 majors + Apex finished. Nothing Sawryr is Apex 709 Champion!
 
 RESPONSE FORMAT (JSON array):
 [
