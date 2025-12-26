@@ -41,7 +41,7 @@ const apexTitlesData: Record<string, { count: number; years: number[] }> = {
   "Vibrant Yaul": { count: 1, years: [685] },
   "Ring Hawlikaw": { count: 1, years: [682] },
   "Rolle Asikov": { count: 1, years: [679] },
-  "Rain Lieryon": { count: 1, years: [703] }
+  "Rain Lieryon": { count: 2, years: [702, 704] }
 };
 
 // Season Star awards data with years
@@ -54,7 +54,8 @@ const seasonStarData: Record<string, number[]> = {
   "Vibrant Yaul": [687],
   "Mountain Granton": [],
   "Ring Hawlikaw": [],
-  "Rolle Asikov": []
+  "Rolle Asikov": [],
+  "Rain Lieryon": [702, 703, 704]
 };
 
 // Override primary teams for immortals (historical affiliations)
