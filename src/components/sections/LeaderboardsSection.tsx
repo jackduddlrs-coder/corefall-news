@@ -118,16 +118,24 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50);
 
     // Most Apex Appearances (top 16 finishes - the Apex bracket)
-    // Exclude season 709 since Apex hasn't occurred yet
     const playerAppearances: Record<string, number> = {};
     Object.entries(pastStandings).forEach(([season, players]) => {
       if (!selectedYears.has(season)) return;
-      if (season === "709") return; // Exclude 709 - Apex hasn't happened yet
-      players.forEach(player => {
-        if (player.Rank <= 16) {
-          playerAppearances[player.Name] = (playerAppearances[player.Name] || 0) + 1;
+      if (season === "709") {
+        // For 709, use the qualified array from apexDetailed
+        const apex709 = apexDetailed.find(a => a.year === 709);
+        if (apex709?.qualified) {
+          apex709.qualified.forEach(name => {
+            playerAppearances[name] = (playerAppearances[name] || 0) + 1;
+          });
         }
-      });
+      } else {
+        players.forEach(player => {
+          if (player.Rank <= 16) {
+            playerAppearances[player.Name] = (playerAppearances[player.Name] || 0) + 1;
+          }
+        });
+      }
     });
     const appearances: PlayerStats[] = Object.entries(playerAppearances)
       .map(([name, count]) => ({ name, team: getMostPlayedTeam(name), value: count }))
