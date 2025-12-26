@@ -80,8 +80,8 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       selectedYears.has(a.year) && (a.win === playerName || a.lose === playerName)
     ).length;
     
-    // Legacy Score: points + (elite * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
-    const legacyScore = careerPoints + (eliteSeasons * 100) + (cttCount * 50) + (majorCount * 200) + (starCount * 400) + (apexFinalsCount * 200) + (apexCount * 1200);
+    // Legacy Score: points + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
+    const legacyScore = careerPoints + (kos * 10) + (eliteSeasons * 100) + (apexApps * 100) + (cttCount * 50) + (majorCount * 200) + (starCount * 400) + (apexFinalsCount * 200) + (apexCount * 1200);
 
     return {
       points: careerPoints,
@@ -112,12 +112,21 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     const allSeasons = Object.keys(pastStandings);
     const playerLegacyMap: Record<string, number> = {};
 
-    // Calculate points and elite seasons for all players
-    Object.entries(pastStandings).forEach(([, players]) => {
+    // Calculate points, KOs, elite seasons, and apex appearances for all players
+    Object.entries(pastStandings).forEach(([year, players]) => {
       players.forEach(player => {
         if (!playerLegacyMap[player.Name]) playerLegacyMap[player.Name] = 0;
         playerLegacyMap[player.Name] += player.Points;
+        playerLegacyMap[player.Name] += player.KOs * 10; // 10 points per KO
         if (player.Points >= 2000) playerLegacyMap[player.Name] += 100; // Elite bonus
+        // Apex appearance bonus (rank <= 16 or qualified for 709)
+        const yearNum = parseInt(year);
+        if (yearNum === 709) {
+          const apex709 = apexDetailed.find(a => a.year === 709);
+          if (apex709?.qualified?.includes(player.Name)) playerLegacyMap[player.Name] += 100;
+        } else if (player.Rank <= 16) {
+          playerLegacyMap[player.Name] += 100;
+        }
       });
     });
 
@@ -390,8 +399,16 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
                     <span className="font-mono">{careerTotals.points.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Career KOs:</span>
+                    <span className="font-mono">{careerTotals.kos} × 10 = +{careerTotals.kos * 10}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
                     <span className="text-muted-foreground">Elite Seasons (2000+ pts):</span>
                     <span className="font-mono">{careerTotals.eliteSeasons} × 100 = +{careerTotals.eliteSeasons * 100}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">Apex Appearances:</span>
+                    <span className="font-mono">{careerTotals.apexApps} × 100 = +{careerTotals.apexApps * 100}</span>
                   </div>
                   <div className="flex justify-between gap-4">
                     <span className="text-muted-foreground">CTT Wins:</span>
