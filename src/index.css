@@ -88,6 +88,7 @@
   .team-manity { background: #708090; color: #fff; }
   .team-zemigamar { background: linear-gradient(135deg, #ff9999 50%, #008080 50%); color: #fff; }
   .team-fadee { background: linear-gradient(135deg, #32cd32 50%, #ff8c00 50%); color: #000; }
+  .team-qw { background: #ff00ff; color: #fff; }
   
   .award-badge {
     @apply inline-block px-2.5 py-1 rounded text-sm mr-1 mb-1;
