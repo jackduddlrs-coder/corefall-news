@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 APEX 709 CHAMPION: NOTHING SAWRYR • Season 709 Complete • Cascade Juner & Vampire Ortez Tie for Season Leader • Qalf Wins CTT
+        🏆 SEASON 710 UNDERWAY • Nothing Sawryr Wins Heartland Cup 710 • Defending Apex Champion Starts Strong
       </div>
 
       <div 
@@ -12,64 +12,64 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-gastro mb-2 inline-block">APEX 709 WORLD CHAMPION</span>
+          <span className="team-tag team-gastro mb-2 inline-block">HEARTLAND 710 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            NOTHING SAWRYR<br/>APEX 709 CHAMPION
+            NOTHING SAWRYR<br/>WINS HEARTLAND 710
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Gastro star defeats Mega Hawnnon 2-1 in the Finals to claim his first Apex title and 5th career trophy.
+            The reigning Apex Champion opens Season 710 with a Heartland Cup victory, his 6th career trophy.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 709 Final Standings</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 710 Updates</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">New Life Champion</span>
-          <h3 className="text-white mt-3">Vampire Ortez Wins Major #3</h3>
+          <span className="team-tag team-gastro">Heartland Champion</span>
+          <h3 className="text-white mt-3">Nothing Sawryr Opens 710 Strong</h3>
           <p className="text-foreground">
-            Vampire claims New Life 709, his <span className="stat-highlight">3rd career major</span>. Supernova Aloi finishes 2nd.
+            The Apex 709 Champion wins Heartland 710 for his <span className="stat-highlight">6th career major</span>. Vampire Ortez finishes 2nd.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Season Co-Leader</span>
-          <h3 className="text-white mt-3">Cascade Juner Ties for S709 Lead</h3>
+          <span className="team-tag team-limium">Rising Star</span>
+          <h3 className="text-white mt-3">Titan Aui Finishes 3rd</h3>
           <p className="text-foreground">
-            Cascade Juner finishes with <span className="stat-highlight">2800 points</span>, tied with Vampire Ortez for the season lead.
+            Limium's Titan Aui makes the podium at Heartland with <span className="stat-highlight">400 points and 2 KOs</span>.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">CTT Champions</span>
-          <h3 className="text-white mt-3">Qalf Wins CTT 709</h3>
+          <span className="team-tag team-gastro">Team Dominance</span>
+          <h3 className="text-white mt-3">Gastro Leads Team Standings</h3>
           <p className="text-foreground">
-            Qalf dominates with <span className="stat-highlight">6650 points</span>. Dashlol 2nd (6400), Damage 3rd (5950).
+            Gastro starts 710 on top with <span className="stat-highlight">850 points</span>. Dashlol (750) and Limium (600) chase.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Armageddon Champion</span>
-          <h3 className="text-white mt-3">Zeus Ziki Won Armageddon</h3>
+          <span className="team-tag team-damage">Slow Start</span>
+          <h3 className="text-white mt-3">Cascade Juner Finishes 13th-16th</h3>
           <p className="text-foreground">
-            Zeus claimed Armageddon 709 for his <span className="stat-highlight">6th career major</span>. Qalf dominated late season.
+            The Season Star 709 has a rare early exit at Heartland with <span className="stat-highlight">150 points</span>. Room to climb.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Malice Cup Champion</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Won Malice Cup</h3>
+          <span className="team-tag team-fadee">Transfer News</span>
+          <h3 className="text-white mt-3">Freeze Jagwiab Joins Fadee</h3>
           <p className="text-foreground">
-            Mega won Malice Cup 709 for his <span className="stat-highlight">3rd career major</span>. Finished 3rd in standings.
+            Freeze moves from Juniper to Fadee for Season 710. Killa Binbac moves to Juire.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Nightmare Champion</span>
-          <h3 className="text-white mt-3">Supernova Aloi Won Nightmare</h3>
+          <span className="team-tag team-gastro">New Arrival</span>
+          <h3 className="text-white mt-3">Club Faxzin Joins Gastro</h3>
           <p className="text-foreground">
-            Supernova claimed Nightmare 709 for his <span className="stat-highlight">1st career major</span>, defeating Vampire in finals.
+            Club Faxzin leaves Juniper to join champions Gastro, reuniting with Nothing Sawryr.
           </p>
         </div>
       </div>

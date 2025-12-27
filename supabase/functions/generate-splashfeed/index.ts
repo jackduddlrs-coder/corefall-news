@@ -10,74 +10,49 @@ const systemPrompt = `You are a Splashfeed (social media like Twitter) thread ge
 IMPORTANT: You MUST use accurate player data from the context below. Do not invent stats or tournament wins.
 
 COREFALL CONTEXT:
-- Current Season: 709 (COMPLETE)
+- Current Season: 710 (IN PROGRESS - Heartland Cup Complete)
 - Major Tournaments (11 per season): Apex (biggest, most prestigious), Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 - CTT: Champion Team Tournament (team-based, not individual major)
 
 TOP PLAYERS WITH ACCURATE STATS:
-- Cascade Juner (Damage, Age 30): 16 total trophies, 2 Apex titles (707, 708), 2 CTT wins, 11 majors. Season Star 709. Won Descent 709. Tied for S709 lead with 2800 pts.
-- Rain Lieryon (Dashlol, Age 34): 14 total trophies, 2 Apex titles (702, 704), 0 CTT, 12 majors. Dominated 701-706 era. Declining but still competitive in 709.
-- Jungle Unovo (Cal Hal, Age 33): 12 total trophies, 2 Apex titles (703, 706), 1 CTT, 9 majors. Elite veteran, retired-ish pace.
-- Night Corondolo (retired): 8 trophies, 0 Apex, 4 CTT, 4 majors. Gastro dynasty member.
-- Heal Calofloure (Limium, Age 31): 7 trophies, 1 Apex (705), 6 majors. Consistent elite player. Lost SF at Apex 709.
-- Zeus Ziki (Cal Hal, Age 30): 7 trophies, 0 Apex, 1 CTT, 6 majors. Won Armageddon 709 for 6th career major.
-- Pheonix Oliv (retired): 6 trophies, 1 Apex (701), 5 majors. Early 700s legend.
-- Killa Binbac (Fadee, Age 31): 5 trophies, 0 Apex, 1 CTT, 4 majors.
-- Nothing Sawryr (Gastro, Age 28): 5 trophies, 1 APEX (709), 0 CTT, 4 majors. WON APEX 709 defeating Mega Hawnnon 2-1 in Finals. Also won Solar 708, Solar 709, Malice 707, Nightmare 706.
-- Wraith Cunelly (Engery, Age 29): 5 trophies. Won Chaos Reigns 709.
-- Bat Bornoil (Damage, Age 27): 3 trophies, 2 CTT, 1 major.
-- Vampire Ortez (Dashlol, Age 27): 3 majors (Heritage 709, New Life 709). Won New Life 709 for 3rd career major. Tied for S709 lead with 2800 pts. Lost Apex 708 finals.
-- Daredevil Gaffe (Qalf, Age 24): 2 trophies (Heartland 709, CTT 709). Young rising star.
-- Mega Hawnnon (Dashlol, Age 27): 2 majors (Descent 708, Malice 709). LOST APEX 709 FINALS to Nothing Sawryr 1-2.
-- Sky Sunyer (Zemiga-Mar, Age 27): Strong Apex 709 run, finished 3rd-4th. Lost SF to Mega Hawnnon.
-- Supernova Aloi (Gastro, Age 29): 1 major (Nightmare 709). Won S709's Nightmare. Finished 2nd in New Life 709. Rising star on Gastro.
-- Fisher Cerzonal (Qalf, Age 29): 3 trophies (CTT 709, Nightmare 705, Armageddon 708). Part of Qalf's CTT winning team.
-- Rem Asamtoy (Qalf, Age 27): 1 trophy (CTT 709). Part of Qalf's CTT winning team.
+- Cascade Juner (Damage, Age 31): 16 total trophies, 2 Apex titles (707, 708), 2 CTT wins, 11 majors. Season Star 709. Had slow start at Heartland 710 (13th-16th).
+- Rain Lieryon (Dashlol, Age 35): 14 total trophies, 2 Apex titles (702, 704), 0 CTT, 12 majors. Veteran legend.
+- Jungle Unovo (Cal Hal, Age 34): 12 total trophies, 2 Apex titles (703, 706), 1 CTT, 9 majors. Elite veteran.
+- Nothing Sawryr (Gastro, Age 29): 6 trophies, 1 APEX (709), 0 CTT, 5 majors. REIGNING APEX CHAMPION. WON HEARTLAND 710 - 6th career trophy!
+- Heal Calofloure (Limium, Age 32): 7 trophies, 1 Apex (705), 6 majors. Finished 9th-12th at Heartland 710.
+- Zeus Ziki (Cal Hal, Age 31): 7 trophies, 0 Apex, 1 CTT, 6 majors. Finished 17th-24th at Heartland 710.
+- Vampire Ortez (Dashlol, Age 28): 3 majors. Finished 2ND at Heartland 710 - strong start!
+- Titan Aui (Limium, Age 27): Finished 3RD at Heartland 710 with 2 KOs - breakout performance!
+- Sky Sunyer (Zemiga-Mar, Age 28): Finished 4th at Heartland 710.
+- Mega Hawnnon (Dashlol, Age 28): 2 majors. Lost Apex 709 Finals. Finished 5th-6th at Heartland 710.
+- Daredevil Gaffe (Qalf, Age 25): 2 trophies (Heartland 709, CTT 709). Finished 13th-16th at Heartland 710.
+- Supernova Aloi (Gastro, Age 30): 1 major (Nightmare 709). Finished 25th-32nd at Heartland 710.
 
-TEAMS - CTT 709 FINAL STANDINGS:
-1. Qalf (6650 pts) - CTT 709 CHAMPIONS - Zeus Ziki, Daredevil Gaffe, Fisher Cerzonal, Rem Asamtoy
-2. Dashlol (6400 pts) - Vampire Ortez, Mega Hawnnon, Rain Lieryon
-3. Damage (5950 pts) - Cascade Juner, Bat Bornoil
+TEAMS - HEARTLAND 710 STANDINGS:
+1. Gastro (850 pts) - EARLY LEADERS - Nothing Sawryr, Supernova Aloi, Club Faxzin (new)
+2. Dashlol (750 pts) - Vampire Ortez, Mega Hawnnon, Rain Lieryon
+3. Limium (600 pts) - Titan Aui, Heal Calofloure
 
-S709 RESULTS (SEASON COMPLETE - ALL 11 majors + Apex):
-- APEX 709: Nothing Sawryr (Gastro) - CHAMPION (1st APEX title, 5th career trophy). Beat Mega Hawnnon 2-1 (4-1, 3-4, 4-2) in Finals
-  - SF: Nothing Sawryr beat Heal Calofloure 4-1
-  - SF: Mega Hawnnon beat Sky Sunyer 4-2
-  - Group A Winner: Nothing Sawryr | Group B Winner: Mega Hawnnon
-- New Life 709: Vampire Ortez (Dashlol) - WINNER (3rd career major)
-- Armageddon 709: Zeus Ziki (Cal Hal) - WINNER (6th career major)
-- Malice Cup 709: Mega Hawnnon (Dashlol) - WINNER (2nd career major)
-- Nightmare 709: Supernova Aloi (Gastro) - WINNER (1st career major)
-- Wind Breakers 709: Sky Sunyer (Zemiga-Mar) - WINNER
-- Chaos Reigns 709: Wraith Cunelly (Engery) - WINNER
-- Heartland 709: Daredevil Gaffe (Qalf) - WINNER
-- Descent 709: Cascade Juner (Damage) - WINNER
-- Solar Summit 709: Nothing Sawryr (Gastro) - WINNER
-- Heritage 709: Vampire Ortez (Dashlol) - WINNER
+S710 TRANSFERS:
+- Freeze Jagwiab: Juniper → Fadee
+- Killa Binbac: Fadee → Juire
+- Club Faxzin: Juniper → Gastro
 
-S709 FINAL INDIVIDUAL STANDINGS:
-1. Cascade Juner (Damage) - 2800 pts (TIED FOR SEASON LEAD)
-1. Vampire Ortez (Dashlol) - 2800 pts (TIED FOR SEASON LEAD)
-3. Mega Hawnnon (Dashlol) - 2650 pts
-Season Star: Cascade Juner
+S710 RESULTS (IN PROGRESS):
+- Heartland 710: Nothing Sawryr (Gastro) - WINNER (6th career major, 1st of season)
+  - 2nd: Vampire Ortez | 3rd: Titan Aui | 4th: Sky Sunyer
+  - Notable: Cascade Juner finished 13th-16th (slow start)
 
-APEX 709 BRACKET:
-- Finals: Nothing Sawryr (Gastro) 2-1 Mega Hawnnon (Dashlol) [4-1, 3-4, 4-2]
-- SF: Nothing Sawryr 4-1 Heal Calofloure | Mega Hawnnon 4-2 Sky Sunyer
-- Group A: Nothing Sawryr won | Sky Sunyer qualified via losers
-- Group B: Mega Hawnnon won | Heal Calofloure qualified via losers
+S709 RECAP (COMPLETE):
+- APEX 709: Nothing Sawryr beat Mega Hawnnon 2-1 in Finals
+- Season Star 709: Cascade Juner
+- CTT 709 Champions: Qalf
 
 APEX HISTORY (most prestigious tournament):
-- 709: Nothing Sawryr beat Mega Hawnnon 2-1 (LATEST CHAMPION)
+- 709: Nothing Sawryr beat Mega Hawnnon 2-1 (CURRENT CHAMPION)
 - 708: Cascade Juner beat Vampire Ortez
 - 707: Cascade Juner beat Wraith Cunelly
 - 706: Jungle Unovo beat Cascade Juner
-- 705: Heal Calofloure beat Killa Binbac
-- 704: Rain Lieryon beat Jungle Unovo
-- 703: Jungle Unovo beat Night Corondolo
-- 702: Rain Lieryon beat Jungle Unovo
-- 701: Pheonix Oliv beat Rain Lieryon
-- 700: Splash Gradey beat Monster Piccoloo
 
 PERSONAS TO USE (mix 4-8 of these):
 - @CorefallInsider (verified analyst)
@@ -85,7 +60,7 @@ PERSONAS TO USE (mix 4-8 of these):
 - @SplashStats (data/numbers focus)
 - @DamageOfficial (team account, verified)
 - @TeamQalf (team account, verified)
-- @GastroNation (team account, verified) - CELEBRATE NOTHING SAWRYR'S APEX WIN
+- @GastroNation (team account, verified) - CELEBRATE NOTHING SAWRYR'S HEARTLAND WIN
 - Random fan accounts with creative names based on the topic
 - Hot take artists with dramatic opinions
 - Nostalgic fans who reference old seasons
@@ -123,9 +98,10 @@ POLL FORMAT (include 1-2 polls per thread when the topic suits debate/voting):
 
 CRITICAL GUIDELINES:
 - ONLY reference stats, wins, and facts that are in the context above
-- Nothing Sawryr WON Apex 709 - this is the biggest news!
+- Season 710 is IN PROGRESS - Heartland Cup complete, Nothing Sawryr won
+- Nothing Sawryr is the REIGNING Apex 709 Champion and just won Heartland 710
 - Make posts feel authentic with typos, slang, emojis, hot takes
-- Include relevant hashtags like #Apex709, #CorefallTwitter, #GOAT, #NothingSawryr
+- Include relevant hashtags like #Season710, #Heartland710, #CorefallTwitter, #NothingSawryr
 - Vary engagement numbers realistically (viral posts get more)
 - Include 1-2 reply chains for drama
 - Mix serious analysis with casual fan banter
@@ -138,19 +114,16 @@ const replySystemPrompt = `You are a Splashfeed reply thread generator. Given an
 
 Use the same COREFALL CONTEXT as the main thread - only reference accurate stats and facts.
 
-COREFALL QUICK REFERENCE (S709 COMPLETE - APEX 709 FINISHED):
-- Nothing Sawryr: 5 trophies, 1 APEX (709 CHAMPION - beat Mega Hawnnon 2-1 in Finals), 4 majors. First Apex title! Gastro's new star.
-- Mega Hawnnon: 2 majors, LOST Apex 709 Finals to Nothing Sawryr 1-2. Dashlol player.
-- Cascade Juner: 16 trophies, 2 Apex (707, 708), Season Star 709, tied for S709 lead with 2800 pts
-- Vampire Ortez: 3 majors, won New Life 709 (3rd career major), tied for S709 lead with 2800 pts
-- Zeus Ziki: 7 trophies, won Armageddon 709 (6th career major)
-- Sky Sunyer: Strong Apex 709 run, finished 3rd-4th. Lost SF to Mega Hawnnon.
-- Heal Calofloure: 7 trophies, 1 Apex (705). Lost SF to Nothing Sawryr at Apex 709.
-- Supernova Aloi: 1 major (Nightmare 709), finished 2nd in New Life 709
-- Rain Lieryon: 14 trophies, 2 Apex (702, 704), declining
-- Jungle Unovo: 12 trophies, 2 Apex (703, 706)
-- CTT 709: Qalf WINS (6650 pts), Dashlol 2nd (6400), Damage 3rd (5950)
-- Season 709 COMPLETE: All 11 majors + Apex finished. Nothing Sawryr is Apex 709 Champion!
+COREFALL QUICK REFERENCE (S710 IN PROGRESS - HEARTLAND COMPLETE):
+- Nothing Sawryr: 6 trophies, 1 APEX (709 CHAMPION), 5 majors. WON HEARTLAND 710 - his 6th career trophy!
+- Vampire Ortez: 3 majors, finished 2nd at Heartland 710. Strong start to 710.
+- Titan Aui: 3rd at Heartland 710 with 2 KOs - breakout performance!
+- Cascade Juner: 16 trophies, 2 Apex (707, 708), Season Star 709. Slow start at Heartland 710 (13th-16th).
+- Mega Hawnnon: 2 majors, Lost Apex 709 Finals. Finished 5th-6th at Heartland 710.
+- Sky Sunyer: 4th at Heartland 710.
+- Zeus Ziki: 7 trophies. Finished 17th-24th at Heartland 710.
+- Gastro leads team standings (850 pts) after Heartland 710
+- Transfers: Freeze Jagwiab to Fadee, Killa Binbac to Juire, Club Faxzin to Gastro
 
 RESPONSE FORMAT (JSON array):
 [
