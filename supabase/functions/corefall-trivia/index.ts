@@ -10,7 +10,7 @@ const triviaSystemPrompt = `You are an expert on the Corefall esports scene. Ans
 COREFALL COMPLETE DATABASE:
 
 === SEASONS & FORMAT ===
-- Current Season: 709 (COMPLETE)
+- Current Season: 710 (IN PROGRESS - Heartland Cup Complete)
 - 11 Majors per season + 1 Apex Championship (biggest, most prestigious)
 - Majors: Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 - CTT: Champion Team Tournament (team-based competition, 1 per season)
@@ -58,11 +58,12 @@ KILLA BINBAC (Fadee, Age 31):
 - Trophies: 5 (0 Apex, 1 CTT, 4 majors)
 - Notable: Lost Apex 705 finals to Heal Calofloure
 
-NOTHING SAWRYR (Gastro, Age 28):
-- Trophies: 5 (1 Apex, 0 CTT, 4 majors)
+NOTHING SAWRYR (Gastro, Age 29):
+- Trophies: 6 (1 Apex, 0 CTT, 5 majors)
 - Apex: 709 (CURRENT CHAMPION)
+- S710: WON HEARTLAND 710 (6th career trophy)
 - Apex 709 Run: Beat Mega Hawnnon 2-1 in Finals (4-1, 3-4, 4-2)
-- Other Wins: Solar 708, Solar 709, Malice 707, Nightmare 706
+- Other Wins: Heartland 710, Solar 708, Solar 709, Malice 707, Nightmare 706
 
 WRAITH CUNELLY (Engery, Age 29):
 - Trophies: 5

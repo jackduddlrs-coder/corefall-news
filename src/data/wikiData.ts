@@ -31,8 +31,8 @@ export const fighterBios: Record<string, {
   "Nothing Sawryr": {
     nickname: "Nothing",
     style: "Unpredictable Chaos",
-    bio: "The reigning Apex 709 Champion, Nothing Sawryr shocked the world with his victory over the heavily favored Mega Hawnnon in the Grand Finals. Known for his unpredictable style and clutch performances, he proved that anything is possible in the Apex. A Gastro loyal who has steadily risen through the ranks.",
-    notableMoments: ["Apex 709 Champion", "5 Career Titles", "Solar Summit Winner (708, 709)"],
+    bio: "The reigning Apex 709 Champion, Nothing Sawryr shocked the world with his victory over the heavily favored Mega Hawnnon in the Grand Finals. He opened Season 710 by winning the Heartland Cup, his 6th career trophy. Known for his unpredictable style and clutch performances, he proved that anything is possible in the Apex. A Gastro loyal who has risen to the very top.",
+    notableMoments: ["Apex 709 Champion", "Heartland 710 Champion", "6 Career Titles", "Solar Summit Winner (708, 709)"],
     rivalries: ["Mega Hawnnon", "Cascade Juner"]
   },
   "Pheonix Oliv": {
