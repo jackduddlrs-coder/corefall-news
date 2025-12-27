@@ -1059,5 +1059,6 @@ export function getTeamClass(teamName: string): string {
   if (t.includes("afe")) return "team-afe";
   if (t.includes("manity")) return "team-manity";
   if (t.includes("fadee")) return "team-fadee";
+  if (t === "qw") return "team-qw";
   return "team-afe";
 }
