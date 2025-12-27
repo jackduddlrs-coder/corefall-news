@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Send, RefreshCw, Heart, Repeat2, MessageCircle, CheckCircle2, ChevronDown, ChevronUp, BarChart3 } from "lucide-react";
+import { Loader2, Send, RefreshCw, Heart, Repeat2, MessageCircle, CheckCircle2, ChevronDown, ChevronUp, BarChart3, Bot, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface PollOption {
   text: string;
@@ -31,6 +32,11 @@ interface SplashPost {
   isReply: boolean;
   replyTo: string | null;
   poll?: Poll | null;
+}
+
+interface TriviaMessage {
+  role: 'user' | 'assistant';
+  content: string;
 }
 
 const getAvatarColor = (handle: string) => {
@@ -65,6 +71,12 @@ export const SplashfeedSection = () => {
   const [posts, setPosts] = useState<PostWithReplies[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [votedPolls, setVotedPolls] = useState<Set<string>>(new Set());
+  
+  // Trivia state
+  const [triviaQuestion, setTriviaQuestion] = useState("");
+  const [triviaMessages, setTriviaMessages] = useState<TriviaMessage[]>([]);
+  const [isAskingTrivia, setIsAskingTrivia] = useState(false);
+  
   const { toast } = useToast();
 
   const generateThread = async () => {
@@ -108,6 +120,55 @@ export const SplashfeedSection = () => {
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const askTrivia = async () => {
+    if (!triviaQuestion.trim()) {
+      toast({
+        title: "Enter a question",
+        description: "What do you want to know about Corefall?",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const userMessage: TriviaMessage = { role: 'user', content: triviaQuestion.trim() };
+    setTriviaMessages(prev => [...prev, userMessage]);
+    setTriviaQuestion("");
+    setIsAskingTrivia(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('corefall-trivia', {
+        body: { question: userMessage.content }
+      });
+
+      if (error) throw error;
+
+      if (data?.answer) {
+        setTriviaMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+      } else {
+        throw new Error('No answer received');
+      }
+    } catch (error: any) {
+      console.error('Error asking trivia:', error);
+      setTriviaMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: "Sorry, I couldn't answer that question. Please try again!" 
+      }]);
+      toast({
+        title: "Trivia failed",
+        description: error.message || "Failed to get trivia answer",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAskingTrivia(false);
+    }
+  };
+
+  const handleTriviaKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isAskingTrivia) {
+      askTrivia();
     }
   };
 
@@ -337,106 +398,252 @@ export const SplashfeedSection = () => {
         </p>
       </div>
 
-      {/* Input Section */}
-      <Card className="p-4 mb-6 bg-card border-border">
-        <div className="flex gap-3">
-          <Input
-            placeholder="What's happening in Corefall? (e.g., 'Is Cascade Juner the GOAT?')"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={isGenerating}
-            className="flex-1 bg-background border-border"
-          />
-          <Button 
-            onClick={generateThread} 
-            disabled={isGenerating}
-            className="gap-2"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                Post
-              </>
-            )}
-          </Button>
-        </div>
-        
-        {/* Suggestion chips */}
-        <div className="flex flex-wrap gap-2 mt-3">
-        {[
-            "Nothing Sawryr wins Apex 709!",
-            "Should Cascade Juner be the GOAT?",
-            "Rain Lieryon comeback?",
-            "Underrated players this season"
-          ].map((suggestion) => (
-            <Badge 
-              key={suggestion}
-              variant="secondary" 
-              className="cursor-pointer hover:bg-primary/20 transition-colors text-xs"
-              onClick={() => !isGenerating && setPrompt(suggestion)}
-            >
-              {suggestion}
-            </Badge>
-          ))}
-        </div>
-      </Card>
+      {/* Tabs for Feed vs Trivia */}
+      <Tabs defaultValue="feed" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsTrigger value="feed" className="gap-2">
+            <MessageCircle className="w-4 h-4" />
+            Feed Generator
+          </TabsTrigger>
+          <TabsTrigger value="trivia" className="gap-2">
+            <Bot className="w-4 h-4" />
+            Ask Trivia
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Loading State */}
-      {isGenerating && (
-        <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-          <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
-          <p>Generating Splashfeed thread...</p>
-          <p className="text-sm">The community is typing...</p>
-        </div>
-      )}
+        {/* Feed Tab */}
+        <TabsContent value="feed" className="space-y-6">
+          {/* Input Section */}
+          <Card className="p-4 bg-card border-border">
+            <div className="flex gap-3">
+              <Input
+                placeholder="What's happening in Corefall? (e.g., 'Is Cascade Juner the GOAT?')"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyPress={handleKeyPress}
+                disabled={isGenerating}
+                className="flex-1 bg-background border-border"
+              />
+              <Button 
+                onClick={generateThread} 
+                disabled={isGenerating}
+                className="gap-2"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Post
+                  </>
+                )}
+              </Button>
+            </div>
+            
+            {/* Suggestion chips */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {[
+                "Nothing Sawryr wins Apex 709!",
+                "Should Cascade Juner be the GOAT?",
+                "Rain Lieryon comeback?",
+                "Underrated players this season"
+              ].map((suggestion) => (
+                <Badge 
+                  key={suggestion}
+                  variant="secondary" 
+                  className="cursor-pointer hover:bg-primary/20 transition-colors text-xs"
+                  onClick={() => !isGenerating && setPrompt(suggestion)}
+                >
+                  {suggestion}
+                </Badge>
+              ))}
+            </div>
+          </Card>
 
-      {/* Posts Feed */}
-      {posts.length > 0 && (
-        <div className="border border-border rounded-lg overflow-hidden">
-          {posts.map((post, index) => (
-            <div key={index}>
-              {renderPost(post, index)}
-              
-              {/* Generated Replies */}
-              {post.showReplies && post.generatedReplies && post.generatedReplies.length > 0 && (
-                <div className="border-l-2 border-primary/30 ml-6">
-                  {post.generatedReplies.map((reply, replyIndex) => 
-                    renderPost({ ...reply, generatedReplies: [], showReplies: false }, replyIndex, true)
+          {/* Loading State */}
+          {isGenerating && (
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
+              <p>Generating Splashfeed thread...</p>
+              <p className="text-sm">The community is typing...</p>
+            </div>
+          )}
+
+          {/* Posts Feed */}
+          {posts.length > 0 && (
+            <div className="border border-border rounded-lg overflow-hidden">
+              {posts.map((post, index) => (
+                <div key={index}>
+                  {renderPost(post, index)}
+                  
+                  {/* Generated Replies */}
+                  {post.showReplies && post.generatedReplies && post.generatedReplies.length > 0 && (
+                    <div className="border-l-2 border-primary/30 ml-6">
+                      {post.generatedReplies.map((reply, replyIndex) => 
+                        renderPost({ ...reply, generatedReplies: [], showReplies: false }, replyIndex, true)
+                      )}
+                    </div>
                   )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isGenerating && posts.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              <p className="text-lg mb-2">💦 No posts yet</p>
+              <p className="text-sm">Enter a topic to see what Splashfeed users think!</p>
+            </div>
+          )}
+
+          {/* Regenerate Button */}
+          {posts.length > 0 && !isGenerating && (
+            <div className="text-center">
+              <Button 
+                variant="outline" 
+                onClick={generateThread}
+                className="gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Generate New Thread
+              </Button>
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Trivia Tab */}
+        <TabsContent value="trivia" className="space-y-6">
+          <Card className="p-4 bg-card border-border">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground">CoreBot</h3>
+                <p className="text-xs text-muted-foreground">Corefall Trivia Expert</p>
+              </div>
+              <Badge variant="secondary" className="ml-auto gap-1">
+                <Sparkles className="w-3 h-3" />
+                AI Powered
+              </Badge>
+            </div>
+            
+            <div className="flex gap-3">
+              <Input
+                placeholder="Ask anything about Corefall... (e.g., 'Who has the most Apex titles?')"
+                value={triviaQuestion}
+                onChange={(e) => setTriviaQuestion(e.target.value)}
+                onKeyPress={handleTriviaKeyPress}
+                disabled={isAskingTrivia}
+                className="flex-1 bg-background border-border"
+              />
+              <Button 
+                onClick={askTrivia} 
+                disabled={isAskingTrivia}
+                className="gap-2"
+              >
+                {isAskingTrivia ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+            
+            {/* Trivia Suggestions */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {[
+                "Who won Apex 709?",
+                "How many trophies does Cascade Juner have?",
+                "Which team won CTT 709?",
+                "Who is the GOAT?"
+              ].map((suggestion) => (
+                <Badge 
+                  key={suggestion}
+                  variant="secondary" 
+                  className="cursor-pointer hover:bg-primary/20 transition-colors text-xs"
+                  onClick={() => !isAskingTrivia && setTriviaQuestion(suggestion)}
+                >
+                  {suggestion}
+                </Badge>
+              ))}
+            </div>
+          </Card>
+
+          {/* Trivia Chat */}
+          {triviaMessages.length > 0 && (
+            <div className="space-y-4">
+              {triviaMessages.map((msg, index) => (
+                <div 
+                  key={index}
+                  className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  {msg.role === 'assistant' && (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                  <div 
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      msg.role === 'user' 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'bg-muted text-foreground'
+                    }`}
+                  >
+                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  </div>
+                  {msg.role === 'user' && (
+                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+                      <span className="text-white text-xs font-bold">You</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              {isAskingTrivia && (
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
+                    <Bot className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="bg-muted p-3 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                      <span className="text-sm text-muted-foreground">Thinking...</span>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      {/* Empty State */}
-      {!isGenerating && posts.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p className="text-lg mb-2">💦 No posts yet</p>
-          <p className="text-sm">Enter a topic to see what Splashfeed users think!</p>
-        </div>
-      )}
+          {/* Empty Trivia State */}
+          {triviaMessages.length === 0 && !isAskingTrivia && (
+            <div className="text-center py-12 text-muted-foreground">
+              <Bot className="w-12 h-12 mx-auto mb-4 text-primary/50" />
+              <p className="text-lg mb-2">Ask CoreBot anything!</p>
+              <p className="text-sm">Player stats, tournament history, team rosters, and more.</p>
+            </div>
+          )}
 
-      {/* Regenerate Button */}
-      {posts.length > 0 && !isGenerating && (
-        <div className="text-center mt-6">
-          <Button 
-            variant="outline" 
-            onClick={generateThread}
-            className="gap-2"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Generate New Thread
-          </Button>
-        </div>
-      )}
+          {/* Clear Chat Button */}
+          {triviaMessages.length > 0 && (
+            <div className="text-center">
+              <Button 
+                variant="outline" 
+                onClick={() => setTriviaMessages([])}
+                className="gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Clear Chat
+              </Button>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
