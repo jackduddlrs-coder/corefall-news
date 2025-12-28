@@ -421,7 +421,7 @@ export function FullApexSection() {
 
   return (
     <div className="animate-fadeIn">
-      <h1 className="text-white">Full Apex Tournament Results (700-708)</h1>
+      <h1 className="text-white">Full Apex Tournament Results (700-709)</h1>
       <p className="text-foreground mb-4">Complete match history for every Apex World Championship.</p>
 
       <div>

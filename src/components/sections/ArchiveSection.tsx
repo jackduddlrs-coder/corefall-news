@@ -72,7 +72,7 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
   return (
     <div className="animate-fadeIn">
       <h1 className="text-white">Historical Standings Archive</h1>
-      <p className="text-foreground">Browse standings from past seasons (700-709). Click column headers to sort.</p>
+      <p className="text-foreground">Browse standings from past seasons (700-710). Click column headers to sort.</p>
 
       <div className="flex flex-wrap gap-4 mb-5">
         <select 

@@ -633,7 +633,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   };
 
   const yearRangeLabel = selectedYears.size === allSeasons.length 
-    ? "700-708" 
+    ? "700-710" 
     : Array.from(selectedYears).sort().join(", ");
 
   const isTeamLeaderboard = (type: LeaderboardType) => 
@@ -644,7 +644,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       <div>
         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Leaderboards</h2>
         <p className="text-muted-foreground text-sm md:text-base">
-          Records from {selectedYears.size === allSeasons.length ? "seasons 700-708" : `season${selectedYears.size > 1 ? "s" : ""} ${yearRangeLabel}`}.
+          Records from {selectedYears.size === allSeasons.length ? "seasons 700-710" : `season${selectedYears.size > 1 ? "s" : ""} ${yearRangeLabel}`}.
         </p>
       </div>
 
