@@ -888,7 +888,7 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
     { round: "R16", match: "Storm Dayniel (4-2) vs Splash Gradey" }
   ],
   "700": [
-    { round: "Finals", match: "Splash Gradey (2-1(4-3,0-4,4-2)) vs Monster Piccoloo" },
+    { round: "Finals", match: "Splash Gradey (2-1(4-3,0-4,4-2)) vs Pheonix Oliv" },
     { round: "SF", match: "Pheonix Oliv (4-2) vs Monster Piccoloo" },
     { round: "SF", match: "Splash Gradey (4-1) vs Cold Varuth" },
     { round: "QF", match: "Pheonix Oliv (4-2) vs Cloud Youug" },
