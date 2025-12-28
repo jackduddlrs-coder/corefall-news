@@ -84,16 +84,12 @@ export const RivalriesSection = ({ onPlayerClick, onTeamClick }: RivalriesSectio
         // Sort by year desc
         matchHistory.sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
-        // Count Apex wins from matchHistory (not h2hRecords which includes CTTs)
-        const apexP1Wins = matchHistory.filter(m => m.winner === player1).length;
-        const apexP2Wins = matchHistory.filter(m => m.winner === player2).length;
-
         return {
           player1,
           player2,
-          player1Wins: apexP1Wins,
-          player2Wins: apexP2Wins,
-          totalMatches: matchHistory.length, // Use Apex-only count
+          player1Wins: data.p1Wins,
+          player2Wins: data.p2Wins,
+          totalMatches: data.p1Wins + data.p2Wins,
           matchHistory
         };
       })
@@ -134,7 +130,7 @@ export const RivalriesSection = ({ onPlayerClick, onTeamClick }: RivalriesSectio
     <div className="space-y-6">
       <div>
         <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1">Historical Rivalries</h2>
-        <p className="text-muted-foreground text-xs md:text-sm">Players who have faced each other multiple times in Apex tournaments (700-709).</p>
+        <p className="text-muted-foreground text-xs md:text-sm">Players who have faced each other multiple times in tournaments (Apex + Majors).</p>
       </div>
 
       {/* Top Rivalries */}
@@ -156,7 +152,7 @@ export const RivalriesSection = ({ onPlayerClick, onTeamClick }: RivalriesSectio
                     <Flame className={`w-4 h-4 ${intensity.color}`} />
                     <span className={`text-xs font-semibold ${intensity.color}`}>{intensity.label} Rivalry</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">{rivalry.totalMatches} Apex Meetings</span>
+                  <span className="text-xs text-muted-foreground">{rivalry.totalMatches} Tournament Meetings</span>
                 </div>
 
                 {/* Players & Score */}
