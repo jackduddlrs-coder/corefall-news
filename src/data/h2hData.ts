@@ -35,7 +35,8 @@ export const h2hRecords: H2HRecord[] = [
   { fighter: "Monster Piccoloo", opponent: "Pheonix Oliv", wins: 0, losses: 1 },
   { fighter: "Splash Gradey", opponent: "Cold Varuth", wins: 1, losses: 0 },
   { fighter: "Cold Varuth", opponent: "Splash Gradey", wins: 0, losses: 1 },
-  { fighter: "Splash Gradey", opponent: "Monster Piccoloo", wins: 1, losses: 0 },
+  { fighter: "Splash Gradey", opponent: "Pheonix Oliv", wins: 1, losses: 0 },
+  { fighter: "Pheonix Oliv", opponent: "Splash Gradey", wins: 0, losses: 1 },
 
   // Season 701 Apex
   { fighter: "Pheonix Oliv", opponent: "Killa Binbac", wins: 1, losses: 0 },
