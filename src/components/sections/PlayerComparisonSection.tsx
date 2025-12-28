@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { pastStandings, getTeamClass, apexDetailed, fullMatches } from "@/data/corefallData";
-import { getH2HRecord } from "@/data/h2hData";
-import { Search, X, Swords, Trophy } from "lucide-react";
+import { getH2HRecord, getAllMatchupsBetween } from "@/data/h2hData";
+import { Search, X, Swords, Trophy, Users } from "lucide-react";
 
 interface H2HSectionProps {
   onPlayerClick: (name: string) => void;
@@ -427,6 +427,68 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* All Matchups List */}
+      {player1 && player2 && h2hRecord && (
+        <div className="bg-card rounded-lg border border-border p-4 md:p-6">
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-4">
+            <Users className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+            <h3 className="text-base md:text-lg font-semibold text-foreground">All Matchups ({h2hRecord.wins + h2hRecord.losses})</h3>
+          </div>
+          
+          <div className="text-center mb-4">
+            <p className="text-xs md:text-sm text-muted-foreground">
+              Complete list of all tournament meetings (Apex + CTT)
+            </p>
+          </div>
+          
+          {(() => {
+            const allMatchups = getAllMatchupsBetween(player1, player2);
+            const p1Wins = allMatchups.filter(m => m.winner === player1).length;
+            const p2Wins = allMatchups.filter(m => m.winner === player2).length;
+            
+            return (
+              <div className="space-y-3">
+                {/* Summary */}
+                <div className="flex items-center justify-center gap-4 md:gap-8 py-2 bg-muted/30 rounded-lg">
+                  <div className="text-center">
+                    <span className="block text-xs text-muted-foreground">{player1.split(' ')[0]}</span>
+                    <span className={`text-xl md:text-2xl font-bold ${p1Wins > p2Wins ? 'text-green-500' : p1Wins < p2Wins ? 'text-red-500' : 'text-foreground'}`}>
+                      {p1Wins}
+                    </span>
+                  </div>
+                  <span className="text-muted-foreground">-</span>
+                  <div className="text-center">
+                    <span className="block text-xs text-muted-foreground">{player2.split(' ')[0]}</span>
+                    <span className={`text-xl md:text-2xl font-bold ${p2Wins > p1Wins ? 'text-green-500' : p2Wins < p1Wins ? 'text-red-500' : 'text-foreground'}`}>
+                      {p2Wins}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Individual matchups */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                  {allMatchups.map((match, idx) => {
+                    const p1Won = match.winner === player1;
+                    return (
+                      <div 
+                        key={idx} 
+                        className={`text-center p-2 rounded-lg text-xs ${
+                          p1Won ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                        }`}
+                      >
+                        <span className="font-bold">{p1Won ? 'W' : 'L'}</span>
+                        <span className="text-muted-foreground ml-1">vs</span>
+                        <span className="ml-1">{match.loser.split(' ')[0]}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 
