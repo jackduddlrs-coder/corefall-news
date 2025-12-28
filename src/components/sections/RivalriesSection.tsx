@@ -237,7 +237,7 @@ export const RivalriesSection = ({ onPlayerClick, onTeamClick }: RivalriesSectio
           <h3 className="font-semibold text-foreground">Repeat Finals Matchups</h3>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {rivalries
             .filter(r => r.matchHistory.some(m => m.round === 'Finals'))
             .filter(r => r.matchHistory.filter(m => m.round === 'Finals').length >= 2)
@@ -245,37 +245,59 @@ export const RivalriesSection = ({ onPlayerClick, onTeamClick }: RivalriesSectio
               const finalsMatches = rivalry.matchHistory.filter(m => m.round === 'Finals');
               const team1 = getPlayerTeam(rivalry.player1);
               const team2 = getPlayerTeam(rivalry.player2);
+              const p1Wins = finalsMatches.filter(m => m.winner === rivalry.player1).length;
+              const p2Wins = finalsMatches.filter(m => m.winner === rivalry.player2).length;
 
               return (
-                <div key={idx} className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => onPlayerClick(rivalry.player1)}
-                      className="text-sm font-medium hover:text-primary"
-                    >
-                      {rivalry.player1}
-                    </button>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${getTeamClass(team1)}`}>{team1}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="text-green-500 font-bold">
-                      {finalsMatches.filter(m => m.winner === rivalry.player1).length}
-                    </span>
-                    <span className="text-muted-foreground">Finals</span>
-                    <span className="text-green-500 font-bold">
-                      {finalsMatches.filter(m => m.winner === rivalry.player2).length}
-                    </span>
+                <div key={idx} className="bg-muted/30 rounded-lg p-3 space-y-2">
+                  {/* Header with players and score */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onPlayerClick(rivalry.player1)}
+                        className={`text-sm font-medium hover:text-primary ${p1Wins > p2Wins ? 'text-green-500' : ''}`}
+                      >
+                        {rivalry.player1}
+                      </button>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded ${getTeamClass(team1)}`}>{team1}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className={`font-bold ${p1Wins > p2Wins ? 'text-green-500' : ''}`}>{p1Wins}</span>
+                      <span className="text-muted-foreground">-</span>
+                      <span className={`font-bold ${p2Wins > p1Wins ? 'text-green-500' : ''}`}>{p2Wins}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded ${getTeamClass(team2)}`}>{team2}</span>
+                      <button
+                        onClick={() => onPlayerClick(rivalry.player2)}
+                        className={`text-sm font-medium hover:text-primary ${p2Wins > p1Wins ? 'text-green-500' : ''}`}
+                      >
+                        {rivalry.player2}
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${getTeamClass(team2)}`}>{team2}</span>
-                    <button
-                      onClick={() => onPlayerClick(rivalry.player2)}
-                      className="text-sm font-medium hover:text-primary"
-                    >
-                      {rivalry.player2}
-                    </button>
+                  {/* Finals match history */}
+                  <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/30">
+                    {finalsMatches.map((match, mIdx) => {
+                      const p1Won = match.winner === rivalry.player1;
+                      return (
+                        <div
+                          key={mIdx}
+                          className={`text-[10px] px-2 py-1 rounded border ${
+                            p1Won 
+                              ? 'bg-green-500/10 border-green-500/30 text-green-400' 
+                              : 'bg-red-500/10 border-red-500/30 text-red-400'
+                          }`}
+                          title={`${match.winner} won (${match.score})`}
+                        >
+                          <span className="font-semibold">{match.year}</span>
+                          <span className="text-muted-foreground ml-1">({match.score})</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
