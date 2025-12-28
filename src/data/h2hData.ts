@@ -1,4 +1,4 @@
-// Head-to-head tournament records between players (Apex 700-708)
+// Head-to-head tournament records between players (Apex 700-709 + Major CTTs)
 export interface H2HRecord {
   fighter: string;
   opponent: string;
