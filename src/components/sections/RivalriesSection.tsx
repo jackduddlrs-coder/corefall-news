@@ -18,16 +18,16 @@ interface Rivalry {
 }
 
 export const RivalriesSection = ({ onPlayerClick, onTeamClick }: RivalriesSectionProps) => {
-  // Get player's most played team
+  // Get team where player scored the most points
   const getPlayerTeam = (playerName: string): string => {
-    const teamSeasons: Record<string, number> = {};
+    const teamPoints: Record<string, number> = {};
     Object.values(pastStandings).forEach(players => {
       const player = players.find(p => p.Name === playerName);
       if (player) {
-        teamSeasons[player.Team] = (teamSeasons[player.Team] || 0) + 1;
+        teamPoints[player.Team] = (teamPoints[player.Team] || 0) + player.Points;
       }
     });
-    const sorted = Object.entries(teamSeasons).sort((a, b) => b[1] - a[1]);
+    const sorted = Object.entries(teamPoints).sort((a, b) => b[1] - a[1]);
     return sorted[0]?.[0] || "Unknown";
   };
 
