@@ -469,19 +469,46 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
                 </div>
                 
                 {/* Individual matchups */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                <div className="space-y-2">
                   {allMatchups.map((match, idx) => {
                     const p1Won = match.winner === player1;
                     return (
                       <div 
                         key={idx} 
-                        className={`text-center p-2 rounded-lg text-xs ${
-                          p1Won ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                        className={`flex items-center justify-between p-2 md:p-3 rounded-lg ${
+                          p1Won ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'
                         }`}
                       >
-                        <span className="font-bold">{p1Won ? 'W' : 'L'}</span>
-                        <span className="text-muted-foreground ml-1">vs</span>
-                        <span className="ml-1">{match.loser.split(' ')[0]}</span>
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span className={`text-xs md:text-sm font-bold ${p1Won ? 'text-green-500' : 'text-red-500'}`}>
+                            {p1Won ? 'W' : 'L'}
+                          </span>
+                          <span 
+                            onClick={() => onPlayerClick(player1)}
+                            className="text-xs md:text-sm hover:text-primary cursor-pointer truncate"
+                          >
+                            {player1.split(' ')[0]}
+                          </span>
+                        </div>
+                        
+                        <div className="text-center px-2 md:px-4 shrink-0">
+                          <span className={`text-[10px] md:text-xs block font-medium ${match.tournament === 'Apex' ? 'text-yellow-500' : 'text-blue-400'}`}>
+                            {match.tournament}
+                          </span>
+                          <span className="text-xs md:text-sm font-bold text-foreground">{match.season}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+                          <span 
+                            onClick={() => onPlayerClick(player2)}
+                            className="text-xs md:text-sm hover:text-primary cursor-pointer truncate"
+                          >
+                            {player2.split(' ')[0]}
+                          </span>
+                          <span className={`text-xs md:text-sm font-bold ${!p1Won ? 'text-green-500' : 'text-red-500'}`}>
+                            {!p1Won ? 'W' : 'L'}
+                          </span>
+                        </div>
                       </div>
                     );
                   })}
