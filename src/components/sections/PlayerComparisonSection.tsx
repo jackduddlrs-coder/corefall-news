@@ -368,11 +368,32 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
             <h3 className="text-base md:text-lg font-semibold text-foreground">Apex Matchups ({apexMatchups.length})</h3>
           </div>
           
+          {/* Grand Finals highlight if any */}
+          {apexMatchups.some(m => m.round === 'Finals') && (
+            <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Trophy className="w-4 h-4 text-yellow-500" />
+                <span className="text-sm font-semibold text-yellow-500">Grand Finals Meetings</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {apexMatchups.filter(m => m.round === 'Finals').map((match, idx) => {
+                  const p1Won = match.winner === player1;
+                  return (
+                    <div key={idx} className={`text-xs px-2 py-1 rounded ${p1Won ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                      <span className="font-bold">{match.year}</span>: {match.winner.split(' ')[0]} ({match.score})
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-2">
             {apexMatchups.map((match, idx) => {
               const p1Won = match.winner === player1;
+              const isFinals = match.round === 'Finals';
               return (
-                <div key={idx} className="flex items-center justify-between bg-muted/30 rounded-lg p-2 md:p-3">
+                <div key={idx} className={`flex items-center justify-between rounded-lg p-2 md:p-3 ${isFinals ? 'bg-yellow-500/10 border border-yellow-500/30' : 'bg-muted/30'}`}>
                   <div className="flex items-center gap-1.5 md:gap-2 flex-1 min-w-0">
                     <span className={`text-xs md:text-sm font-bold shrink-0 ${p1Won ? 'text-green-500' : 'text-red-500'}`}>
                       {p1Won ? 'W' : 'L'}
@@ -386,7 +407,7 @@ export const H2HSection = ({ onPlayerClick, onTeamClick }: H2HSectionProps) => {
                   </div>
                   
                   <div className="text-center px-2 md:px-4 shrink-0">
-                    <span className="text-[10px] md:text-xs text-muted-foreground block">{getRoundName(match.round)}</span>
+                    <span className={`text-[10px] md:text-xs block ${isFinals ? 'text-yellow-500 font-semibold' : 'text-muted-foreground'}`}>{getRoundName(match.round)}</span>
                     <span className="text-xs md:text-sm font-bold text-foreground">{match.year}</span>
                     <span className="text-[10px] md:text-xs text-muted-foreground block">({match.score})</span>
                   </div>
