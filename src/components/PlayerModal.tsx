@@ -99,7 +99,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     };
   }, [seasonHistory, selectedYears, playerName]);
 
-  const isActive = seasonHistory.some(s => s.year === 709);
+  const isActive = seasonHistory.some(s => s.year === 710);
   const trophies = trophyData.find(t => t.name === playerName);
   
   // Get Season Star awards
@@ -320,7 +320,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
           <div className="min-w-0 flex-1">
             <h2 className="text-lg md:text-2xl font-bold uppercase tracking-wider text-white m-0 truncate">{playerName}</h2>
             <span className={`text-xs md:text-sm ${isActive ? "text-primary font-bold" : "text-muted-foreground font-bold"}`}>
-              {isActive ? "Active (707)" : "Inactive"}
+              {isActive ? "Active (710)" : "Inactive"}
             </span>
           </div>
           <button 
