@@ -75,18 +75,18 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .slice(0, 50)
       .map(p => ({ name: p.name, team: p.team, value: p.points, season: p.season }));
 
-    // Track team seasons for each player (within selected years)
-    const playerTeamSeasons: Record<string, Record<string, number>> = {};
+    // Track total points scored per team for each player (within selected years)
+    const playerTeamPoints: Record<string, Record<string, number>> = {};
     allPlayers.forEach(p => {
-      if (!playerTeamSeasons[p.name]) {
-        playerTeamSeasons[p.name] = {};
+      if (!playerTeamPoints[p.name]) {
+        playerTeamPoints[p.name] = {};
       }
-      playerTeamSeasons[p.name][p.team] = (playerTeamSeasons[p.name][p.team] || 0) + 1;
+      playerTeamPoints[p.name][p.team] = (playerTeamPoints[p.name][p.team] || 0) + p.points;
     });
 
-    // Helper to get most played team
-    const getMostPlayedTeam = (name: string): string => {
-      const teams = playerTeamSeasons[name];
+    // Helper to get team where player scored most points
+    const getMostPointsTeam = (name: string): string => {
+      const teams = playerTeamPoints[name];
       if (!teams) return "Unknown";
       return Object.entries(teams).sort((a, b) => b[1] - a[1])[0][0];
     };
@@ -97,7 +97,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       playerTotalPoints[p.name] = (playerTotalPoints[p.name] || 0) + p.points;
     });
     const allTimePoints: PlayerStats[] = Object.entries(playerTotalPoints)
-      .map(([name, total]) => ({ name, team: getMostPlayedTeam(name), value: total }))
+      .map(([name, total]) => ({ name, team: getMostPointsTeam(name), value: total }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
@@ -113,7 +113,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       playerTotalKOs[p.name] = (playerTotalKOs[p.name] || 0) + p.kos;
     });
     const allTimeKOs: PlayerStats[] = Object.entries(playerTotalKOs)
-      .map(([name, total]) => ({ name, team: getMostPlayedTeam(name), value: total }))
+      .map(([name, total]) => ({ name, team: getMostPointsTeam(name), value: total }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
@@ -138,7 +138,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }
     });
     const appearances: PlayerStats[] = Object.entries(playerAppearances)
-      .map(([name, count]) => ({ name, team: getMostPlayedTeam(name), value: count }))
+      .map(([name, count]) => ({ name, team: getMostPointsTeam(name), value: count }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
@@ -156,7 +156,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .filter(([_, ranks]) => ranks.length >= 2)
       .map(([name, ranks]) => ({
         name,
-        team: getMostPlayedTeam(name),
+        team: getMostPointsTeam(name),
         value: Math.round((ranks.reduce((a, b) => a + b, 0) / ranks.length) * 10) / 10,
         season: `${ranks.length} seasons`
       }))
@@ -253,7 +253,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       if (age && age > 0) {
         champAges.push({
           name: win.winner,
-          team: getMostPlayedTeam(win.winner) || 'Unknown',
+          team: getMostPointsTeam(win.winner) || 'Unknown',
           value: age,
           season: `${win.year} ${win.tournament}`,
           age: age
@@ -333,7 +333,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     const legacyRankings: PlayerStats[] = Object.entries(playerLegacyMap)
       .map(([name, stats]) => ({
         name,
-        team: getMostPlayedTeam(name),
+        team: getMostPointsTeam(name),
         value: Math.round(stats.points * 0.8) + (stats.kos * 10) + (stats.elite * 100) + (stats.apexApps * 100) + (stats.ctt * 50) + (stats.majors * 200) + (stats.star * 400) + (stats.apexFinals * 200) + (stats.apex * 1200)
       }))
       .sort((a, b) => b.value - a.value)
