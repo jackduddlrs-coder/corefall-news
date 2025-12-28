@@ -1091,3 +1091,22 @@ export const getH2HRecord = (player1: string, player2: string): { wins: number; 
 
   return { wins, losses };
 };
+
+// Get all individual matchups between two players (returns each match separately)
+export const getAllMatchupsBetween = (player1: string, player2: string): { winner: string; loser: string }[] => {
+  const matchups: { winner: string; loser: string }[] = [];
+  
+  h2hRecords.forEach((record) => {
+    if (record.fighter === player1 && record.opponent === player2 && record.wins > 0) {
+      for (let i = 0; i < record.wins; i++) {
+        matchups.push({ winner: player1, loser: player2 });
+      }
+    } else if (record.fighter === player2 && record.opponent === player1 && record.wins > 0) {
+      for (let i = 0; i < record.wins; i++) {
+        matchups.push({ winner: player2, loser: player1 });
+      }
+    }
+  });
+  
+  return matchups;
+};
