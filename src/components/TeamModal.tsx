@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { pastTeamStandings, pastStandings, seasons, getTeamClass } from "@/data/corefallData";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, BookOpen } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface TeamModalProps {
@@ -122,7 +123,17 @@ export function TeamModal({ teamName, onClose, onPlayerClick }: TeamModalProps) 
       >
         <div className="bg-gradient-to-br from-[#111] to-[#222] p-4 md:p-8 border-b-2 border-primary flex justify-between items-center sticky top-0 z-20">
           <div>
-            <h2 className="text-lg md:text-2xl font-bold uppercase tracking-wider text-white m-0">{teamName}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg md:text-2xl font-bold uppercase tracking-wider text-white m-0">{teamName}</h2>
+              <Link 
+                to={`/wiki/team/${encodeURIComponent(teamName)}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-primary hover:text-secondary transition-colors shrink-0"
+                title="View Wiki Entry"
+              >
+                <BookOpen className="w-4 h-4 md:w-5 md:h-5" />
+              </Link>
+            </div>
             <span className="text-xs md:text-sm text-muted-foreground font-bold">Active Franchise</span>
           </div>
           <button 
