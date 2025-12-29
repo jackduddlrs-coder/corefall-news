@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners, apexDetailed } from "@/data/corefallData";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
-import { ChevronDown, ChevronRight, Trophy, Info } from "lucide-react";
+import { ChevronDown, ChevronRight, Trophy, Info, BookOpen } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -318,7 +319,17 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       >
         <div className="bg-gradient-to-br from-[#111] to-[#222] p-4 md:p-8 border-b-2 border-primary flex justify-between items-center sticky top-0 z-20">
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg md:text-2xl font-bold uppercase tracking-wider text-white m-0 truncate">{playerName}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg md:text-2xl font-bold uppercase tracking-wider text-white m-0 truncate">{playerName}</h2>
+              <Link 
+                to={`/wiki/player/${encodeURIComponent(playerName)}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-primary hover:text-secondary transition-colors shrink-0"
+                title="View Wiki Entry"
+              >
+                <BookOpen className="w-4 h-4 md:w-5 md:h-5" />
+              </Link>
+            </div>
             <span className={`text-xs md:text-sm ${isActive ? "text-primary font-bold" : "text-muted-foreground font-bold"}`}>
               {isActive ? "Active (710)" : "Inactive"}
             </span>
