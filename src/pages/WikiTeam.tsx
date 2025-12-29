@@ -7,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useWikiEdits } from "@/hooks/useWikiEdits";
 import { EditableField } from "@/components/wiki/EditableField";
 import { EditableArrayField } from "@/components/wiki/EditableArrayField";
+import { getTeamLogo } from "@/data/teamLogos";
 
 const WikiTeam = () => {
   const { teamName } = useParams<{ teamName: string }>();
@@ -155,14 +156,22 @@ const WikiTeam = () => {
         {/* Hero Header */}
         <div className="bg-gradient-to-br from-panel to-background border border-border rounded-2xl p-6 md:p-10 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <span className={`team-tag ${getTeamClass(decodedName)} text-lg font-bold mb-3 inline-block`}>
-                {decodedName}
-              </span>
-              <h1 className="text-3xl md:text-5xl font-black uppercase tracking-wider text-foreground">
-                {decodedName}
-              </h1>
-              <div className="mt-2">
+            <div className="flex items-center gap-6">
+              {getTeamLogo(decodedName) && (
+                <img 
+                  src={getTeamLogo(decodedName)} 
+                  alt={`${decodedName} logo`}
+                  className="h-20 w-20 md:h-28 md:w-28 object-contain rounded-xl"
+                />
+              )}
+              <div>
+                <span className={`team-tag ${getTeamClass(decodedName)} text-lg font-bold mb-3 inline-block`}>
+                  {decodedName}
+                </span>
+                <h1 className="text-3xl md:text-5xl font-black uppercase tracking-wider text-foreground">
+                  {decodedName}
+                </h1>
+                <div className="mt-2">
                 <span className="text-xs text-muted-foreground mr-2">Founded:</span>
                 <EditableField
                   value={getValue('founded', bio?.founded)}
@@ -189,7 +198,8 @@ const WikiTeam = () => {
               <div className="text-xs text-muted-foreground">{totals.seasons} seasons</div>
             </div>
           </div>
-        </div>
+              </div>
+            </div>
 
         {/* Team Info Card */}
         <section className="mb-8">
