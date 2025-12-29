@@ -61,7 +61,7 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
             <SeasonsSection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
           </TabsContent>
           <TabsContent value="majors" className="mt-0">
-            <MajorHistorySection onPlayerClick={onPlayerClick} />
+            <MajorHistorySection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
           </TabsContent>
           <TabsContent value="moves" className="mt-0">
             <RosterMovesSection onPlayerClick={onPlayerClick} onTeamClick={onTeamClick} />
