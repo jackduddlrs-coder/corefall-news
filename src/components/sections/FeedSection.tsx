@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 710 • Sky Sunyer Wins Descent 710 • Gastro Leads Team Standings
+        🏆 SEASON 710 • Vampire Ortez Wins Solar 710 • Damage Leads Team Standings
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-zemigamar mb-2 inline-block">SKY DESCENT 710 CHAMPION</span>
+          <span className="team-tag team-dashlol mb-2 inline-block">VAMPIRE SOLAR 710 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            SKY SUNYER<br/>WINS DESCENT 710
+            VAMPIRE ORTEZ<br/>WINS SOLAR 710
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            Zemiga-Mar's star claims his 4th career trophy, surging to 3rd in season standings with 1100 points.
+            Dashlol's star claims his 4th career trophy, surging to 1st in season standings with 1750 points.
           </p>
         </div>
       </div>
@@ -26,50 +26,50 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-zemigamar">Descent Champion</span>
-          <h3 className="text-white mt-3">Sky Sunyer Wins 4th Career Major</h3>
+          <span className="team-tag team-dashlol">Solar Champion</span>
+          <h3 className="text-white mt-3">Vampire Ortez Wins 4th Career Major</h3>
           <p className="text-foreground">
-            Sky Sunyer claims Descent 710, his <span className="stat-highlight">4th career trophy</span>. Rem Asamtoy finishes 2nd.
+            Vampire Ortez claims Solar 710, his <span className="stat-highlight">4th career trophy</span>. Takes the lead with 1750 points.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Points Leader</span>
-          <h3 className="text-white mt-3">Nothing Sawryr Leads with 1300 Points</h3>
+          <span className="team-tag team-damage">Team Leader</span>
+          <h3 className="text-white mt-3">Damage Leads Team Standings with 3150 Points</h3>
           <p className="text-foreground">
-            The reigning Apex Champion leads 710 standings. Vampire Ortez sits 2nd with <span className="stat-highlight">1200 points</span>.
+            Damage takes team lead with <span className="stat-highlight">3150 points</span>. Qalf (2950) and Dashlol (2900) chase.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Team Dominance</span>
-          <h3 className="text-white mt-3">Gastro Leads Teams with 2850 Points</h3>
+          <span className="team-tag team-gastro">Strong Season</span>
+          <h3 className="text-white mt-3">Nothing Sawryr at 1600 Points</h3>
           <p className="text-foreground">
-            Gastro takes team lead with <span className="stat-highlight">2850 points</span>. Damage (2700) and Dashlol (2250) chase.
+            The reigning Apex Champion sits 2nd with <span className="stat-highlight">1600 points</span> and 6 KOs.
+          </p>
+        </div>
+        
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-qalf">Rising Star</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe Tied for 3rd with 1300 Points</h3>
+          <p className="text-foreground">
+            The Qalf star shares 3rd place with Sky Sunyer, both at <span className="stat-highlight">1300 points</span>.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-zemigamar">Breakout</span>
-          <h3 className="text-white mt-3">Sky Sunyer Surges to 3rd with 1100 Points</h3>
+          <h3 className="text-white mt-3">Sky Sunyer at 1300 Points with 6 KOs</h3>
           <p className="text-foreground">
-            The Zemiga-Mar star is having a career season with <span className="stat-highlight">4 KOs</span> through the first majors.
+            The Zemiga-Mar star tied for 3rd with <span className="stat-highlight">6 KOs</span> through 5 majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Hot Start</span>
-          <h3 className="text-white mt-3">Rem Asamtoy Climbs to 6th</h3>
+          <span className="team-tag team-damage">Veteran</span>
+          <h3 className="text-white mt-3">Cascade Juner 5th with 1200 Points</h3>
           <p className="text-foreground">
-            The Qalf veteran surges after Descent 2nd place finish, now at <span className="stat-highlight">1000 points</span>.
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Contender</span>
-          <h3 className="text-white mt-3">Jam Naze Rises with 5 KOs</h3>
-          <p className="text-foreground">
-            The young Gastro star leads the season in KOs with <span className="stat-highlight">5 total</span> through 4 majors.
+            The Damage veteran ranks 5th with <span className="stat-highlight">1200 points</span> and 4 KOs.
           </p>
         </div>
       </div>
