@@ -8,7 +8,7 @@ interface MajorsSectionProps {
 
 type SortKey = "total" | "apex" | "ctt" | "major" | "name";
 type SortDirection = "asc" | "desc";
-type TrophyType = "all" | "apex" | "ctt" | "major";
+type TrophyType = "apex" | "ctt" | "major";
 
 const ALL_YEARS = ["700", "701", "702", "703", "704", "705", "706", "707", "708", "709", "710"];
 
@@ -43,7 +43,7 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
   const [sortKey, setSortKey] = useState<SortKey>("total");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(ALL_YEARS));
-  const [selectedType, setSelectedType] = useState<TrophyType>("all");
+  const [selectedTypes, setSelectedTypes] = useState<Set<TrophyType>>(new Set(["apex", "ctt", "major"]));
 
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
@@ -60,7 +60,19 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
   const selectAll = () => setSelectedYears(new Set(ALL_YEARS));
   const clearAll = () => setSelectedYears(new Set());
 
-  // Filter and recalculate trophies based on selected years and type
+  const toggleType = (type: TrophyType) => {
+    setSelectedTypes(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) {
+        next.delete(type);
+      } else {
+        next.add(type);
+      }
+      return next;
+    });
+  };
+
+  // Filter and recalculate trophies based on selected years and types
   const filteredTrophies = useMemo(() => {
     return trophyData.map(t => {
       const parsed = parseTrophyList(t.list);
@@ -70,10 +82,10 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
       const yearFilteredCtt = parsed.ctt.filter(y => selectedYears.has(y));
       const yearFilteredMajor = parsed.major.filter(y => selectedYears.has(y));
       
-      // Then filter by type
-      const filteredApex = selectedType === "all" || selectedType === "apex" ? yearFilteredApex.length : 0;
-      const filteredCtt = selectedType === "all" || selectedType === "ctt" ? yearFilteredCtt.length : 0;
-      const filteredMajor = selectedType === "all" || selectedType === "major" ? yearFilteredMajor.length : 0;
+      // Then filter by selected types
+      const filteredApex = selectedTypes.has("apex") ? yearFilteredApex.length : 0;
+      const filteredCtt = selectedTypes.has("ctt") ? yearFilteredCtt.length : 0;
+      const filteredMajor = selectedTypes.has("major") ? yearFilteredMajor.length : 0;
       const filteredTotal = filteredApex + filteredCtt + filteredMajor;
       
       return {
@@ -85,7 +97,7 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
         filteredList: t.list
       };
     }).filter(t => t.total > 0);
-  }, [selectedYears, selectedType]);
+  }, [selectedYears, selectedTypes]);
 
   const sortedTrophies = useMemo(() => {
     return [...filteredTrophies].sort((a, b) => {
@@ -128,16 +140,15 @@ export function MajorsSection({ onPlayerClick }: MajorsSectionProps) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground mr-2">Filter by Type:</span>
           {[
-            { value: "all", label: "All Types", color: "bg-primary" },
-            { value: "apex", label: "Apex Only", color: "bg-[hsl(var(--gold))]" },
-            { value: "ctt", label: "CTT Only", color: "bg-[hsl(var(--silver))]" },
-            { value: "major", label: "Major Only", color: "bg-[hsl(var(--bronze))]" }
+            { value: "apex" as TrophyType, label: "Apex", color: "bg-[hsl(var(--gold))]" },
+            { value: "ctt" as TrophyType, label: "CTT", color: "bg-[hsl(var(--silver))]" },
+            { value: "major" as TrophyType, label: "Major", color: "bg-[hsl(var(--bronze))]" }
           ].map(type => (
             <button
               key={type.value}
-              onClick={() => setSelectedType(type.value as TrophyType)}
+              onClick={() => toggleType(type.value)}
               className={`px-3 py-1 text-xs rounded transition-colors ${
-                selectedType === type.value
+                selectedTypes.has(type.value)
                   ? `${type.color} text-black font-semibold`
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
