@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 710 UNDERWAY • Mega Hawnnon Wins Chaos Reigns 710 • Dashlol Takes Team Lead
+        🏆 SEASON 710 • Bat Bornoil Wins Bat Heritage 710 • Damage Surges to 2nd
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">CHAOS REIGNS 710 CHAMPION</span>
+          <span className="team-tag team-damage mb-2 inline-block">BAT HERITAGE 710 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            MEGA HAWNNON<br/>WINS CHAOS REIGNS 710
+            BAT BORNOIL<br/>WINS HERITAGE 710
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            Dashlol's rising star claims his 3rd career major, propelling his team to the top of the standings.
+            Damage's rising star claims his 4th career trophy, powering his team to 2nd in the standings.
           </p>
         </div>
       </div>
@@ -26,50 +26,50 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Chaos Reigns Champion</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Wins 3rd Career Major</h3>
+          <span className="team-tag team-damage">Heritage Champion</span>
+          <h3 className="text-white mt-3">Bat Bornoil Wins 4th Career Major</h3>
           <p className="text-foreground">
-            Mega Hawnnon claims Chaos Reigns 710, his <span className="stat-highlight">3rd career trophy</span>. Daredevil Gaffe finishes 2nd.
+            Bat Bornoil claims Bat Heritage 710, his <span className="stat-highlight">4th career trophy</span>. Cascade Juner finishes 2nd.
+          </p>
+        </div>
+        
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-dashlol">Points Leader</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Takes 710 Lead with 1400</h3>
+          <p className="text-foreground">
+            Mega Hawnnon leads 710 standings with <span className="stat-highlight">1400 points</span>. Nothing Sawryr and Vampire Ortez tied at 1150.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-dashlol">Team Dominance</span>
-          <h3 className="text-white mt-3">Dashlol Takes Lead with 1650 Points</h3>
+          <h3 className="text-white mt-3">Dashlol Leads with 2900 Points</h3>
           <p className="text-foreground">
-            Dashlol surges to the top of team standings with <span className="stat-highlight">1650 points</span>. Gastro (1500) and Damage (1350) chase.
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Co-Leaders</span>
-          <h3 className="text-white mt-3">Nothing Sawryr & Mega Hawnnon Tied at 850</h3>
-          <p className="text-foreground">
-            The reigning Apex Champion and Chaos Reigns winner share the lead with <span className="stat-highlight">850 points each</span>.
+            Dashlol maintains team lead with <span className="stat-highlight">2900 points</span>. Damage surges to 2nd (2800), Gastro 3rd (2150).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-damage">Rising Strong</span>
-          <h3 className="text-white mt-3">Cascade Juner Climbs to 550</h3>
+          <h3 className="text-white mt-3">Cascade Juner Climbs to 4th with 1000 Points</h3>
           <p className="text-foreground">
-            After a slow Heartland start, Cascade Juner rebounds at Chaos Reigns with <span className="stat-highlight">3 KOs</span>. Tied 5th overall.
+            The 2x Apex Champion rebounds with a Heritage runner-up finish, now 4th overall with <span className="stat-highlight">5 KOs</span>.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-fadee">Transfer News</span>
-          <h3 className="text-white mt-3">Freeze Jagwiab Joins Fadee</h3>
+          <span className="team-tag team-damage">Hot Start</span>
+          <h3 className="text-white mt-3">Damage Core Performing</h3>
           <p className="text-foreground">
-            Freeze moves from Juniper to Fadee for Season 710. Killa Binbac moves to Juire.
+            Cascade Juner (1000), Bat Bornoil (950), and Totality Tryoe (650) power Damage's strong season start.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">New Arrival</span>
-          <h3 className="text-white mt-3">Club Faxzin Joins Gastro</h3>
+          <span className="team-tag team-qalf">Contender</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe Sits 6th with 900</h3>
           <p className="text-foreground">
-            Club Faxzin leaves Juniper to join champions Gastro, reuniting with Nothing Sawryr.
+            The young Qalf star continues consistent play, accumulating <span className="stat-highlight">4 KOs</span> through 3 tournaments.
           </p>
         </div>
       </div>
