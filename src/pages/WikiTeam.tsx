@@ -4,10 +4,16 @@ import { ChevronLeft, Trophy, Users, TrendingUp, Calendar, Shield, MapPin, User,
 import { pastTeamStandings, pastStandings, seasons, getTeamClass } from "@/data/corefallData";
 import { teamBios, teamInfo, contractData } from "@/data/wikiData";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useWikiEdits } from "@/hooks/useWikiEdits";
+import { EditableField } from "@/components/wiki/EditableField";
+import { EditableArrayField } from "@/components/wiki/EditableArrayField";
 
 const WikiTeam = () => {
   const { teamName } = useParams<{ teamName: string }>();
   const decodedName = decodeURIComponent(teamName || "");
+
+  // Wiki edits hook
+  const { saveEdit, getValue, getArrayValue, saveArrayEdit } = useWikiEdits('team', decodedName);
 
   // Get team bio
   const bio = teamBios[decodedName];
@@ -85,10 +91,10 @@ const WikiTeam = () => {
       .sort((a, b) => b.totalPoints - a.totalPoints);
   }, [decodedName]);
 
-  // Current roster (709)
+  // Current roster (710)
   const currentRoster = useMemo(() => {
-    const season709 = pastStandings["709"] || [];
-    return season709
+    const season710 = pastStandings["710"] || pastStandings["709"] || [];
+    return season710
       .filter(p => p.Team === decodedName)
       .sort((a, b) => a.Rank - b.Rank);
   }, [decodedName]);
@@ -121,7 +127,7 @@ const WikiTeam = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Team Not Found</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Team Not Found</h1>
           <Link to="/wiki" className="text-primary hover:underline">← Back to Wiki</Link>
         </div>
       </div>
@@ -135,7 +141,7 @@ const WikiTeam = () => {
         <div className="flex justify-between items-center h-[50px] md:h-[70px] gap-2">
           <Link 
             to="/"
-            className="text-lg md:text-3xl font-extrabold uppercase tracking-wider text-white shrink-0 hover:text-primary transition-colors"
+            className="text-lg md:text-3xl font-extrabold uppercase tracking-wider text-foreground shrink-0 hover:text-primary transition-colors"
           >
             Corefall<span className="text-primary">News</span>
           </Link>
@@ -153,90 +159,134 @@ const WikiTeam = () => {
               <span className={`team-tag ${getTeamClass(decodedName)} text-lg font-bold mb-3 inline-block`}>
                 {decodedName}
               </span>
-              <h1 className="text-3xl md:text-5xl font-black uppercase tracking-wider text-white">
+              <h1 className="text-3xl md:text-5xl font-black uppercase tracking-wider text-foreground">
                 {decodedName}
               </h1>
-              {bio?.founded && (
-                <div className="text-muted-foreground mt-2">Est. {bio.founded}</div>
-              )}
-              {bio?.colors && (
-                <div className="text-xs text-muted-foreground mt-1">Colors: {bio.colors}</div>
-              )}
+              <div className="mt-2">
+                <span className="text-xs text-muted-foreground mr-2">Founded:</span>
+                <EditableField
+                  value={getValue('founded', bio?.founded)}
+                  onSave={(v) => saveEdit('founded', v)}
+                  className="inline-block"
+                  labelClassName="text-muted-foreground"
+                  placeholder="Enter founding year..."
+                />
+              </div>
+              <div className="mt-1">
+                <span className="text-xs text-muted-foreground mr-2">Colors:</span>
+                <EditableField
+                  value={getValue('colors', bio?.colors)}
+                  onSave={(v) => saveEdit('colors', v)}
+                  className="inline-block"
+                  labelClassName="text-xs text-muted-foreground"
+                  placeholder="Enter team colors..."
+                />
+              </div>
             </div>
             <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-center min-w-[150px]">
               <div className="text-[10px] text-primary uppercase font-bold tracking-wider">Era Points</div>
-              <div className="text-4xl font-black text-white">{totals.totalPoints.toLocaleString()}</div>
+              <div className="text-4xl font-black text-foreground">{totals.totalPoints.toLocaleString()}</div>
               <div className="text-xs text-muted-foreground">{totals.seasons} seasons</div>
             </div>
           </div>
         </div>
 
         {/* Team Info Card */}
-        {info && (
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-              <Shield className="h-5 w-5" /> Team Info
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-panel border border-border rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Location</span>
-                </div>
-                <div className="text-sm font-medium text-white">{info.location}</div>
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+            <Shield className="h-5 w-5" /> Team Info
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="bg-panel border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Location</span>
               </div>
-              <div className="bg-panel border border-border rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <User className="h-4 w-4 text-primary" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Head Coach</span>
-                </div>
-                <div className="text-sm font-medium text-white">{info.coach}</div>
-              </div>
-              <div className="bg-panel border border-border rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Heart className="h-4 w-4 text-primary" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Popularity</span>
-                </div>
-                <div className="text-sm font-medium text-white">#{info.popularity}</div>
-              </div>
-              <div className="bg-panel border border-border rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="h-4 w-4 text-green-400" />
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Payroll</span>
-                </div>
-                <div className="text-sm font-medium text-green-400">{teamPayroll.toFixed(1)}M</div>
-              </div>
+              <EditableField
+                value={getValue('location', info?.location)}
+                onSave={(v) => saveEdit('location', v)}
+                labelClassName="text-sm font-medium text-foreground"
+                placeholder="Enter location..."
+              />
             </div>
-          </section>
-        )}
+            <div className="bg-panel border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <User className="h-4 w-4 text-primary" />
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Head Coach</span>
+              </div>
+              <EditableField
+                value={getValue('coach', info?.coach)}
+                onSave={(v) => saveEdit('coach', v)}
+                labelClassName="text-sm font-medium text-foreground"
+                placeholder="Enter coach name..."
+              />
+            </div>
+            <div className="bg-panel border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Heart className="h-4 w-4 text-primary" />
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Popularity</span>
+              </div>
+              <div className="text-sm font-medium text-foreground">#{info?.popularity || 'N/A'}</div>
+            </div>
+            <div className="bg-panel border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <DollarSign className="h-4 w-4 text-green-400" />
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Payroll</span>
+              </div>
+              <div className="text-sm font-medium text-green-400">{teamPayroll.toFixed(1)}M</div>
+            </div>
+          </div>
+        </section>
 
         {/* Description */}
-        {bio?.description && (
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-              <Shield className="h-5 w-5" /> About
-            </h2>
-            <div className="bg-panel border border-border rounded-xl p-5">
-              <p className="text-muted-foreground leading-relaxed">{bio.description}</p>
-              {bio.rivalTeams && bio.rivalTeams.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-border">
-                  <div className="text-xs font-bold text-foreground mb-2">Rival Teams:</div>
-                  <div className="flex flex-wrap gap-2">
-                    {bio.rivalTeams.map((rival, i) => (
-                      <Link
-                        key={i}
-                        to={`/wiki/team/${encodeURIComponent(rival)}`}
-                        className={`team-tag ${getTeamClass(rival)} text-xs hover:opacity-80`}
-                      >
-                        {rival}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+            <Shield className="h-5 w-5" /> About
+          </h2>
+          <div className="bg-panel border border-border rounded-xl p-5">
+            <EditableField
+              value={getValue('description', bio?.description)}
+              onSave={(v) => saveEdit('description', v)}
+              multiline
+              labelClassName="text-muted-foreground leading-relaxed"
+              placeholder="Enter team description..."
+            />
+            <div className="mt-4 pt-4 border-t border-border">
+              <div className="text-xs font-bold text-foreground mb-2">Notable Alumni:</div>
+              <EditableArrayField
+                values={getArrayValue('notableAlumni', bio?.notableAlumni)}
+                onSave={(v) => saveArrayEdit('notableAlumni', v)}
+                placeholder="Add alumni..."
+                renderItem={(player, i) => (
+                  <Link
+                    key={i}
+                    to={`/wiki/player/${encodeURIComponent(player)}`}
+                    className="bg-muted/50 text-xs px-2 py-1 rounded text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {player}
+                  </Link>
+                )}
+              />
             </div>
-          </section>
-        )}
+            <div className="mt-4 pt-4 border-t border-border">
+              <div className="text-xs font-bold text-foreground mb-2">Rival Teams:</div>
+              <EditableArrayField
+                values={getArrayValue('rivalTeams', bio?.rivalTeams)}
+                onSave={(v) => saveArrayEdit('rivalTeams', v)}
+                placeholder="Add rival team..."
+                renderItem={(rival, i) => (
+                  <Link
+                    key={i}
+                    to={`/wiki/team/${encodeURIComponent(rival)}`}
+                    className={`team-tag ${getTeamClass(rival)} text-xs hover:opacity-80`}
+                  >
+                    {rival}
+                  </Link>
+                )}
+              />
+            </div>
+          </div>
+        </section>
 
         {/* Trophy Case */}
         <section className="mb-8">
@@ -302,20 +352,20 @@ const WikiTeam = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Best Finish</div>
-              <div className="text-2xl font-bold text-white">#{totals.bestRank}</div>
+              <div className="text-2xl font-bold text-foreground">#{totals.bestRank}</div>
               <div className="text-xs text-muted-foreground">({totals.bestYear})</div>
             </div>
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Rank</div>
-              <div className="text-2xl font-bold text-white">{totals.avgRank.toFixed(1)}</div>
+              <div className="text-2xl font-bold text-foreground">{totals.avgRank.toFixed(1)}</div>
             </div>
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Apex Titles</div>
-              <div className="text-2xl font-bold text-white">{apexWins.length}</div>
+              <div className="text-2xl font-bold text-foreground">{apexWins.length}</div>
             </div>
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">CTT Titles</div>
-              <div className="text-2xl font-bold text-white">{cttWins.length}</div>
+              <div className="text-2xl font-bold text-foreground">{cttWins.length}</div>
             </div>
           </div>
         </section>
@@ -353,7 +403,7 @@ const WikiTeam = () => {
         {currentRoster.length > 0 && (
           <section className="mb-8">
             <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-              <Users className="h-5 w-5" /> Current Roster & Contracts (709)
+              <Users className="h-5 w-5" /> Current Roster & Contracts (710)
             </h2>
             <div className="bg-panel border border-border rounded-xl overflow-hidden">
               <table className="w-full text-sm">
@@ -382,7 +432,7 @@ const WikiTeam = () => {
                       <td className="p-3 text-green-400 hidden md:table-cell">
                         {p.contract?.amount || "—"}
                       </td>
-                      <td className={`p-3 hidden md:table-cell ${p.contract?.contractThrough && p.contract.contractThrough <= 709 ? "text-amber-400" : ""}`}>
+                      <td className="p-3 text-muted-foreground hidden md:table-cell">
                         {p.contract?.contractThrough || "—"}
                       </td>
                     </tr>
@@ -393,7 +443,7 @@ const WikiTeam = () => {
           </section>
         )}
 
-        {/* All-Time Top Players */}
+        {/* All-Time Players */}
         <section className="mb-8">
           <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
             <Users className="h-5 w-5" /> All-Time Top Players
@@ -405,13 +455,14 @@ const WikiTeam = () => {
                   <th className="text-left p-3 text-primary uppercase text-xs">#</th>
                   <th className="text-left p-3 text-primary uppercase text-xs">Player</th>
                   <th className="text-left p-3 text-primary uppercase text-xs">Points</th>
-                  <th className="text-left p-3 text-primary uppercase text-xs">Seasons</th>
+                  <th className="text-left p-3 text-primary uppercase text-xs hidden md:table-cell">KOs</th>
+                  <th className="text-left p-3 text-primary uppercase text-xs hidden md:table-cell">Seasons</th>
                 </tr>
               </thead>
               <tbody>
-                {allTimePlayers.slice(0, 10).map((p, idx) => (
+                {allTimePlayers.slice(0, 10).map((p, i) => (
                   <tr key={p.name} className="border-t border-border hover:bg-muted/30">
-                    <td className="p-3 text-muted-foreground">{idx + 1}</td>
+                    <td className="p-3 text-muted-foreground">{i + 1}</td>
                     <td className="p-3">
                       <Link 
                         to={`/wiki/player/${encodeURIComponent(p.name)}`}
@@ -421,7 +472,8 @@ const WikiTeam = () => {
                       </Link>
                     </td>
                     <td className="p-3">{p.totalPoints.toLocaleString()}</td>
-                    <td className="p-3">{p.seasons}</td>
+                    <td className="p-3 hidden md:table-cell">{p.totalKOs}</td>
+                    <td className="p-3 hidden md:table-cell">{p.seasons}</td>
                   </tr>
                 ))}
               </tbody>
@@ -431,30 +483,36 @@ const WikiTeam = () => {
 
         {/* Season History */}
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-primary mb-3">Season History</h2>
+          <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+            <Calendar className="h-5 w-5" /> Season History
+          </h2>
           <div className="bg-panel border border-border rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-black">
-                  <th className="text-left p-3 text-primary uppercase text-xs">Season</th>
+                  <th className="text-left p-3 text-primary uppercase text-xs">Year</th>
                   <th className="text-left p-3 text-primary uppercase text-xs">Rank</th>
                   <th className="text-left p-3 text-primary uppercase text-xs">Points</th>
-                  <th className="text-left p-3 text-primary uppercase text-xs">Top Player</th>
+                  <th className="text-left p-3 text-primary uppercase text-xs hidden md:table-cell">Best Player</th>
                 </tr>
               </thead>
               <tbody>
                 {history.map(h => (
                   <tr key={h.year} className="border-t border-border hover:bg-muted/30">
                     <td className="p-3 font-bold text-primary">{h.year}</td>
-                    <td className={`p-3 ${h.rank === 1 ? "text-amber-400 font-bold" : ""}`}>#{h.rank}</td>
-                    <td className="p-3">{h.points.toLocaleString()}</td>
                     <td className="p-3">
-                      {h.players.length > 0 && (
+                      <span className={h.rank === 1 ? "text-amber-400 font-bold" : ""}>
+                        #{h.rank}
+                      </span>
+                    </td>
+                    <td className="p-3">{h.points.toLocaleString()}</td>
+                    <td className="p-3 hidden md:table-cell">
+                      {h.players[0] && (
                         <Link 
                           to={`/wiki/player/${encodeURIComponent(h.players[0].name)}`}
                           className="text-foreground hover:text-primary transition-colors"
                         >
-                          {h.players[0].name}
+                          {h.players[0].name} ({h.players[0].points.toLocaleString()})
                         </Link>
                       )}
                     </td>
@@ -467,9 +525,11 @@ const WikiTeam = () => {
       </div>
 
       {/* Footer */}
-      <footer className="text-center p-6 md:p-10 mt-8 bg-header text-muted-foreground border-t border-border text-sm">
-        <p>&copy; 707 Corefall News.</p>
-        <Link to="/wiki" className="text-primary hover:underline text-xs">← Back to Wiki</Link>
+      <footer className="bg-header border-t-[3px] border-primary py-6 mt-10">
+        <div className="max-w-[1000px] mx-auto px-3 md:px-5 text-center">
+          <p className="text-muted-foreground text-sm">© 710 CorefallNews. All rights reserved.</p>
+          <Link to="/" className="text-primary text-sm hover:underline">← Back to Home</Link>
+        </div>
       </footer>
     </div>
   );

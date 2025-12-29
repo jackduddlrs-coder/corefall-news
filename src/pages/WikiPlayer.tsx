@@ -4,10 +4,16 @@ import { ChevronLeft, Trophy, Target, Calendar, TrendingUp, Swords, Star, Dollar
 import { pastStandings, trophyData, seasons, apexDetailed, majorWinners, getTeamClass } from "@/data/corefallData";
 import { fighterBios, contractData } from "@/data/wikiData";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useWikiEdits } from "@/hooks/useWikiEdits";
+import { EditableField } from "@/components/wiki/EditableField";
+import { EditableArrayField } from "@/components/wiki/EditableArrayField";
 
 const WikiPlayer = () => {
   const { playerName } = useParams<{ playerName: string }>();
   const decodedName = decodeURIComponent(playerName || "");
+
+  // Wiki edits hook
+  const { saveEdit, getValue, getArrayValue, saveArrayEdit, loading } = useWikiEdits('fighter', decodedName);
 
   // Get fighter bio
   const bio = fighterBios[decodedName];
@@ -75,13 +81,13 @@ const WikiPlayer = () => {
     ? seasonHistory[seasonHistory.length - 1].team 
     : "Unknown";
 
-  const isActive = seasonHistory.some(s => s.year === 709);
+  const isActive = seasonHistory.some(s => s.year === 709 || s.year === 710);
 
   if (!decodedName || seasonHistory.length === 0) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Fighter Not Found</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Fighter Not Found</h1>
           <Link to="/wiki" className="text-primary hover:underline">← Back to Wiki</Link>
         </div>
       </div>
@@ -95,7 +101,7 @@ const WikiPlayer = () => {
         <div className="flex justify-between items-center h-[50px] md:h-[70px] gap-2">
           <Link 
             to="/"
-            className="text-lg md:text-3xl font-extrabold uppercase tracking-wider text-white shrink-0 hover:text-primary transition-colors"
+            className="text-lg md:text-3xl font-extrabold uppercase tracking-wider text-foreground shrink-0 hover:text-primary transition-colors"
           >
             Corefall<span className="text-primary">News</span>
           </Link>
@@ -115,12 +121,16 @@ const WikiPlayer = () => {
                   👑 Hall of Immortals
                 </div>
               )}
-              <h1 className="text-3xl md:text-5xl font-black uppercase tracking-wider text-white">
+              <h1 className="text-3xl md:text-5xl font-black uppercase tracking-wider text-foreground">
                 {decodedName}
               </h1>
-              {bio?.nickname && (
-                <div className="text-xl text-muted-foreground italic mt-1">"{bio.nickname}"</div>
-              )}
+              <EditableField
+                value={getValue('nickname', bio?.nickname)}
+                onSave={(v) => saveEdit('nickname', v)}
+                className="mt-1"
+                labelClassName="text-xl text-muted-foreground italic"
+                placeholder="Enter nickname..."
+              />
               <div className="flex items-center gap-3 mt-3">
                 <Link 
                   to={`/wiki/team/${encodeURIComponent(currentTeam)}`}
@@ -129,13 +139,13 @@ const WikiPlayer = () => {
                   {currentTeam}
                 </Link>
                 <span className={`text-sm ${isActive ? "text-primary" : "text-muted-foreground"}`}>
-                  {isActive ? "Active (709)" : "Inactive"}
+                  {isActive ? "Active (710)" : "Inactive"}
                 </span>
               </div>
             </div>
             <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-center min-w-[150px]">
               <div className="text-[10px] text-primary uppercase font-bold tracking-wider">Career Points</div>
-              <div className="text-4xl font-black text-white">{careerTotals.points.toLocaleString()}</div>
+              <div className="text-4xl font-black text-foreground">{careerTotals.points.toLocaleString()}</div>
               <div className="text-xs text-muted-foreground">{careerTotals.seasons} seasons</div>
             </div>
           </div>
@@ -155,16 +165,16 @@ const WikiPlayer = () => {
                 </div>
                 <div>
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Contract Through</div>
-                  <div className="text-xl font-bold text-white">{contract.contractThrough}</div>
+                  <div className="text-xl font-bold text-foreground">{contract.contractThrough}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Years Remaining</div>
-                  <div className="text-xl font-bold text-white">{contract.contractThrough - 709}</div>
+                  <div className="text-xl font-bold text-foreground">{contract.contractThrough - 710}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Status</div>
-                  <div className={`text-sm font-bold ${contract.contractThrough <= 709 ? "text-amber-400" : "text-green-400"}`}>
-                    {contract.contractThrough <= 709 ? "Expiring" : "Under Contract"}
+                  <div className={`text-sm font-bold ${contract.contractThrough <= 710 ? "text-amber-400" : "text-green-400"}`}>
+                    {contract.contractThrough <= 710 ? "Expiring" : "Under Contract"}
                   </div>
                 </div>
               </div>
@@ -173,49 +183,57 @@ const WikiPlayer = () => {
         )}
 
         {/* Bio Section */}
-        {bio && (
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
-              <Target className="h-5 w-5" /> Biography
-            </h2>
-            <div className="bg-panel border border-border rounded-xl p-5">
-              {bio.style && (
-                <div className="text-xs text-primary font-bold uppercase tracking-wider mb-2">
-                  Fighting Style: {bio.style}
-                </div>
-              )}
-              <p className="text-muted-foreground leading-relaxed">{bio.bio}</p>
-              {bio.notableMoments && (
-                <div className="mt-4 pt-4 border-t border-border">
-                  <div className="text-xs font-bold text-foreground mb-2">Notable Moments:</div>
-                  <div className="flex flex-wrap gap-2">
-                    {bio.notableMoments.map((moment, i) => (
-                      <span key={i} className="bg-muted/50 text-xs px-2 py-1 rounded text-muted-foreground">
-                        {moment}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {bio.rivalries && bio.rivalries.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-border">
-                  <div className="text-xs font-bold text-foreground mb-2">Key Rivalries:</div>
-                  <div className="flex flex-wrap gap-2">
-                    {bio.rivalries.map((rival, i) => (
-                      <Link
-                        key={i}
-                        to={`/wiki/player/${encodeURIComponent(rival)}`}
-                        className="bg-destructive/10 text-destructive text-xs px-2 py-1 rounded hover:bg-destructive/20 transition-colors"
-                      >
-                        {rival}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+            <Target className="h-5 w-5" /> Biography
+          </h2>
+          <div className="bg-panel border border-border rounded-xl p-5">
+            <div className="mb-3">
+              <div className="text-xs text-primary font-bold uppercase tracking-wider mb-1">Fighting Style</div>
+              <EditableField
+                value={getValue('style', bio?.style)}
+                onSave={(v) => saveEdit('style', v)}
+                labelClassName="text-muted-foreground"
+                placeholder="Enter fighting style..."
+              />
             </div>
-          </section>
-        )}
+            <div className="mb-4">
+              <div className="text-xs text-primary font-bold uppercase tracking-wider mb-1">Biography</div>
+              <EditableField
+                value={getValue('bio', bio?.bio)}
+                onSave={(v) => saveEdit('bio', v)}
+                multiline
+                labelClassName="text-muted-foreground leading-relaxed"
+                placeholder="Enter biography..."
+              />
+            </div>
+            <div className="mt-4 pt-4 border-t border-border">
+              <div className="text-xs font-bold text-foreground mb-2">Notable Moments:</div>
+              <EditableArrayField
+                values={getArrayValue('notableMoments', bio?.notableMoments)}
+                onSave={(v) => saveArrayEdit('notableMoments', v)}
+                placeholder="Add notable moment..."
+              />
+            </div>
+            <div className="mt-4 pt-4 border-t border-border">
+              <div className="text-xs font-bold text-foreground mb-2">Key Rivalries:</div>
+              <EditableArrayField
+                values={getArrayValue('rivalries', bio?.rivalries)}
+                onSave={(v) => saveArrayEdit('rivalries', v)}
+                placeholder="Add rivalry..."
+                renderItem={(rival, i) => (
+                  <Link
+                    key={i}
+                    to={`/wiki/player/${encodeURIComponent(rival)}`}
+                    className="bg-destructive/10 text-destructive text-xs px-2 py-1 rounded hover:bg-destructive/20 transition-colors"
+                  >
+                    {rival}
+                  </Link>
+                )}
+              />
+            </div>
+          </div>
+        </section>
 
         {/* Honors */}
         <section className="mb-8">
@@ -260,19 +278,19 @@ const WikiPlayer = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Total KOs</div>
-              <div className="text-2xl font-bold text-white">{careerTotals.kos}</div>
+              <div className="text-2xl font-bold text-foreground">{careerTotals.kos}</div>
             </div>
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Elite Seasons</div>
-              <div className="text-2xl font-bold text-white">{careerTotals.eliteSeasons}</div>
+              <div className="text-2xl font-bold text-foreground">{careerTotals.eliteSeasons}</div>
             </div>
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Apex Apps</div>
-              <div className="text-2xl font-bold text-white">{careerTotals.apexApps}</div>
+              <div className="text-2xl font-bold text-foreground">{careerTotals.apexApps}</div>
             </div>
             <div className="bg-panel border border-border rounded-xl p-4 text-center">
               <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Rank</div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold text-foreground">
                 {(seasonHistory.reduce((sum, s) => sum + s.rank, 0) / seasonHistory.length).toFixed(1)}
               </div>
             </div>
@@ -378,7 +396,7 @@ const WikiPlayer = () => {
                         {s.team}
                       </Link>
                     </td>
-                    <td className={`p-3 ${s.rank <= 3 ? "text-amber-400 font-bold" : ""}`}>#{s.rank}</td>
+                    <td className="p-3 text-muted-foreground">#{s.rank}</td>
                     <td className="p-3">{s.points.toLocaleString()}</td>
                     <td className="p-3">{s.ko}</td>
                   </tr>
@@ -390,9 +408,11 @@ const WikiPlayer = () => {
       </div>
 
       {/* Footer */}
-      <footer className="text-center p-6 md:p-10 mt-8 bg-header text-muted-foreground border-t border-border text-sm">
-        <p>&copy; 707 Corefall News.</p>
-        <Link to="/wiki" className="text-primary hover:underline text-xs">← Back to Wiki</Link>
+      <footer className="bg-header border-t-[3px] border-primary py-6 mt-10">
+        <div className="max-w-[1000px] mx-auto px-3 md:px-5 text-center">
+          <p className="text-muted-foreground text-sm">© 709 CorefallNews. All rights reserved.</p>
+          <Link to="/" className="text-primary text-sm hover:underline">← Back to Home</Link>
+        </div>
       </footer>
     </div>
   );

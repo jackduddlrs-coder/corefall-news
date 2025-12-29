@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      wiki_edits: {
+        Row: {
+          created_at: string
+          entity_name: string
+          entity_type: string
+          field_name: string
+          field_value: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity_name: string
+          entity_type: string
+          field_name: string
+          field_value: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity_name?: string
+          entity_type?: string
+          field_name?: string
+          field_value?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
