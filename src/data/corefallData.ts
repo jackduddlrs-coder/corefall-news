@@ -643,7 +643,7 @@ export const trophyData = [
   { name: "Cloud Youug", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (700) - Limium Contributor" },
   { name: "Saint Lameron", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (700) - Limium Contributor" },
   { name: "Heretic Forchis", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (701) - Cal Hal Contributor" },
-  { name: "Vampire Ortez", total: 3, apex: 0, ctt: 0, major: 3, list: "Heartland Cup (707), Heritage (709), New Life (709)" },
+  { name: "Vampire Ortez", total: 4, apex: 0, ctt: 0, major: 4, list: "Solar (710), Heartland Cup (707), Heritage (709), New Life (709)" },
   { name: "Shark Obimovch", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (702)" },
   { name: "Pulse Farward", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (708)" },
   { name: "Bat Bornoil", total: 4, apex: 0, ctt: 2, major: 2, list: "Heritage (710), Wind Breakers (708), CTT (707, 708)" },
