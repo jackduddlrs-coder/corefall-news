@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 710 • Bat Bornoil Wins Bat Heritage 710 • Damage Leads Team Standings
+        🏆 SEASON 710 • Sky Sunyer Wins Descent 710 • Gastro Leads Team Standings
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-damage mb-2 inline-block">BAT HERITAGE 710 CHAMPION</span>
+          <span className="team-tag team-zemigamar mb-2 inline-block">SKY DESCENT 710 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            BAT BORNOIL<br/>WINS HERITAGE 710
+            SKY SUNYER<br/>WINS DESCENT 710
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            Damage's rising star claims his 4th career trophy, powering his team to the top of the standings.
+            Zemiga-Mar's star claims his 4th career trophy, surging to 3rd in season standings with 1100 points.
           </p>
         </div>
       </div>
@@ -26,50 +26,50 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Heritage Champion</span>
-          <h3 className="text-white mt-3">Bat Bornoil Wins 4th Career Major</h3>
+          <span className="team-tag team-zemigamar">Descent Champion</span>
+          <h3 className="text-white mt-3">Sky Sunyer Wins 4th Career Major</h3>
           <p className="text-foreground">
-            Bat Bornoil claims Bat Heritage 710, his <span className="stat-highlight">4th career trophy</span>. Cascade Juner finishes 2nd.
+            Sky Sunyer claims Descent 710, his <span className="stat-highlight">4th career trophy</span>. Rem Asamtoy finishes 2nd.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-gastro">Points Leader</span>
-          <h3 className="text-white mt-3">Nothing Sawryr Leads with 1100 Points</h3>
+          <h3 className="text-white mt-3">Nothing Sawryr Leads with 1300 Points</h3>
           <p className="text-foreground">
-            The reigning Apex Champion leads 710 standings. Bat Bornoil and Mega Hawnnon tied at <span className="stat-highlight">950 points</span>.
+            The reigning Apex Champion leads 710 standings. Vampire Ortez sits 2nd with <span className="stat-highlight">1200 points</span>.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Team Dominance</span>
-          <h3 className="text-white mt-3">Damage Leads Teams with 2200 Points</h3>
+          <span className="team-tag team-gastro">Team Dominance</span>
+          <h3 className="text-white mt-3">Gastro Leads Teams with 2850 Points</h3>
           <p className="text-foreground">
-            Damage takes team lead with <span className="stat-highlight">2200 points</span>. Gastro (2100) and Dashlol (1850) chase.
+            Gastro takes team lead with <span className="stat-highlight">2850 points</span>. Damage (2700) and Dashlol (2250) chase.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhall">Breakout</span>
-          <h3 className="text-white mt-3">Cross Exzona Climbs to 5th with 800 Points</h3>
+          <span className="team-tag team-zemigamar">Breakout</span>
+          <h3 className="text-white mt-3">Sky Sunyer Surges to 3rd with 1100 Points</h3>
           <p className="text-foreground">
-            The Cal Hal veteran is having a career season with <span className="stat-highlight">4 KOs</span> through the first majors.
+            The Zemiga-Mar star is having a career season with <span className="stat-highlight">4 KOs</span> through the first majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Hot Start</span>
-          <h3 className="text-white mt-3">Damage Core Performing</h3>
+          <span className="team-tag team-qalf">Hot Start</span>
+          <h3 className="text-white mt-3">Rem Asamtoy Climbs to 6th</h3>
           <p className="text-foreground">
-            Bat Bornoil (950), Cascade Juner (750), and Totality Tryoe (500) power Damage's strong season start.
+            The Qalf veteran surges after Descent 2nd place finish, now at <span className="stat-highlight">1000 points</span>.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Contender</span>
-          <h3 className="text-white mt-3">Daredevil Gaffe Sits 7th with 750</h3>
+          <span className="team-tag team-gastro">Contender</span>
+          <h3 className="text-white mt-3">Jam Naze Rises with 5 KOs</h3>
           <p className="text-foreground">
-            The young Qalf star tied with Cascade Juner, accumulating <span className="stat-highlight">3 KOs</span> through the majors.
+            The young Gastro star leads the season in KOs with <span className="stat-highlight">5 total</span> through 4 majors.
           </p>
         </div>
       </div>
