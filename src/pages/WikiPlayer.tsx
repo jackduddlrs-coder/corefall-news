@@ -7,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useWikiEdits } from "@/hooks/useWikiEdits";
 import { EditableField } from "@/components/wiki/EditableField";
 import { EditableArrayField } from "@/components/wiki/EditableArrayField";
+import { EditableRivalryField } from "@/components/wiki/EditableRivalryField";
 
 const WikiPlayer = () => {
   const { playerName } = useParams<{ playerName: string }>();
@@ -246,10 +247,11 @@ const WikiPlayer = () => {
             </div>
             <div className="mt-4 pt-4 border-t border-border">
               <div className="text-xs font-bold text-foreground mb-2">Key Rivalries:</div>
-              <EditableArrayField
+              <EditableRivalryField
                 values={getArrayValue('rivalries', bio?.rivalries)}
                 onSave={(v) => saveArrayEdit('rivalries', v)}
-                placeholder="Add rivalry..."
+                type="player"
+                excludeName={decodedName}
                 renderItem={(rival, i) => (
                   <Link
                     key={i}
