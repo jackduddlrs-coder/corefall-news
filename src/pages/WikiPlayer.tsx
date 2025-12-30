@@ -143,10 +143,16 @@ const WikiPlayer = () => {
                 </span>
               </div>
             </div>
-            <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-center min-w-[150px]">
-              <div className="text-[10px] text-primary uppercase font-bold tracking-wider">Career Points</div>
-              <div className="text-4xl font-black text-foreground">{careerTotals.points.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">{careerTotals.seasons} seasons</div>
+            <div className="flex flex-col gap-3">
+              <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-center min-w-[150px]">
+                <div className="text-[10px] text-primary uppercase font-bold tracking-wider">Career Points</div>
+                <div className="text-4xl font-black text-foreground">{careerTotals.points.toLocaleString()}</div>
+                <div className="text-xs text-muted-foreground">{careerTotals.seasons} seasons</div>
+              </div>
+              <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-center min-w-[150px]">
+                <div className="text-[10px] text-amber-400 uppercase font-bold tracking-wider">Legacy Score</div>
+                <div className="text-2xl font-black text-foreground">{Math.round(careerTotals.points * 0.8).toLocaleString()}</div>
+              </div>
             </div>
           </div>
         </div>

@@ -176,27 +176,42 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value);
 
     // Team championships
-    const teamChampionships: Record<string, { apex: number; ctt: number; star: number }> = {};
+    const teamChampionships: Record<string, { apex: number; ctt: number; star: number; major: number }> = {};
     seasons.forEach(s => {
       if (!selectedYears.has(s.year.toString())) return;
       if (s.team) {
-        if (!teamChampionships[s.team]) teamChampionships[s.team] = { apex: 0, ctt: 0, star: 0 };
+        if (!teamChampionships[s.team]) teamChampionships[s.team] = { apex: 0, ctt: 0, star: 0, major: 0 };
         teamChampionships[s.team].apex++;
       }
       if (s.ctt) {
-        if (!teamChampionships[s.ctt]) teamChampionships[s.ctt] = { apex: 0, ctt: 0, star: 0 };
+        if (!teamChampionships[s.ctt]) teamChampionships[s.ctt] = { apex: 0, ctt: 0, star: 0, major: 0 };
         teamChampionships[s.ctt].ctt++;
       }
       if (s.starTeam) {
-        if (!teamChampionships[s.starTeam]) teamChampionships[s.starTeam] = { apex: 0, ctt: 0, star: 0 };
+        if (!teamChampionships[s.starTeam]) teamChampionships[s.starTeam] = { apex: 0, ctt: 0, star: 0, major: 0 };
         teamChampionships[s.starTeam].star++;
       }
     });
+    
+    // Count majors by team (using majorWinners and pastStandings to find team)
+    majorWinners.forEach(win => {
+      if (!selectedYears.has(win.year.toString())) return;
+      if (win.tournament === "Apex") return; // Skip Apex as it's already counted
+      // Find the player's team for that season
+      const seasonPlayers = pastStandings[win.year.toString()];
+      const playerData = seasonPlayers?.find(p => p.Name === win.winner);
+      const team = playerData?.Team;
+      if (team) {
+        if (!teamChampionships[team]) teamChampionships[team] = { apex: 0, ctt: 0, star: 0, major: 0 };
+        teamChampionships[team].major++;
+      }
+    });
+    
     const teamChamps: TeamStats[] = Object.entries(teamChampionships)
       .map(([team, counts]) => ({
         team, 
-        value: counts.apex + counts.ctt + counts.star,
-        details: `${counts.apex} Apex, ${counts.ctt} CTT, ${counts.star} Star`
+        value: counts.apex + counts.ctt + counts.star + counts.major,
+        details: `${counts.apex} Apex, ${counts.ctt} CTT, ${counts.star} Star, ${counts.major} Major`
       }))
       .sort((a, b) => b.value - a.value);
 
