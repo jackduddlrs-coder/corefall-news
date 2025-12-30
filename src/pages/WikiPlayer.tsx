@@ -54,6 +54,29 @@ const WikiPlayer = () => {
     return { points, kos, eliteSeasons, apexApps, seasons: seasonHistory.length };
   }, [seasonHistory, decodedName]);
 
+  // Legacy score calculation (matches archive formula)
+  const legacyScore = useMemo(() => {
+    const playerTrophy = trophyData.find(t => t.name === decodedName);
+    const apexTitles = playerTrophy?.apex || 0;
+    const cttTitles = playerTrophy?.ctt || 0;
+    const majorTitles = majorWinners.filter(w => w.winner === decodedName && w.tournament !== "Apex").length;
+    const starCount = seasons.filter(s => s.star === decodedName).length;
+    const apexFinalsCount = apexDetailed.filter(a => a.win === decodedName || a.lose === decodedName).length;
+    
+    // Formula: (points * 0.8) + (kos * 10) + (elite * 100) + (apexApps * 100) + (ctt * 50) + (majors * 200) + (star * 400) + (apexFinals * 200) + (apex * 1200)
+    return Math.round(
+      (careerTotals.points * 0.8) + 
+      (careerTotals.kos * 10) + 
+      (careerTotals.eliteSeasons * 100) + 
+      (careerTotals.apexApps * 100) + 
+      (cttTitles * 50) + 
+      (majorTitles * 200) + 
+      (starCount * 400) + 
+      (apexFinalsCount * 200) + 
+      (apexTitles * 1200)
+    );
+  }, [careerTotals, decodedName]);
+
   // Trophy data
   const playerTrophies = trophyData.find(t => t.name === decodedName);
   
@@ -151,7 +174,7 @@ const WikiPlayer = () => {
               </div>
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-center min-w-[150px]">
                 <div className="text-[10px] text-amber-400 uppercase font-bold tracking-wider">Legacy Score</div>
-                <div className="text-2xl font-black text-foreground">{Math.round(careerTotals.points * 0.8).toLocaleString()}</div>
+                <div className="text-2xl font-black text-foreground">{legacyScore.toLocaleString()}</div>
               </div>
             </div>
           </div>
