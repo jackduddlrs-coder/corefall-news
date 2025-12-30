@@ -23,14 +23,14 @@ export const fighterBios: Record<string, {
   },
   "Cascade Juner": {
     nickname: "The Cascade",
-    style: "Relentless Pressure",
+    style: "Balanced / More Rigid",
     bio: "The current king of Corefall, Cascade Juner burst onto the scene in 707 and hasn't looked back. With back-to-back Apex titles (707, 708) and an astounding 16 career titles, he represents the new generation of elite fighters. His pressure-heavy style overwhelms opponents, making him the most feared competitor today.",
     notableMoments: ["2x Apex Champion (707, 708)", "2x CTT Champion", "16 Career Titles", "Season Star 709"],
     rivalries: ["Vampire Ortez", "Mega Hawnnon"]
   },
   "Nothing Sawryr": {
     nickname: "Nothing",
-    style: "Unpredictable Chaos",
+    style: "Balanced / More Rigid",
     bio: "The reigning Apex 709 Champion, Nothing Sawryr shocked the world with his victory over the heavily favored Mega Hawnnon in the Grand Finals. He opened Season 710 by winning the Heartland Cup, his 6th career trophy. Known for his unpredictable style and clutch performances, he proved that anything is possible in the Apex. A Gastro loyal who has risen to the very top.",
     notableMoments: ["Apex 709 Champion", "Heartland 710 Champion", "6 Career Titles", "Solar Summit Winner (708, 709)"],
     rivalries: ["Mega Hawnnon", "Cascade Juner"]
@@ -58,28 +58,28 @@ export const fighterBios: Record<string, {
   },
   "Zeus Ziki": {
     nickname: "The Lightning",
-    style: "Explosive Power",
+    style: "Pressure / More Rigid",
     bio: "Cal Hal's current ace, Zeus Ziki combines explosive power with tactical intelligence. His Season Star 708 campaign and 7 career titles make him a constant championship threat.",
     notableMoments: ["Season Star 708", "7 Career Titles", "CTT 706"],
     rivalries: ["Cascade Juner", "Wraith Cunelly"]
   },
   "Mega Hawnnon": {
     nickname: "Mega",
-    style: "Power Overwhelming",
+    style: "Wildcard / More Loose",
     bio: "The Apex 709 Runner-Up, Mega Hawnnon came agonizingly close to the title. His raw power and improving tactical game make him a favorite for future championships. A rising Dashlol star.",
-    notableMoments: ["Apex 709 Finals", "2 Major Titles", "Dashlol Core Member"],
+    notableMoments: ["Apex 709 Finals", "Nightmare 710 Champion", "4 Major Titles", "Dashlol Core Member"],
     rivalries: ["Nothing Sawryr", "Vampire Ortez"]
   },
   "Vampire Ortez": {
     nickname: "The Vampire",
-    style: "Life Drain",
+    style: "Pressure / More Loose",
     bio: "Known for wearing down opponents and 'draining' their energy throughout matches, Vampire Ortez is one of the most consistent performers of the modern era. Apex 708 Runner-Up and multiple major winner.",
-    notableMoments: ["Apex 708 Finals", "3 Career Titles", "Points Leader 709"],
+    notableMoments: ["Apex 708 Finals", "Solar 710 Champion", "4 Career Titles", "Points Leader 709"],
     rivalries: ["Cascade Juner", "Mega Hawnnon"]
   },
   "Heal Calofloure": {
     nickname: "The Healer",
-    style: "Endurance Master",
+    style: "Counter / More Rigid",
     bio: "The Apex 705 Champion represents durability incarnate. His ability to outlast opponents and recover from deficits is legendary. A Limium core member who continues to compete at the highest level.",
     notableMoments: ["Apex 705 Champion", "7 Career Titles", "Perennial Contender"],
     rivalries: ["Killa Binbac", "Zeus Ziki"]
@@ -100,7 +100,7 @@ export const fighterBios: Record<string, {
   },
   "Wraith Cunelly": {
     nickname: "The Wraith",
-    style: "Phantom Movement",
+    style: "Counter / More Loose",
     bio: "Engery's current franchise player, Wraith Cunelly is known for elusive movement and devastating counters. Apex 707 Finalist and consistent championship contender.",
     notableMoments: ["Apex 707 Finals", "5 Career Titles", "Engery Leader"],
     rivalries: ["Cascade Juner", "Zeus Ziki"]
@@ -111,6 +111,69 @@ export const fighterBios: Record<string, {
     bio: "A knockout artist and Qalf legend, Killa Binbac led the 706 season in KOs with an astonishing 16. His pure aggression and finishing ability make him a constant entertainment.",
     notableMoments: ["Season Star 706", "16 KOs in 706", "5 Career Titles"],
     rivalries: ["Heal Calofloure", "Wraith Cunelly"]
+  },
+  "Bat Bornoil": {
+    nickname: "The Bat",
+    style: "Pressure / More Rigid",
+    bio: "Damage's reliable number two, Bat Bornoil brings consistent pressure and powerful strikes. A key contributor to Damage's recent dynasty.",
+    notableMoments: ["Heritage 710 Champion", "Multiple Major Titles", "Damage Core Member"],
+    rivalries: ["Supernova Aloi", "Fisher Cerzonal"]
+  },
+  "Rem Asamtoy": {
+    nickname: "Rem",
+    style: "Pressure / More Loose",
+    bio: "A dynamic Qalf fighter known for relentless forward movement and unpredictable offense. Rising talent in the current era.",
+    notableMoments: ["Qalf Core Member", "Rising Contender"],
+    rivalries: ["Daredevil Gaffe", "Pulse Farward"]
+  },
+  "Clipper Doznu": {
+    nickname: "The Clipper",
+    style: "Counter / More Loose",
+    bio: "Varcity's sharp counter-striker, Clipper Doznu waits for openings and strikes with precision. A patient fighter who excels in extended matches.",
+    notableMoments: ["Varcity Core Member", "Consistent Performer"],
+    rivalries: ["Pulse Farward", "Game Darwonn"]
+  },
+  "Supernova Aloi": {
+    nickname: "The Supernova",
+    style: "Counter / More Rigid",
+    bio: "Gastro's explosive counter-puncher who can turn any match with a single exchange. His disciplined approach and calculated aggression make him dangerous.",
+    notableMoments: ["Gastro Core Member", "Multiple Top Finishes"],
+    rivalries: ["Bat Bornoil", "Zeus Ziki"]
+  },
+  "Pulse Farward": {
+    nickname: "Pulse",
+    style: "Balanced / More Loose",
+    bio: "Varcity's versatile fighter who adapts his approach based on opponents. His fluid style and quick adjustments make him difficult to prepare for.",
+    notableMoments: ["Varcity Core Member", "Consistent Top 40"],
+    rivalries: ["Clipper Doznu", "Rem Asamtoy"]
+  },
+  "Daredevil Gaffe": {
+    nickname: "Daredevil",
+    style: "Balanced / More Rigid",
+    bio: "Qalf's fearless young star who takes calculated risks and thrives in high-pressure situations. One of the brightest prospects in Corefall.",
+    notableMoments: ["Qalf Core Member", "Rising Star", "Multiple Major Finishes"],
+    rivalries: ["Nothing Sawryr", "Rem Asamtoy"]
+  },
+  "Fisher Cerzonal": {
+    nickname: "The Fisher",
+    style: "Balanced / More Rigid",
+    bio: "A patient and methodical fighter who picks apart opponents with precision. Qalf's veteran presence and consistent performer.",
+    notableMoments: ["Qalf Core Member", "Multiple Top Finishes"],
+    rivalries: ["Bat Bornoil", "Heal Calofloure"]
+  },
+  "Harsh Raii": {
+    nickname: "Harsh",
+    style: "Wildcard / More Loose",
+    bio: "AFE's unpredictable wildcard who can beat anyone on any given day. His chaotic style makes him a nightmare to prepare for.",
+    notableMoments: ["AFE Core Member", "Upset Specialist"],
+    rivalries: ["Sky Sunyer", "Freeze Jagwiab"]
+  },
+  "Sky Sunyer": {
+    nickname: "Sky",
+    style: "Wildcard / More Loose",
+    bio: "Zemiga-Mar's franchise player with an explosive and unpredictable approach. His ability to shift gears mid-match keeps opponents guessing.",
+    notableMoments: ["Descent 710 Champion", "Zemiga-Mar Leader", "Rising Star"],
+    rivalries: ["Harsh Raii", "Mega Hawnnon"]
   }
 };
 
