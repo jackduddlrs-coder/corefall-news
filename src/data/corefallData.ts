@@ -631,7 +631,7 @@ export const trophyData = [
   { name: "Nemesis Owanash", total: 3, apex: 0, ctt: 0, major: 3, list: "Wind Breakers (701, 702), Heritage (703)" },
   { name: "Justice Karoawaki", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (700), Solar Summit (703)" },
   { name: "Whiteout Gar-Kiola", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (702), Malice (705)" },
-  { name: "Nothing Sawryr", total: 6, apex: 1, ctt: 0, major: 5, list: "Apex (709), Heartland (710), Solar (708, 709), Malice (707), Nightmare (706)" },
+  { name: "Nothing Sawryr", total: 7, apex: 1, ctt: 0, major: 6, list: "Apex (709), Heartland (710), Malice (710), Solar (708, 709), Malice (707), Nightmare (706)" },
   { name: "Mega Hawnnon", total: 4, apex: 0, ctt: 0, major: 4, list: "Nightmare (710), Chaos Reigns (710), Descent (708), Malice (709)" },
   { name: "Supernova Aloi", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (709)" },
   { name: "Tiger Griff", total: 2, apex: 0, ctt: 0, major: 2, list: "Chaos Reigns (700), Nightmare (700)" },
@@ -934,6 +934,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 710, tournament: "Solar", winner: "Vampire Ortez" },
   { year: 710, tournament: "Nightmare", winner: "Mega Hawnnon" },
   { year: 710, tournament: "Wind Breakers", winner: "Jam Naze" },
+  { year: 710, tournament: "Malice", winner: "Nothing Sawryr" },
 // Season 709
   { year: 709, tournament: "Apex", winner: "Nothing Sawryr" },
   { year: 709, tournament: "Solar", winner: "Nothing Sawryr" },
