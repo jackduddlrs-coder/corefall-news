@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 710 • Mega Hawnnon Wins Nightmare 710 • Gastro & Damage Tied for Team Lead
+        🏆 SEASON 710 • Jam Naze Wins Wind Breakers 710 • Gastro Takes Team Lead with 4750 Points
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">MEGA NIGHTMARE 710 CHAMPION</span>
+          <span className="team-tag team-gastro mb-2 inline-block">WIND BREAKERS 710 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            MEGA HAWNNON<br/>WINS NIGHTMARE 710
+            JAM NAZE<br/>WINS WIND BREAKERS 710
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            Dashlol's star claims his 4th career major trophy, surging to 3rd in season standings with 1700 points.
+            Gastro's rising star claims his 1st career major trophy, vaulting to 6th in season standings with 1650 points.
           </p>
         </div>
       </div>
@@ -26,50 +26,50 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Nightmare Champion</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Wins 4th Career Major</h3>
+          <span className="team-tag team-gastro">Wind Breakers Champion</span>
+          <h3 className="text-white mt-3">Jam Naze Claims 1st Career Major</h3>
           <p className="text-foreground">
-            Mega Hawnnon claims Nightmare 710, his <span className="stat-highlight">4th career trophy</span>. Now tied for 2nd with 1700 points.
+            Jam Naze wins Wind Breakers 710, his <span className="stat-highlight">1st career trophy</span>. Now 6th with 1650 points and 7 KOs.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-gastro">Team Race</span>
-          <h3 className="text-white mt-3">Gastro & Damage Tied at 3850 Points</h3>
+          <h3 className="text-white mt-3">Gastro Takes Lead with 4750 Points</h3>
           <p className="text-foreground">
-            Two teams locked at <span className="stat-highlight">3850 points</span>. Qalf and Dashlol chase at 3600 each.
+            Gastro surges ahead with <span className="stat-highlight">4750 points</span>. Damage trails at 4550, Dashlol at 4250.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-dashlol">Season Leader</span>
-          <h3 className="text-white mt-3">Vampire Ortez Leads with 1900 Points</h3>
+          <h3 className="text-white mt-3">Mega Hawnnon Leads with 2150 Points</h3>
           <p className="text-foreground">
-            Dashlol's star holds the lead with <span className="stat-highlight">1900 points</span> and 8 KOs after 7 majors.
+            Dashlol's star takes the lead with <span className="stat-highlight">2150 points</span> and 5 KOs after 8 majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Strong Season</span>
-          <h3 className="text-white mt-3">Nothing Sawryr Tied for 2nd at 1700 Points</h3>
+          <span className="team-tag team-dashlol">Strong Season</span>
+          <h3 className="text-white mt-3">Vampire Ortez 2nd with 2100 Points</h3>
           <p className="text-foreground">
-            The reigning Apex Champion tied with Mega Hawnnon at <span className="stat-highlight">1700 points</span>.
+            Dashlol's other star sits 2nd with <span className="stat-highlight">2100 points</span> and 8 KOs.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-damage">Consistent</span>
-          <h3 className="text-white mt-3">Bat Bornoil 4th with 1550 Points</h3>
+          <h3 className="text-white mt-3">Bat Bornoil 3rd with 1850 Points</h3>
           <p className="text-foreground">
-            The Damage veteran sits 4th with <span className="stat-highlight">1550 points</span> and 4 KOs.
+            The Damage veteran climbs to 3rd with <span className="stat-highlight">1850 points</span> and 6 KOs.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Rising</span>
-          <h3 className="text-white mt-3">Rem Asamtoy 5th with 1500 Points</h3>
+          <span className="team-tag team-gastro">Rising</span>
+          <h3 className="text-white mt-3">Nothing Sawryr & Rem Asamtoy Tied 4th</h3>
           <p className="text-foreground">
-            The Qalf star claims 5th with <span className="stat-highlight">1500 points</span> and 5 KOs.
+            The Apex Champ and Qalf star tied at <span className="stat-highlight">1800 points</span> with 6 and 5 KOs respectively.
           </p>
         </div>
       </div>
