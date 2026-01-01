@@ -572,7 +572,7 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
 
 // Season History (679-708)
 export const seasons = [
-  { year: 710, apex: "", team: "", apexAge: 0, ctt: "", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 28 },
+  { year: 710, apex: "", team: "", apexAge: 0, ctt: "Gastro", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 28 },
   { year: 709, apex: "Nothing Sawryr", team: "Gastro", apexAge: 28, ctt: "Qalf", star: "Cascade Juner", starTeam: "Damage", starAge: 30 },
   { year: 708, apex: "Cascade Juner", team: "Damage", apexAge: 29, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
   { year: 707, apex: "Cascade Juner", team: "Damage", apexAge: 28, ctt: "Damage", star: "Cascade Juner", starTeam: "Damage", starAge: 28 },
@@ -631,9 +631,9 @@ export const trophyData = [
   { name: "Nemesis Owanash", total: 3, apex: 0, ctt: 0, major: 3, list: "Wind Breakers (701, 702), Heritage (703)" },
   { name: "Justice Karoawaki", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (700), Solar Summit (703)" },
   { name: "Whiteout Gar-Kiola", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (702), Malice (705)" },
-  { name: "Nothing Sawryr", total: 7, apex: 1, ctt: 0, major: 6, list: "Apex (709), Heartland (710), Malice (710), Solar (708, 709), Malice (707), Nightmare (706)" },
+  { name: "Nothing Sawryr", total: 8, apex: 1, ctt: 1, major: 6, list: "Apex (709), CTT (710), Heartland (710), Malice (710), Solar (708, 709), Malice (707), Nightmare (706)" },
   { name: "Mega Hawnnon", total: 4, apex: 0, ctt: 0, major: 4, list: "Nightmare (710), Chaos Reigns (710), Descent (708), Malice (709)" },
-  { name: "Supernova Aloi", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (709)" },
+  { name: "Supernova Aloi", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (710), Nightmare (709)" },
   { name: "Tiger Griff", total: 2, apex: 0, ctt: 0, major: 2, list: "Chaos Reigns (700), Nightmare (700)" },
   { name: "Monster Piccoloo", total: 2, apex: 0, ctt: 0, major: 2, list: "Solar (700), Chaos Reigns (701)" },
   { name: "Horse Queanlend", total: 1, apex: 0, ctt: 0, major: 1, list: "Nightmare (707)" },
@@ -652,8 +652,9 @@ export const trophyData = [
   
   { name: "Daredevil Gaffe", total: 3, apex: 0, ctt: 1, major: 2, list: "Heartland Cup (709), CTT (709), New Life (710)" },
   { name: "Rem Asamtoy", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (709)" },
-  { name: "Jam Naze", total: 1, apex: 0, ctt: 0, major: 1, list: "Wind Breakers (710)" },
-  { name: "Titan Aui", total: 1, apex: 0, ctt: 0, major: 1, list: "Armageddon (710)" }
+  { name: "Jam Naze", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (710), Wind Breakers (710)" },
+  { name: "Titan Aui", total: 1, apex: 0, ctt: 0, major: 1, list: "Armageddon (710)" },
+  { name: "Club Faxzin", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (710)" }
 ];
 
 // Apex Finals History
