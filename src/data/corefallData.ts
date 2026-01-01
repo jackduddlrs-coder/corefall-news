@@ -570,9 +570,9 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
   ]
 };
 
-// Season History (679-708)
+// Season History (679-710)
 export const seasons = [
-  { year: 710, apex: "", team: "", apexAge: 0, ctt: "Gastro", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 28 },
+  { year: 710, apex: "Mega Hawnnon", team: "Dashlol", apexAge: 28, ctt: "Gastro", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 28 },
   { year: 709, apex: "Nothing Sawryr", team: "Gastro", apexAge: 28, ctt: "Qalf", star: "Cascade Juner", starTeam: "Damage", starAge: 30 },
   { year: 708, apex: "Cascade Juner", team: "Damage", apexAge: 29, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
   { year: 707, apex: "Cascade Juner", team: "Damage", apexAge: 28, ctt: "Damage", star: "Cascade Juner", starTeam: "Damage", starAge: 28 },
@@ -632,7 +632,7 @@ export const trophyData = [
   { name: "Justice Karoawaki", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (700), Solar Summit (703)" },
   { name: "Whiteout Gar-Kiola", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (702), Malice (705)" },
   { name: "Nothing Sawryr", total: 8, apex: 1, ctt: 1, major: 6, list: "Apex (709), CTT (710), Heartland (710), Malice (710), Solar (708, 709), Malice (707), Nightmare (706)" },
-  { name: "Mega Hawnnon", total: 4, apex: 0, ctt: 0, major: 4, list: "Nightmare (710), Chaos Reigns (710), Descent (708), Malice (709)" },
+  { name: "Mega Hawnnon", total: 5, apex: 1, ctt: 0, major: 4, list: "Apex (710), Nightmare (710), Chaos Reigns (710), Descent (708), Malice (709)" },
   { name: "Supernova Aloi", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (710), Nightmare (709)" },
   { name: "Tiger Griff", total: 2, apex: 0, ctt: 0, major: 2, list: "Chaos Reigns (700), Nightmare (700)" },
   { name: "Monster Piccoloo", total: 2, apex: 0, ctt: 0, major: 2, list: "Solar (700), Chaos Reigns (701)" },
@@ -659,6 +659,7 @@ export const trophyData = [
 
 // Apex Finals History
 export const apexDetailed = [
+  { year: 710, win: "Mega Hawnnon", wTeam: "Dashlol", winAge: 28, lose: "Vampire Ortez", lTeam: "Dashlol", loseAge: 28 },
   { year: 709, win: "Nothing Sawryr", wTeam: "Gastro", winAge: 28, lose: "Mega Hawnnon", lTeam: "Dashlol", loseAge: 27, qualified: ["Cascade Juner", "Vampire Ortez", "Mega Hawnnon", "Daredevil Gaffe", "Sky Sunyer", "Heal Calofloure", "Zeus Ziki", "Nothing Sawryr", "Wraith Cunelly", "Rem Asamtoy", "Supernova Aloi", "Bat Bornoil", "Pulse Farward", "Fisher Cerzonal", "Harsh Raii", "Clipper Doznu"] },
   { year: 708, win: "Cascade Juner", wTeam: "Damage", winAge: 29, lose: "Vampire Ortez", lTeam: "Dashlol", loseAge: 26 },
   { year: 707, win: "Cascade Juner", wTeam: "Damage", winAge: 28, lose: "Wraith Cunelly", lTeam: "Engery", loseAge: 27 },
@@ -929,6 +930,7 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
 // Season 710
+  { year: 710, tournament: "Apex", winner: "Mega Hawnnon" },
   { year: 710, tournament: "Heartland", winner: "Nothing Sawryr" },
   { year: 710, tournament: "Chaos Reigns", winner: "Mega Hawnnon" },
   { year: 710, tournament: "Heritage", winner: "Bat Bornoil" },
