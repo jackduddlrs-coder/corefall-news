@@ -174,6 +174,27 @@ export const fighterBios: Record<string, {
     bio: "Zemiga-Mar's franchise player with an explosive and unpredictable approach. His ability to shift gears mid-match keeps opponents guessing.",
     notableMoments: ["Descent 710 Champion", "Zemiga-Mar Leader", "Rising Star"],
     rivalries: ["Harsh Raii", "Mega Hawnnon"]
+  },
+  "Spring Cemet": {
+    nickname: "The Spring",
+    style: "Counter / More Loose",
+    bio: "Limium's rising talent known for his quick reflexes and ability to bounce back from adversity. His counter-heavy style and youthful energy make him a promising addition to the franchise.",
+    notableMoments: ["Limium Core Member", "711 Breakout Candidate"],
+    rivalries: ["Titan Aui", "Heal Calofloure"]
+  },
+  "Totality Tryoe": {
+    nickname: "Totality",
+    style: "Pressure / More Rigid",
+    bio: "A Damage prospect carrying the Tryoe family legacy. His disciplined, pressure-focused approach mirrors the franchise's identity. Expected to be a key piece of Damage's future.",
+    notableMoments: ["Damage Core Member", "711 Prospect", "Tryoe Legacy"],
+    rivalries: ["Guardian Garlim", "Bat Bornoil"]
+  },
+  "Guardian Garlim": {
+    nickname: "The Guardian",
+    style: "Balanced / More Rigid",
+    bio: "Cal Hal's defensive anchor known for his rock-solid fundamentals and ability to neutralize aggressive opponents. A consistent performer who excels in high-pressure situations.",
+    notableMoments: ["Cal Hal Core Member", "711 Breakout Candidate"],
+    rivalries: ["Totality Tryoe", "Cross Exzona"]
   }
 };
 
