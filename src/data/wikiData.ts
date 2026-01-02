@@ -177,59 +177,60 @@ export const fighterBios: Record<string, {
   }
 };
 
-// Team info from Team_Info.xlsx
+// Team info from Team_Info.xlsx (711 season)
 export const teamInfo: Record<string, {
   location: string;
   coach: string;
   popularity: number;
 }> = {
-  "Damage": { location: "Jaxston, Auren", coach: "Soler Varo", popularity: 1 },
+  "Damage": { location: "Jaxston, Auren", coach: "Bulldoser Banwich", popularity: 1 },
   "Engery": { location: "Jaxston, Auren", coach: "Ball Raytor", popularity: 2 },
   "Dashlol": { location: "Lou, Thane", coach: "Thunder Toria", popularity: 3 },
-  "Cal Hal": { location: "Dodster, Auren", coach: "Splash Gradey", popularity: 4 },
-  "Gastro": { location: "Omaidara, Thane", coach: "Nemesis Owanash", popularity: 5 },
+  "Gastro": { location: "Omaidara, Thane", coach: "Nemesis Owanash", popularity: 4 },
+  "Cal Hal": { location: "Dodster, Auren", coach: "Jungle Unovo", popularity: 5 },
   "Limium": { location: "Oscrar, Dureya", coach: "Cold Varuth", popularity: 6 },
   "Qalf": { location: "Dimonco, Vorell", coach: "Astro Daslo", popularity: 7 },
   "Varcity": { location: "Jaxston, Auren", coach: "Monster Piccoloo", popularity: 8 },
-  "Zemiga-Mar": { location: "Andur, Dureya", coach: "Bulldoser Banwich", popularity: 9 },
+  "Zemiga-Mar": { location: "Andur, Dureya", coach: "Splash Gradey", popularity: 9 },
   "AFE": { location: "Daneyse, Vorell", coach: "Legacy Maryinez", popularity: 10 },
-  "Juire": { location: "Dimonco, Vorell", coach: "Shark Obimovch", popularity: 11 },
-  "Juniper": { location: "Sente, Thane", coach: "Sword Vacane", popularity: 12 },
-  "Fadee": { location: "Lou, Thane", coach: "Light Brog", popularity: 13 }
+  "Fadee": { location: "Lou, Thane", coach: "Light Brog", popularity: 11 },
+  "Juire": { location: "Dimonco, Vorell", coach: "Shark Obimovch", popularity: 12 },
+  "Juniper": { location: "Sente, Thane", coach: "Sword Vacane", popularity: 13 }
 };
 
-// Contract data from Contract_Data.xlsx (709 season)
+// Contract data from Contract_Data.xlsx (711 season)
 export const contractData: Record<string, {
   team: string;
   age: number;
   amount: string;
   contractThrough: number;
 }> = {
-  "Cascade Juner": { team: "Damage", age: 30, amount: "8.2 Million", contractThrough: 711 },
-  "Nothing Sawryr": { team: "Gastro", age: 28, amount: "6.8 Million", contractThrough: 710 },
-  "Mega Hawnnon": { team: "Dashlol", age: 27, amount: "4.4 Million", contractThrough: 709 },
-  "Daredevil Gaffe": { team: "Qalf", age: 24, amount: "4.8 Million", contractThrough: 711 },
-  "Bat Bornoil": { team: "Damage", age: 27, amount: "5.1 Million", contractThrough: 710 },
-  "Zeus Ziki": { team: "Cal Hal", age: 30, amount: "7.3 Million", contractThrough: 711 },
-  "Wraith Cunelly": { team: "Engery", age: 29, amount: "6.1 Million", contractThrough: 712 },
-  "Sky Sunyer": { team: "Zemiga-Mar", age: 27, amount: "5.3 Million", contractThrough: 711 },
-  "Vampire Ortez": { team: "Dashlol", age: 27, amount: "5.6 Million", contractThrough: 711 },
-  "Heal Calofloure": { team: "Limium", age: 31, amount: "5.7 Million", contractThrough: 709 },
-  "Pulse Farward": { team: "Varcity", age: 28, amount: "3.5 Million", contractThrough: 709 },
-  "Rem Asamtoy": { team: "Qalf", age: 27, amount: "1.3 Million", contractThrough: 710 },
-  "Titan Aui": { team: "Limium", age: 26, amount: "1.5 Million", contractThrough: 709 },
-  "Clipper Doznu": { team: "Varcity", age: 27, amount: "1.1 Million", contractThrough: 709 },
-  "Supernova Aloi": { team: "Gastro", age: 29, amount: "3.2 Million", contractThrough: 710 },
-  "Game Darwonn": { team: "Engery", age: 29, amount: "2.7 Million", contractThrough: 710 },
-  "Fisher Cerzonal": { team: "Qalf", age: 29, amount: "4.7 Million", contractThrough: 709 },
-  "Freeze Jagwiab": { team: "Juniper", age: 24, amount: "1.2 Million", contractThrough: 711 },
-  "Killa Binbac": { team: "Fadee", age: 31, amount: "3.5 Million", contractThrough: 710 },
-  "Harsh Raii": { team: "AFE", age: 25, amount: "1.2 Million", contractThrough: 711 },
-  "Horse Queanlend": { team: "Juire", age: 28, amount: "4.3 Million", contractThrough: 712 },
-  "Cross Exzona": { team: "Cal Hal", age: 26, amount: "4.7 Million", contractThrough: 712 },
-  "Rocket Dalbale": { team: "Zemiga-Mar", age: 24, amount: "1.1 Million", contractThrough: 711 },
-  "Whiteout Gar-Kiola": { team: "Juire", age: 31, amount: "3.8 Million", contractThrough: 710 },
-  "Rain Lieryon": { team: "Dashlol", age: 34, amount: "5 Million", contractThrough: 709 }
+  "Cascade Juner": { team: "Damage", age: 32, amount: "8.2 Million", contractThrough: 711 },
+  "Nothing Sawryr": { team: "Gastro", age: 30, amount: "7.5 Million", contractThrough: 712 },
+  "Mega Hawnnon": { team: "Dashlol", age: 29, amount: "6.5 Million", contractThrough: 712 },
+  "Daredevil Gaffe": { team: "Qalf", age: 26, amount: "4.8 Million", contractThrough: 711 },
+  "Bat Bornoil": { team: "Damage", age: 29, amount: "5.7 Million", contractThrough: 713 },
+  "Zeus Ziki": { team: "Fadee", age: 32, amount: "7.3 Million", contractThrough: 711 },
+  "Wraith Cunelly": { team: "Engery", age: 31, amount: "6.1 Million", contractThrough: 712 },
+  "Sky Sunyer": { team: "Zemiga-Mar", age: 29, amount: "5.3 Million", contractThrough: 711 },
+  "Vampire Ortez": { team: "Dashlol", age: 29, amount: "5.6 Million", contractThrough: 711 },
+  "Heal Calofloure": { team: "Limium", age: 33, amount: "5 Million", contractThrough: 711 },
+  "Pulse Farward": { team: "Engery", age: 30, amount: "5.1 Million", contractThrough: 712 },
+  "Rem Asamtoy": { team: "Qalf", age: 29, amount: "4.5 Million", contractThrough: 713 },
+  "Titan Aui": { team: "Limium", age: 28, amount: "3.7 Million", contractThrough: 713 },
+  "Clipper Doznu": { team: "Varcity", age: 29, amount: "3 Million", contractThrough: 712 },
+  "Fisher Cerzonal": { team: "Qalf", age: 31, amount: "2.4 Million", contractThrough: 711 },
+  "Freeze Jagwiab": { team: "Fadee", age: 26, amount: "3.3 Million", contractThrough: 713 },
+  "Killa Binbac": { team: "Juire", age: 33, amount: "1.5 Million", contractThrough: 711 },
+  "Club Faxzin": { team: "Gastro", age: 28, amount: "1 Million", contractThrough: 711 },
+  "Harsh Raii": { team: "AFE", age: 26, amount: "1.2 Million", contractThrough: 711 },
+  "Horse Queanlend": { team: "Juire", age: 29, amount: "4.3 Million", contractThrough: 712 },
+  "Cross Exzona": { team: "Dashlol", age: 27, amount: "4.7 Million", contractThrough: 712 },
+  "Rocket Dalbale": { team: "Cal Hal", age: 25, amount: "1.1 Million", contractThrough: 711 },
+  "Spring Cemet": { team: "Limium", age: 25, amount: "2.2 Million", contractThrough: 712 },
+  "Totality Tryoe": { team: "Damage", age: 26, amount: "2.3 Million", contractThrough: 713 },
+  "Guardian Garlim": { team: "Cal Hal", age: 27, amount: "3.2 Million", contractThrough: 713 },
+  "Supernova Aloi": { team: "AFE", age: 31, amount: "1.8 Million", contractThrough: 711 }
 };
 
 // Team bios and extended info
