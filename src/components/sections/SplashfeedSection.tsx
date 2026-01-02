@@ -446,10 +446,10 @@ export const SplashfeedSection = () => {
             {/* Suggestion chips */}
             <div className="flex flex-wrap gap-2 mt-3">
               {[
-                "Nothing Sawryr wins Apex 709!",
-                "Should Cascade Juner be the GOAT?",
-                "Rain Lieryon comeback?",
-                "Underrated players this season"
+                "Mega Hawnnon wins Apex 710 - Dynasty begins?",
+                "Mega Hawnnon Season Star & Apex Champion!",
+                "Dashlol civil war: Mega vs Vampire in finals",
+                "Nothing Sawryr dethroned after Apex 709 win"
               ].map((suggestion) => (
                 <Badge 
                   key={suggestion}
