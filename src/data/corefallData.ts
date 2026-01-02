@@ -695,6 +695,39 @@ export const apexDetailed = [
 
 // Full Match Data
 export const fullMatches: Record<string, { round: string; match: string }[]> = {
+  "710": [
+    { round: "Finals", match: "Mega Hawnnon (2-1(3-4,4-1,4-2)) vs Vampire Ortez" },
+    { round: "SF", match: "Mega Hawnnon (4-2) vs Bat Bornoil" },
+    { round: "SF", match: "Vampire Ortez (4-2) vs Wraith Cunelly" },
+    // Group A - Double Elimination
+    { round: "UBR1", match: "Mega Hawnnon (4-0) vs Guardian Garlim (Group A)" },
+    { round: "UBR1", match: "Rem Asamtoy (4-2) vs Sky Sunyer (Group A)" },
+    { round: "UBR1", match: "Daredevil Gaffe (4-2) vs Heal Calofloure (Group A)" },
+    { round: "UBR1", match: "Wraith Cunelly (4-1) vs Pulse Farward (Group A)" },
+    { round: "LBR1", match: "Sky Sunyer (4-2) vs Guardian Garlim (Group A)" },
+    { round: "LBR1", match: "Pulse Farward (4-0) vs Heal Calofloure (Group A)" },
+    { round: "UBSF", match: "Mega Hawnnon (4-1) vs Rem Asamtoy (Group A)" },
+    { round: "UBSF", match: "Daredevil Gaffe (4-3) vs Wraith Cunelly (Group A)" },
+    { round: "LBQF", match: "Wraith Cunelly (4-1) vs Sky Sunyer (Group A)" },
+    { round: "LBQF", match: "Rem Asamtoy (4-3) vs Pulse Farward (Group A)" },
+    { round: "LBSF", match: "Wraith Cunelly (4-2) vs Rem Asamtoy (Group A)" },
+    { round: "UBF", match: "Mega Hawnnon (4-1) vs Daredevil Gaffe (Group A)" },
+    { round: "LBF", match: "Wraith Cunelly (4-2) vs Daredevil Gaffe (Group A)" },
+    // Group B - Double Elimination
+    { round: "UBR1", match: "Nothing Sawryr (4-1) vs Rocket Dalbale (Group B)" },
+    { round: "UBR1", match: "Bat Bornoil (4-3) vs Cascade Juner (Group B)" },
+    { round: "UBR1", match: "Vampire Ortez (4-1) vs Freeze Jagwiab (Group B)" },
+    { round: "UBR1", match: "Jam Naze (4-3) vs Titan Aui (Group B)" },
+    { round: "LBR1", match: "Cascade Juner (4-1) vs Rocket Dalbale (Group B)" },
+    { round: "LBR1", match: "Titan Aui (4-3) vs Freeze Jagwiab (Group B)" },
+    { round: "UBSF", match: "Bat Bornoil (4-2) vs Nothing Sawryr (Group B)" },
+    { round: "UBSF", match: "Vampire Ortez (4-0) vs Jam Naze (Group B)" },
+    { round: "LBQF", match: "Cascade Juner (4-2) vs Jam Naze (Group B)" },
+    { round: "LBQF", match: "Nothing Sawryr (4-1) vs Titan Aui (Group B)" },
+    { round: "LBSF", match: "Cascade Juner (4-3) vs Nothing Sawryr (Group B)" },
+    { round: "UBF", match: "Vampire Ortez (4-2) vs Bat Bornoil (Group B)" },
+    { round: "LBF", match: "Bat Bornoil (4-1) vs Cascade Juner (Group B)" }
+  ],
   "709": [
     { round: "Finals", match: "Nothing Sawryr (2-1(4-1,3-4,4-2)) vs Mega Hawnnon" },
     { round: "SF", match: "Nothing Sawryr (4-1) vs Heal Calofloure" },
