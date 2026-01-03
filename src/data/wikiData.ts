@@ -280,21 +280,21 @@ export const teamBios: Record<string, {
   "Dashlol": {
     founded: "Pre-680 Era",
     colors: "Blue & Silver",
-    description: "Home to the legendary Pheonix Oliv dynasty of the 690s and Rain Lieryon's dominance in the early 700s. Dashlol represents legacy and excellence. Currently features rising stars Mega Hawnnon and Vampire Ortez.",
+    description: "Home to the legendary Pheonix Oliv dynasty of the 690s and Rain Lieryon's dominance in the early 700s. Dashlol represents legacy and excellence. The 711 roster features Mega Hawnnon, Vampire Ortez, and new addition Cross Exzona from Cal Hal.",
     notableAlumni: ["Pheonix Oliv", "Rain Lieryon", "Vampire Ortez", "Mega Hawnnon"],
     rivalTeams: ["Damage", "Varcity"]
   },
   "Engery": {
     founded: "Pre-680 Era",
     colors: "Green & White",
-    description: "The Snow Masogoto era (691-695) established Engery as one of Corefall's elite franchises. Home to multiple CTT championships and consistent contenders like Wraith Cunelly and Zeus Ziki (706-707).",
+    description: "The Snow Masogoto era (691-695) established Engery as one of Corefall's elite franchises. Home to multiple CTT championships. Wraith Cunelly anchors the roster in 711, joined by new addition Pulse Farward who brings versatility to the team.",
     notableAlumni: ["Snow Masogoto", "Ball Ratyor", "Wraith Cunelly", "Zeus Ziki"],
     rivalTeams: ["Limium", "Damage"]
   },
   "Cal Hal": {
     founded: "Pre-680 Era",
     colors: "Orange & Navy",
-    description: "A franchise defined by clutch performers, Cal Hal has produced multiple Apex champions including Splash Gradey (700) and Jungle Unovo (703, 706). Zeus Ziki carries the torch today.",
+    description: "A franchise defined by clutch performers, Cal Hal has produced multiple Apex champions including Splash Gradey (700) and Jungle Unovo (703, 706). With new additions Rocket Dalbale and Guardian Garlim in 711, the team looks to build a new contending core under coach Jungle Unovo.",
     notableAlumni: ["Jungle Unovo", "Splash Gradey", "Zeus Ziki", "Cross Exzona"],
     rivalTeams: ["Varcity", "Dashlol"]
   },
@@ -308,21 +308,21 @@ export const teamBios: Record<string, {
   "Limium": {
     founded: "Pre-680 Era",
     colors: "Teal & Gold",
-    description: "The Vibrant Yaul and Bulldoser Banwich eras cemented Limium as a historic power. Heal Calofloure's career-spanning dominance keeps them relevant today. Known for developing patient, endurance-focused fighters.",
+    description: "The Vibrant Yaul and Bulldoser Banwich eras cemented Limium as a historic power. Heal Calofloure's career-spanning dominance keeps them relevant today, and the 711 addition of Spring Cemet adds youth to the roster. Known for developing patient, endurance-focused fighters.",
     notableAlumni: ["Vibrant Yaul", "Bulldoser Banwich", "Heal Calofloure", "Cold Varuth", "Rolle Asikov"],
     rivalTeams: ["Engery", "Qalf"]
   },
   "Varcity": {
     founded: "Pre-680 Era",
     colors: "Purple & White",
-    description: "A franchise with deep history, Varcity has produced legends like Pheonix Oliv (701 Apex), Mountain Granton, and Giga Lertown. Blood Astur and Pulse Farward carry the current roster.",
-    notableAlumni: ["Pheonix Oliv", "Mountain Granton", "Giga Lertown", "Monster Piccoloo", "Blood Astur"],
+    description: "A franchise with deep history, Varcity has produced legends like Pheonix Oliv (701 Apex), Mountain Granton, and Giga Lertown. The 711 roster features Clipper Doznu and new addition Pepper Teraa, looking to rebuild after Pulse Farward's departure.",
+    notableAlumni: ["Pheonix Oliv", "Mountain Granton", "Giga Lertown", "Monster Piccoloo", "Blood Astur", "Pulse Farward"],
     rivalTeams: ["Dashlol", "Cal Hal"]
   },
   "AFE": {
     founded: "Pre-680 Era",
     colors: "Maroon & Silver",
-    description: "A solid mid-tier franchise that occasionally produces top talent. Whiteout Gar-Kiola and Greed Mahuney have represented the team well in recent seasons.",
+    description: "A solid mid-tier franchise that occasionally produces top talent. The 711 roster features Harsh Raii and new acquisition Supernova Aloi from Gastro, adding firepower to the team.",
     notableAlumni: ["Whiteout Gar-Kiola", "Greed Mahuney", "Harsh Raii", "Guardian Garlim"],
     rivalTeams: ["Juniper", "Juire"]
   },
@@ -349,8 +349,8 @@ export const teamBios: Record<string, {
   },
   "Fadee": {
     founded: "Pre-700 Era",
-    colors: "Crimson & Black",
-    description: "A rebuilding franchise looking to return to prominence. Currently home to veteran Killa Binbac who brings experience and championship pedigree to the young roster.",
+    colors: "Lime & Orange",
+    description: "A franchise on the rise after landing star acquisition Zeus Ziki from Cal Hal in 711. With Zeus Ziki and Freeze Jagwiab, Fadee looks to challenge for contention in the coming seasons.",
     notableAlumni: ["Killa Binbac", "Friction Zalzabi", "Venus Aloi"],
     rivalTeams: ["Juniper", "Zemiga-Mar"]
   }
