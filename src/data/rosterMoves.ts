@@ -100,6 +100,16 @@ export const rosterMoves: RosterMove[] = [
   { player: "Freeze Jagwiab", oldTeam: "Juniper", newTeam: "Fadee", season: "710" },
   { player: "Killa Binbac", oldTeam: "Fadee", newTeam: "Juire", season: "710" },
   { player: "Club Faxzin", oldTeam: "Juniper", newTeam: "Gastro", season: "710" },
+
+  // Season 711 (moves before 711)
+  { player: "Rocket Dalbale", oldTeam: "Zemiga-Mar", newTeam: "Cal Hal", season: "711" },
+  { player: "Guardian Garlim", oldTeam: "AFE", newTeam: "Cal Hal", season: "711" },
+  { player: "Cross Exzona", oldTeam: "Cal Hal", newTeam: "Dashlol", season: "711" },
+  { player: "Zeus Ziki", oldTeam: "Cal Hal", newTeam: "Fadee", season: "711" },
+  { player: "Spring Cemet", oldTeam: "Engery", newTeam: "Limium", season: "711" },
+  { player: "Supernova Aloi", oldTeam: "Gastro", newTeam: "AFE", season: "711" },
+  { player: "Pepper Teraa", oldTeam: "QW", newTeam: "Varcity", season: "711" },
+  { player: "Pulse Farward", oldTeam: "Varcity", newTeam: "Engery", season: "711" },
 ];
 
 // Get all available seasons with roster moves
