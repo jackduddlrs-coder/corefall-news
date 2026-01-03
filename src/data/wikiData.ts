@@ -66,8 +66,8 @@ export const fighterBios: Record<string, {
   "Mega Hawnnon": {
     nickname: "Mega",
     style: "Wildcard / More Loose",
-    bio: "The Apex 709 Runner-Up, Mega Hawnnon came agonizingly close to the title. His raw power and improving tactical game make him a favorite for future championships. A rising Dashlol star.",
-    notableMoments: ["Apex 709 Finals", "Nightmare 710 Champion", "4 Major Titles", "Dashlol Core Member"],
+    bio: "The reigning Apex 710 Champion and Season Star 710, Mega Hawnnon conquered the mountain after falling short in 709. His explosive power and fearless approach finally earned him the ultimate prize, defeating rival Vampire Ortez in the Grand Finals. A Dashlol franchise cornerstone entering his prime.",
+    notableMoments: ["Apex 710 Champion", "Season Star 710", "Nightmare 710 Champion", "Chaos Reigns 710 Champion", "5+ Major Titles"],
     rivalries: ["Nothing Sawryr", "Vampire Ortez"]
   },
   "Vampire Ortez": {
