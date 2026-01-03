@@ -1,6 +1,12 @@
 // Past Team Standings
 export const pastTeamStandings: Record<string, { team: string; points: number }[]> = {
-  "711": [],
+  "711": [
+    { team: "Dashlol", points: 900 }, { team: "Cal Hal", points: 900 }, { team: "Limium", points: 800 },
+    { team: "Gastro", points: 500 }, { team: "Fadee", points: 500 }, { team: "Qalf", points: 400 },
+    { team: "Varcity", points: 400 }, { team: "Damage", points: 350 }, { team: "Zemiga-Mar", points: 250 },
+    { team: "Engery", points: 250 }, { team: "AFE", points: 100 }, { team: "Juire", points: 50 },
+    { team: "Juniper", points: 50 }
+  ],
   "710": [
     { team: "Gastro", points: 6600 }, { team: "Damage", points: 6000 }, { team: "Dashlol", points: 6000 },
     { team: "Qalf", points: 5700 }, { team: "Limium", points: 4900 }, { team: "Zemiga-Mar", points: 4200 },
@@ -99,7 +105,40 @@ export const pastTeamStandings: Record<string, { team: string; points: number }[
 
 // Past Individual Standings - Top 40 for each season from Excel files
 export const pastStandings: Record<string, { Rank: number; Name: string; Team: string; Age: number; Points: number; KOs: number }[]> = {
-  "711": [],
+  "711": [
+    { Rank: 1, Name: "Rocket Dalbale", Team: "Cal Hal", Age: 26, Points: 550, KOs: 0 },
+    { Rank: 2, Name: "Titan Aui", Team: "Limium", Age: 28, Points: 450, KOs: 2 },
+    { Rank: 3, Name: "Mega Hawnnon", Team: "Dashlol", Age: 29, Points: 400, KOs: 2 },
+    { Rank: 4, Name: "Zeus Ziki", Team: "Fadee", Age: 32, Points: 350, KOs: 0 },
+    { Rank: 5, Name: "Vampire Ortez", Team: "Dashlol", Age: 29, Points: 300, KOs: 1 },
+    { Rank: 6, Name: "Clipper Doznu", Team: "Varcity", Age: 29, Points: 300, KOs: 1 },
+    { Rank: 7, Name: "Nothing Sawryr", Team: "Gastro", Age: 30, Points: 250, KOs: 0 },
+    { Rank: 8, Name: "Rem Asamtoy", Team: "Qalf", Age: 29, Points: 250, KOs: 2 },
+    { Rank: 9, Name: "Jam Naze", Team: "Gastro", Age: 25, Points: 200, KOs: 2 },
+    { Rank: 10, Name: "Cross Exzona", Team: "Dashlol", Age: 28, Points: 200, KOs: 0 },
+    { Rank: 11, Name: "Spring Cemet", Team: "Limium", Age: 25, Points: 200, KOs: 1 },
+    { Rank: 12, Name: "Ghost Mazze", Team: "Cal Hal", Age: 24, Points: 200, KOs: 1 },
+    { Rank: 13, Name: "Daredevil Gaffe", Team: "Qalf", Age: 26, Points: 150, KOs: 1 },
+    { Rank: 14, Name: "Sky Sunyer", Team: "Zemiga-Mar", Age: 29, Points: 150, KOs: 1 },
+    { Rank: 15, Name: "Bat Bornoil", Team: "Damage", Age: 29, Points: 150, KOs: 2 },
+    { Rank: 16, Name: "Guardian Garlim", Team: "Cal Hal", Age: 27, Points: 150, KOs: 1 },
+    { Rank: 17, Name: "Wraith Cunelly", Team: "Engery", Age: 31, Points: 100, KOs: 0 },
+    { Rank: 18, Name: "Cascade Juner", Team: "Damage", Age: 32, Points: 100, KOs: 0 },
+    { Rank: 19, Name: "Freeze Jagwiab", Team: "Fadee", Age: 26, Points: 100, KOs: 1 },
+    { Rank: 20, Name: "Totality Tryoe", Team: "Damage", Age: 26, Points: 100, KOs: 1 },
+    { Rank: 21, Name: "Rhino Aso", Team: "Limium", Age: 25, Points: 100, KOs: 1 },
+    { Rank: 22, Name: "Venom Zairos", Team: "Engery", Age: 24, Points: 100, KOs: 0 },
+    { Rank: 23, Name: "Pepper Teraa", Team: "Varcity", Age: 23, Points: 100, KOs: 0 },
+    { Rank: 24, Name: "Magician Wawor", Team: "Zemiga-Mar", Age: 23, Points: 100, KOs: 1 },
+    { Rank: 25, Name: "Pulse Farward", Team: "Engery", Age: 30, Points: 50, KOs: 0 },
+    { Rank: 26, Name: "Heal Calofloure", Team: "Limium", Age: 33, Points: 50, KOs: 0 },
+    { Rank: 27, Name: "Harsh Raii", Team: "AFE", Age: 27, Points: 50, KOs: 0 },
+    { Rank: 28, Name: "Club Faxzin", Team: "Gastro", Age: 28, Points: 50, KOs: 0 },
+    { Rank: 29, Name: "Killa Binbac", Team: "Juire", Age: 33, Points: 50, KOs: 0 },
+    { Rank: 30, Name: "Octane Danza", Team: "AFE", Age: 25, Points: 50, KOs: 0 },
+    { Rank: 31, Name: "Glide Gasfort", Team: "Fadee", Age: 23, Points: 50, KOs: 0 },
+    { Rank: 32, Name: "Orange Raer", Team: "Juniper", Age: 22, Points: 50, KOs: 0 }
+  ],
   "710": [
     { Rank: 1, Name: "Mega Hawnnon", Team: "Dashlol", Age: 28, Points: 3200, KOs: 9 },
     { Rank: 2, Name: "Nothing Sawryr", Team: "Gastro", Age: 29, Points: 2850, KOs: 8 },
@@ -656,7 +695,8 @@ export const trophyData = [
   { name: "Rem Asamtoy", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (709)" },
   { name: "Jam Naze", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (710), Wind Breakers (710)" },
   { name: "Titan Aui", total: 1, apex: 0, ctt: 0, major: 1, list: "Armageddon (710)" },
-  { name: "Club Faxzin", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (710)" }
+  { name: "Club Faxzin", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (710)" },
+  { name: "Rocket Dalbale", total: 1, apex: 0, ctt: 0, major: 1, list: "Heartland (711)" }
 ];
 
 // Apex Finals History
@@ -964,6 +1004,8 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Tournaments: Apex, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
+// Season 711
+  { year: 711, tournament: "Heartland", winner: "Rocket Dalbale" },
 // Season 710
   { year: 710, tournament: "Apex", winner: "Mega Hawnnon" },
   { year: 710, tournament: "Heartland", winner: "Nothing Sawryr" },
