@@ -93,11 +93,17 @@ const WikiTeam = () => {
       .sort((a, b) => b.totalPoints - a.totalPoints);
   }, [decodedName]);
 
-  // Current roster (710)
+  // Current roster (711) - get players from contract data for this team
   const currentRoster = useMemo(() => {
+    // Get all players contracted to this team in 711
+    const teamPlayers = Object.entries(contractData)
+      .filter(([_, c]) => c.team === decodedName)
+      .map(([name, _]) => name);
+    
+    // Get stats from most recent season (710 or 709)
     const season710 = pastStandings["710"] || pastStandings["709"] || [];
     return season710
-      .filter(p => p.Team === decodedName)
+      .filter(p => teamPlayers.includes(p.Name))
       .sort((a, b) => a.Rank - b.Rank);
   }, [decodedName]);
 
