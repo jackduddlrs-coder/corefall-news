@@ -76,7 +76,7 @@ export const MajorHistorySection = ({ onPlayerClick, onTeamClick }: MajorHistory
               <TableHead className="w-16 text-center font-bold">Year</TableHead>
               <TableHead className="font-bold">Tournament</TableHead>
               <TableHead className="font-bold">Winner</TableHead>
-              <TableHead className="font-bold hidden sm:table-cell">Team</TableHead>
+              <TableHead className="font-bold">Team</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -105,7 +105,7 @@ export const MajorHistorySection = ({ onPlayerClick, onTeamClick }: MajorHistory
                     {major.winner}
                   </button>
                 </TableCell>
-                <TableCell className="hidden sm:table-cell">
+                <TableCell>
                   <button
                     onClick={() => onTeamClick(major.team)}
                     className={`px-2 py-0.5 rounded text-xs font-medium hover:opacity-80 ${getTeamClass(major.team)}`}
