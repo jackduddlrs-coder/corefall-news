@@ -1,5 +1,6 @@
 // Past Team Standings
 export const pastTeamStandings: Record<string, { team: string; points: number }[]> = {
+  "711": [],
   "710": [
     { team: "Gastro", points: 6600 }, { team: "Damage", points: 6000 }, { team: "Dashlol", points: 6000 },
     { team: "Qalf", points: 5700 }, { team: "Limium", points: 4900 }, { team: "Zemiga-Mar", points: 4200 },
@@ -98,6 +99,7 @@ export const pastTeamStandings: Record<string, { team: string; points: number }[
 
 // Past Individual Standings - Top 40 for each season from Excel files
 export const pastStandings: Record<string, { Rank: number; Name: string; Team: string; Age: number; Points: number; KOs: number }[]> = {
+  "711": [],
   "710": [
     { Rank: 1, Name: "Mega Hawnnon", Team: "Dashlol", Age: 28, Points: 3200, KOs: 9 },
     { Rank: 2, Name: "Nothing Sawryr", Team: "Gastro", Age: 29, Points: 2850, KOs: 8 },
