@@ -1,6 +1,7 @@
 // Tournament names by season (10 majors per season)
 // Tournament names by season (10 majors per season)
 export const tournamentNames: Record<string, string[]> = {
+  "711": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
   "710": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
   "709": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
   "708": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
@@ -24,6 +25,40 @@ export interface TournamentResult {
 // Season 708 Tournament Results - All majors
 // Verified: Sum of all tournament EP values equals season total points
 export const playerTournamentResults: Record<string, Record<string, Record<string, TournamentResult>>> = {
+  "711": {
+    "Rocket Dalbale": { "Heartland": { finish: "1st", points: 550, kos: 0 } },
+    "Titan Aui": { "Heartland": { finish: "2nd", points: 450, kos: 2 } },
+    "Mega Hawnnon": { "Heartland": { finish: "3rd", points: 400, kos: 2 } },
+    "Zeus Ziki": { "Heartland": { finish: "4th", points: 350, kos: 0 } },
+    "Vampire Ortez": { "Heartland": { finish: "5th-6th", points: 300, kos: 1 } },
+    "Clipper Doznu": { "Heartland": { finish: "5th-6th", points: 300, kos: 1 } },
+    "Nothing Sawryr": { "Heartland": { finish: "7th-8th", points: 250, kos: 0 } },
+    "Rem Asamtoy": { "Heartland": { finish: "7th-8th", points: 250, kos: 2 } },
+    "Jam Naze": { "Heartland": { finish: "9th-12th", points: 200, kos: 2 } },
+    "Cross Exzona": { "Heartland": { finish: "9th-12th", points: 200, kos: 0 } },
+    "Spring Cemet": { "Heartland": { finish: "9th-12th", points: 200, kos: 1 } },
+    "Ghost Mazze": { "Heartland": { finish: "9th-12th", points: 200, kos: 1 } },
+    "Daredevil Gaffe": { "Heartland": { finish: "13th-16th", points: 150, kos: 1 } },
+    "Sky Sunyer": { "Heartland": { finish: "13th-16th", points: 150, kos: 1 } },
+    "Bat Bornoil": { "Heartland": { finish: "13th-16th", points: 150, kos: 2 } },
+    "Guardian Garlim": { "Heartland": { finish: "13th-16th", points: 150, kos: 1 } },
+    "Wraith Cunelly": { "Heartland": { finish: "17th-24th", points: 100, kos: 0 } },
+    "Cascade Juner": { "Heartland": { finish: "17th-24th", points: 100, kos: 0 } },
+    "Freeze Jagwiab": { "Heartland": { finish: "17th-24th", points: 100, kos: 1 } },
+    "Totality Tryoe": { "Heartland": { finish: "17th-24th", points: 100, kos: 1 } },
+    "Rhino Aso": { "Heartland": { finish: "17th-24th", points: 100, kos: 1 } },
+    "Pepper Teraa": { "Heartland": { finish: "17th-24th", points: 100, kos: 0 } },
+    "Venom Zairos": { "Heartland": { finish: "17th-24th", points: 100, kos: 0 } },
+    "Magician Wawor": { "Heartland": { finish: "17th-24th", points: 100, kos: 1 } },
+    "Pulse Farward": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Heal Calofloure": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Harsh Raii": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Club Faxzin": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Killa Binbac": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Octane Danza": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Glide Gasfort": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } },
+    "Orange Raer": { "Heartland": { finish: "25th-32nd", points: 50, kos: 0 } }
+  },
   "710": {
     "Bat Bornoil": { "Heartland": { finish: "5th-6th", points: 300, kos: 0 }, "Chaos": { finish: "17th-24th", points: 100, kos: 1 }, "Heritage": { finish: "1st", points: 550, kos: 2 }, "Descent": { finish: "17th-24th", points: 100, kos: 0 }, "Solar": { finish: "17th-24th", points: 100, kos: 0 }, "Nightmare": { finish: "2nd", points: 450, kos: 1 }, "Wind Breakers": { finish: "5th-6th", points: 300, kos: 2 }, "Malice": { finish: "17th-24th", points: 100, kos: 1 }, "Armageddon": { finish: "17th-24th", points: 100, kos: 0 }, "New Life": { finish: "17th-24th", points: 100, kos: 0 } },
     "Cross Exzona": { "Heartland": { finish: "7th-8th", points: 250, kos: 1 }, "Chaos": { finish: "17th-24th", points: 100, kos: 1 }, "Heritage": { finish: "2nd", points: 450, kos: 2 }, "Descent": { finish: "25th-32nd", points: 50, kos: 0 }, "Solar": { finish: "25th-32nd", points: 50, kos: 0 }, "Nightmare": { finish: "17th-24th", points: 100, kos: 1 }, "Wind Breakers": { finish: "25th-32nd", points: 50, kos: 0 }, "Malice": { finish: "7th-8th", points: 250, kos: 1 }, "Armageddon": { finish: "25th-32nd", points: 50, kos: 0 }, "New Life": { finish: "13th-16th", points: 150, kos: 1 } },
