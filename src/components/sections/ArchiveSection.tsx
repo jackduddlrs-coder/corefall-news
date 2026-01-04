@@ -17,7 +17,7 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   
-  const seasonOptions = ["709", "708", "707", "706", "705", "704", "703", "702", "701", "700"];
+  const seasonOptions = ["710", "709", "708", "707", "706", "705", "704", "703", "702", "701", "700"];
   
   const standings = pastStandings[selectedSeason] || [];
   const teamStandings = pastTeamStandings[selectedSeason] || [];
