@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 711 UNDERWAY • Rocket Dalbale Wins Heartland Cup 711 • Cal Hal Leads Team Standings
+        🏆 SEASON 711 UNDERWAY • Vampire Ortez Wins Chaos Reigns 711 • Dashlol Leads Team Standings
       </div>
 
       <div 
@@ -12,64 +12,64 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-calhal mb-2 inline-block">HEARTLAND CUP 711 CHAMPION</span>
+          <span className="team-tag team-dashlol mb-2 inline-block">CHAOS REIGNS 711 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            ROCKET DALBALE<br/>WINS HEARTLAND CUP 711
+            VAMPIRE ORTEZ<br/>WINS CHAOS REIGNS 711
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Cal Hal star claims his first career major title, leading the 711 standings with 550 points.
+            The Dashlol star claims his 5th career major title, taking the 711 standings lead with 850 points.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 711 After Heartland Cup</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 711 After Chaos Reigns</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Heartland Cup Champion</span>
-          <h3 className="text-white mt-3">Rocket Dalbale Wins First Major</h3>
+          <span className="team-tag team-dashlol">Chaos Reigns Champion</span>
+          <h3 className="text-white mt-3">Vampire Ortez Wins 5th Career Major</h3>
           <p className="text-foreground">
-            The Cal Hal star claims Heartland Cup 711 with <span className="stat-highlight">550 points</span>, his first career major title.
+            The Dashlol star claims Chaos Reigns 711 to lead the season with <span className="stat-highlight">850 points</span> and 1 KO.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-limium">2nd Place</span>
-          <h3 className="text-white mt-3">Titan Aui Strong Start with 450 Points</h3>
+          <span className="team-tag team-dashlol">2nd Place</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Strong with 750 Points</h3>
           <p className="text-foreground">
-            The Limium veteran sits 2nd in early standings with <span className="stat-highlight">450 points</span> and 2 KOs.
+            The reigning Apex 710 champion has <span className="stat-highlight">750 points</span> and 3 KOs, trailing teammate Vampire.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">3rd Place</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Off to Solid Start</h3>
+          <span className="team-tag team-calhal">3rd Place</span>
+          <h3 className="text-white mt-3">Rocket Dalbale Holds at 700 Points</h3>
           <p className="text-foreground">
-            The reigning Apex 710 champion has <span className="stat-highlight">400 points</span> and 2 KOs early in 711.
+            The Heartland 711 champion sits 3rd with <span className="stat-highlight">700 points</span> after the first two majors.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Team Leaders</span>
-          <h3 className="text-white mt-3">Cal Hal & Dashlol Tied at 900 Points</h3>
+          <span className="team-tag team-dashlol">Team Leaders</span>
+          <h3 className="text-white mt-3">Dashlol Leads with 1850 Points</h3>
           <p className="text-foreground">
-            Cal Hal and Dashlol lead the team standings with <span className="stat-highlight">900 points</span> each after Heartland.
+            Dashlol dominates team standings with <span className="stat-highlight">1850 points</span>, ahead of Limium (1400).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-fadee">Rising Stars</span>
-          <h3 className="text-white mt-3">Zeus Ziki 4th with 350 Points</h3>
+          <span className="team-tag team-damage">KO Leader</span>
+          <h3 className="text-white mt-3">Bat Bornoil Leads with 5 KOs</h3>
           <p className="text-foreground">
-            The veteran now with Fadee sits 4th in the standings with <span className="stat-highlight">350 points</span>.
+            The Damage fighter leads the KO race with <span className="stat-highlight">5 knockouts</span> through two tournaments.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-limium">Strong Showing</span>
-          <h3 className="text-white mt-3">Limium 3rd in Team Standings</h3>
+          <span className="team-tag team-engery">Rising Stars</span>
+          <h3 className="text-white mt-3">Wraith Cunelly 5th with 550 Points</h3>
           <p className="text-foreground">
-            Limium sits 3rd with <span className="stat-highlight">800 points</span> behind Cal Hal and Dashlol.
+            The Engery veteran climbs to 5th with <span className="stat-highlight">550 points</span> after a strong Chaos Reigns showing.
           </p>
         </div>
       </div>
