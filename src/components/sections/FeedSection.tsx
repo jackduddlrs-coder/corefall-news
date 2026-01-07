@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 711 UNDERWAY • Vampire Ortez Wins Chaos Reigns 711 • Dashlol Leads Team Standings
+        🏆 SEASON 711 UNDERWAY • Mega Hawnnon Wins Heritage 711 • Dashlol Leads Team Standings
       </div>
 
       <div 
@@ -12,64 +12,64 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">CHAOS REIGNS 711 CHAMPION</span>
+          <span className="team-tag team-dashlol mb-2 inline-block">HERITAGE 711 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            VAMPIRE ORTEZ<br/>WINS CHAOS REIGNS 711
+            MEGA HAWNNON<br/>WINS HERITAGE 711
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Dashlol star claims his 5th career major title, taking the 711 standings lead with 850 points.
+            The reigning Apex champion claims his 6th career major title, taking the 711 standings lead with 1300 points.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 711 After Chaos Reigns</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 711 After Heritage</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Chaos Reigns Champion</span>
-          <h3 className="text-white mt-3">Vampire Ortez Wins 5th Career Major</h3>
+          <span className="team-tag team-dashlol">Heritage Champion</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Claims 6th Career Major</h3>
           <p className="text-foreground">
-            The Dashlol star claims Chaos Reigns 711 to lead the season with <span className="stat-highlight">850 points</span> and 1 KO.
+            The Dashlol star wins Heritage 711 to take the lead with <span className="stat-highlight">1300 points</span> and 3 KOs.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-dashlol">2nd Place</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Strong with 750 Points</h3>
+          <h3 className="text-white mt-3">Vampire Ortez Sits at 1050 Points</h3>
           <p className="text-foreground">
-            The reigning Apex 710 champion has <span className="stat-highlight">750 points</span> and 3 KOs, trailing teammate Vampire.
+            The Chaos Reigns winner has <span className="stat-highlight">1050 points</span> and 3 KOs, trailing teammate Mega.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">3rd Place</span>
-          <h3 className="text-white mt-3">Rocket Dalbale Holds at 700 Points</h3>
+          <span className="team-tag team-limium">3rd Place</span>
+          <h3 className="text-white mt-3">Titan Aui Rises to 900 Points</h3>
           <p className="text-foreground">
-            The Heartland 711 champion sits 3rd with <span className="stat-highlight">700 points</span> after the first two majors.
+            The Limium star climbs to 3rd with <span className="stat-highlight">900 points</span> and 3 KOs after Heritage.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-dashlol">Team Leaders</span>
-          <h3 className="text-white mt-3">Dashlol Leads with 1850 Points</h3>
+          <h3 className="text-white mt-3">Dashlol Dominates with 2900 Points</h3>
           <p className="text-foreground">
-            Dashlol dominates team standings with <span className="stat-highlight">1850 points</span>, ahead of Limium (1400).
+            Dashlol extends team lead with <span className="stat-highlight">2900 points</span>, ahead of Limium (1950).
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">KO Leader</span>
-          <h3 className="text-white mt-3">Bat Bornoil Leads with 5 KOs</h3>
+          <span className="team-tag team-gastro">KO Leader</span>
+          <h3 className="text-white mt-3">Jam Naze Leads with 6 KOs</h3>
           <p className="text-foreground">
-            The Damage fighter leads the KO race with <span className="stat-highlight">5 knockouts</span> through two tournaments.
+            The Gastro fighter leads the KO race with <span className="stat-highlight">6 knockouts</span> through three tournaments.
           </p>
         </div>
         
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-engery">Rising Stars</span>
-          <h3 className="text-white mt-3">Wraith Cunelly 5th with 550 Points</h3>
+          <h3 className="text-white mt-3">Wraith Cunelly 4th with 800 Points</h3>
           <p className="text-foreground">
-            The Engery veteran climbs to 5th with <span className="stat-highlight">550 points</span> after a strong Chaos Reigns showing.
+            The Engery veteran shares 4th with Sky Sunyer at <span className="stat-highlight">800 points</span> each.
           </p>
         </div>
       </div>
