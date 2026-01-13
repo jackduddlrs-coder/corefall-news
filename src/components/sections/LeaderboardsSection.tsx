@@ -7,7 +7,8 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "peak-age" | "age-brackets" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "age-analytics" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages";
 
 interface PlayerStats {
   name: string;
@@ -36,6 +37,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [selectedYears, setSelectedYears] = useState<Set<string>>(new Set(allSeasons));
   const [champAgeSortAsc, setChampAgeSortAsc] = useState<boolean>(true);
   const [expandedTeamSeason, setExpandedTeamSeason] = useState<string | null>(null);
+  const [ageSubTab, setAgeSubTab] = useState<AgeSubTab>("peak-age");
 
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
@@ -568,7 +570,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     };
   }, [selectedYears]);
 
-  const getTitle = (type: LeaderboardType) => {
+  const getTitle = (type: LeaderboardType): string => {
     switch (type) {
       case "legacy-score": return "All-Time Legacy Rankings";
       case "single-points": return "Most Single Season Points";
@@ -576,31 +578,36 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "avg-points": return "Average Points Per Season";
       case "consistency": return "Consistency Rating";
       case "peak-season": return "Peak Season Finder";
-      case "peak-age": return "Peak Age Analysis";
-      case "age-brackets": return "Performance by Age Bracket";
+      case "age-analytics": return getAgeSubTabTitle();
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
       case "avg-finish": return "Best Average Finish";
-      case "champ-ages": return `Champion Ages (${(leaderboards["champ-ages"] as PlayerStats[]).length} titles)`;
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
       case "team-season-pts": return "Best Team Season Points";
+      default: return "";
     }
   };
 
-  const getValueLabel = (type: LeaderboardType) => {
+  const getAgeSubTabTitle = (): string => {
+    switch (ageSubTab) {
+      case "peak-age": return "Peak Age Analysis";
+      case "age-brackets": return "Performance by Age Bracket";
+      case "champ-ages": return `Champion Ages (${(leaderboards["champ-ages"] as PlayerStats[]).length} titles)`;
+    }
+  };
+
+  const getValueLabel = (type: LeaderboardType): string => {
     switch (type) {
       case "legacy-score": return "Legacy Score";
       case "avg-points": return "Avg Pts";
       case "consistency": return "Rating";
       case "peak-season": return "Score";
-      case "peak-age": return "Age";
-      case "age-brackets": return "Avg Pts";
+      case "age-analytics": return ageSubTab === "age-brackets" ? "Avg Pts" : "Age";
       case "appearances": return "Seasons";
       case "avg-finish": return "Avg Rank";
-      case "champ-ages": return "Age";
       case "team-points": return "Points";
       case "team-championships": return "Titles";
       case "team-players": return "Players";
@@ -760,7 +767,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points" || type === "peak-season" || type === "consistency" || type === "peak-age";
+    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points" || type === "peak-season" || type === "consistency";
 
     return (
       <div className="overflow-x-auto">
@@ -861,6 +868,96 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
           <p><strong>Insights:</strong> Shows average performance across different age groups. "Seasons" = total player-seasons in bracket. "Players" = unique players who competed at that age.</p>
         </div>
+      </div>
+    );
+  };
+
+  const renderAgeAnalyticsSection = () => {
+    return (
+      <div className="space-y-4">
+        {/* Sub-tabs for age analytics */}
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          <button
+            onClick={() => setAgeSubTab("peak-age")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              ageSubTab === "peak-age"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Peak Age
+          </button>
+          <button
+            onClick={() => setAgeSubTab("age-brackets")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              ageSubTab === "age-brackets"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Age Brackets
+          </button>
+          <button
+            onClick={() => setAgeSubTab("champ-ages")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              ageSubTab === "champ-ages"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Champion Ages
+          </button>
+        </div>
+
+        {/* Render the appropriate sub-section */}
+        {ageSubTab === "peak-age" && renderPeakAgeLeaderboard()}
+        {ageSubTab === "age-brackets" && renderAgeBracketsLeaderboard()}
+        {ageSubTab === "champ-ages" && renderChampAgesLeaderboard()}
+      </div>
+    );
+  };
+
+  const renderPeakAgeLeaderboard = () => {
+    const data = leaderboards["peak-age"] as PlayerStats[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Player</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Team</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Season</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.map((player, index) => (
+              <tr key={`${player.name}-${index}`} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                <td className="p-2 md:p-3">
+                  <span 
+                    onClick={() => onPlayerClick(player.name)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {player.name}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 hidden sm:table-cell">
+                  <span 
+                    onClick={() => onTeamClick(player.team)}
+                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(player.team)}`}
+                  >
+                    {player.team}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 text-muted-foreground hidden md:table-cell">{player.season}</td>
+                <td className="p-2 md:p-3 text-right font-bold text-foreground">{player.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   };
@@ -978,11 +1075,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="peak-season" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Peak Season
             </TabsTrigger>
-            <TabsTrigger value="peak-age" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Peak Age
-            </TabsTrigger>
-            <TabsTrigger value="age-brackets" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Age Brackets
+            <TabsTrigger value="age-analytics" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Age Analytics
             </TabsTrigger>
             <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Season KOs
@@ -995,9 +1089,6 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             </TabsTrigger>
             <TabsTrigger value="avg-finish" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Avg Finish
-            </TabsTrigger>
-            <TabsTrigger value="champ-ages" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Champion Ages
             </TabsTrigger>
           </TabsList>
         </div>
@@ -1041,11 +1132,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           <TabsContent value="peak-season" className="mt-0">
             {renderPlayerLeaderboard("peak-season")}
           </TabsContent>
-          <TabsContent value="peak-age" className="mt-0">
-            {renderPlayerLeaderboard("peak-age")}
-          </TabsContent>
-          <TabsContent value="age-brackets" className="mt-0">
-            {renderAgeBracketsLeaderboard()}
+          <TabsContent value="age-analytics" className="mt-0">
+            {renderAgeAnalyticsSection()}
           </TabsContent>
           <TabsContent value="single-kos" className="mt-0">
             {renderPlayerLeaderboard("single-kos")}
@@ -1058,9 +1146,6 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="avg-finish" className="mt-0">
             {renderPlayerLeaderboard("avg-finish")}
-          </TabsContent>
-          <TabsContent value="champ-ages" className="mt-0">
-            {renderChampAgesLeaderboard()}
           </TabsContent>
           <TabsContent value="team-points" className="mt-0">
             {renderTeamLeaderboard("team-points")}
