@@ -694,7 +694,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points";
+    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points" || type === "peak-season" || type === "consistency";
 
     return (
       <div className="overflow-x-auto">
