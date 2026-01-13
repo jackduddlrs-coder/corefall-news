@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 
 interface PlayerStats {
   name: string;
@@ -114,6 +114,32 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         value: Math.round(total / playerSeasonCounts[name]),
         season: `${playerSeasonCounts[name]} seasons`
       }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
+    // Consistency Rating (requires at least 3 seasons)
+    const playerPointsBySeason: Record<string, number[]> = {};
+    allPlayers.forEach(p => {
+      if (!playerPointsBySeason[p.name]) playerPointsBySeason[p.name] = [];
+      playerPointsBySeason[p.name].push(p.points);
+    });
+
+    const consistencyRating: PlayerStats[] = Object.entries(playerPointsBySeason)
+      .filter(([_, points]) => points.length >= 3)
+      .map(([name, points]) => {
+        const mean = points.reduce((a, b) => a + b, 0) / points.length;
+        const variance = points.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / points.length;
+        const stdDev = Math.sqrt(variance);
+        const cv = mean > 0 ? (stdDev / mean) * 100 : 0;
+        const consistencyScore = Math.max(0, 100 - cv);
+        
+        return {
+          name,
+          team: getMostPointsTeam(name),
+          value: Math.round(consistencyScore * 10) / 10,
+          season: `${points.length} seasons`
+        };
+      })
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
@@ -375,6 +401,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "single-points": singleSeasonPoints,
       "all-time-points": allTimePoints,
       "avg-points": avgPoints,
+      "consistency": consistencyRating,
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
@@ -393,6 +420,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "single-points": return "Most Single Season Points";
       case "all-time-points": return "All-Time Career Points";
       case "avg-points": return "Average Points Per Season";
+      case "consistency": return "Consistency Rating";
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
@@ -409,6 +437,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     switch (type) {
       case "legacy-score": return "Legacy Score";
       case "avg-points": return "Avg Pts";
+      case "consistency": return "Rating";
       case "appearances": return "Seasons";
       case "avg-finish": return "Avg Rank";
       case "champ-ages": return "Age";
@@ -732,6 +761,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="avg-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Avg Pts
             </TabsTrigger>
+            <TabsTrigger value="consistency" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Consistency
+            </TabsTrigger>
             <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Season KOs
             </TabsTrigger>
@@ -782,6 +814,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="avg-points" className="mt-0">
             {renderPlayerLeaderboard("avg-points")}
+          </TabsContent>
+          <TabsContent value="consistency" className="mt-0">
+            {renderPlayerLeaderboard("consistency")}
           </TabsContent>
           <TabsContent value="single-kos" className="mt-0">
             {renderPlayerLeaderboard("single-kos")}
