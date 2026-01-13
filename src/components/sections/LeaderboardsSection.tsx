@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 
 interface PlayerStats {
   name: string;
@@ -98,6 +98,22 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     });
     const allTimePoints: PlayerStats[] = Object.entries(playerTotalPoints)
       .map(([name, total]) => ({ name, team: getMostPointsTeam(name), value: total }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
+    // Average points per season (requires at least 2 seasons)
+    const playerSeasonCounts: Record<string, number> = {};
+    allPlayers.forEach(p => {
+      playerSeasonCounts[p.name] = (playerSeasonCounts[p.name] || 0) + 1;
+    });
+    const avgPoints: PlayerStats[] = Object.entries(playerTotalPoints)
+      .filter(([name]) => playerSeasonCounts[name] >= 2)
+      .map(([name, total]) => ({
+        name,
+        team: getMostPointsTeam(name),
+        value: Math.round(total / playerSeasonCounts[name]),
+        season: `${playerSeasonCounts[name]} seasons`
+      }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
@@ -358,6 +374,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "legacy-score": legacyRankings,
       "single-points": singleSeasonPoints,
       "all-time-points": allTimePoints,
+      "avg-points": avgPoints,
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
@@ -375,6 +392,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "legacy-score": return "All-Time Legacy Rankings";
       case "single-points": return "Most Single Season Points";
       case "all-time-points": return "All-Time Career Points";
+      case "avg-points": return "Average Points Per Season";
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
@@ -390,6 +408,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const getValueLabel = (type: LeaderboardType) => {
     switch (type) {
       case "legacy-score": return "Legacy Score";
+      case "avg-points": return "Avg Pts";
       case "appearances": return "Seasons";
       case "avg-finish": return "Avg Rank";
       case "champ-ages": return "Age";
@@ -552,7 +571,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish";
+    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points";
 
     return (
       <div className="overflow-x-auto">
@@ -709,6 +728,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             </TabsTrigger>
             <TabsTrigger value="all-time-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Career Pts
+            </TabsTrigger>
+            <TabsTrigger value="avg-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Avg Pts
             </TabsTrigger>
             <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Season KOs
