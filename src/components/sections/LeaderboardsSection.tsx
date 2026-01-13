@@ -131,13 +131,15 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         const variance = points.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / points.length;
         const stdDev = Math.sqrt(variance);
         const cv = mean > 0 ? (stdDev / mean) * 100 : 0;
-        const consistencyScore = Math.max(0, 100 - cv);
+        const consistencyPct = Math.max(0, 100 - cv) / 100; // 0-1 scale
+        // Weighted score: mean points * consistency factor, rewards high + stable performers
+        const consistencyScore = Math.round(mean * consistencyPct);
         
         return {
           name,
           team: getMostPointsTeam(name),
-          value: Math.round(consistencyScore * 10) / 10,
-          season: `${points.length} seasons`
+          value: consistencyScore,
+          season: `${points.length} seasons, ${Math.round(mean)} avg`
         };
       })
       .sort((a, b) => b.value - a.value)
