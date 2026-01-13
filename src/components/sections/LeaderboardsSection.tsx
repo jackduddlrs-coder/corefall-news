@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "peak-age" | "age-brackets" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 
 interface PlayerStats {
   name: string;
@@ -54,7 +54,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   // Calculate all leaderboards from pastStandings data filtered by selected years
   const leaderboards = useMemo(() => {
-    const allPlayers: { name: string; team: string; points: number; kos: number; season: string }[] = [];
+    const allPlayers: { name: string; team: string; points: number; kos: number; season: string; age: number }[] = [];
     
     Object.entries(pastStandings).forEach(([season, players]) => {
       if (!selectedYears.has(season)) return;
@@ -64,7 +64,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           team: player.Team,
           points: player.Points,
           kos: player.KOs,
-          season
+          season,
+          age: player.Age || 0
         });
       });
     });
@@ -233,6 +234,65 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           season: `${entry.season} (${details.join(', ')})`
         };
       });
+
+    // Peak Age - at what age each player had their best season (by points)
+    const playerBestByAge: Record<string, { age: number; points: number; season: string; team: string }> = {};
+    allPlayers.forEach(entry => {
+      if (entry.age <= 0) return;
+      if (!playerBestByAge[entry.name] || entry.points > playerBestByAge[entry.name].points) {
+        playerBestByAge[entry.name] = { age: entry.age, points: entry.points, season: entry.season, team: entry.team };
+      }
+    });
+    
+    const peakAges: PlayerStats[] = Object.entries(playerBestByAge)
+      .map(([name, data]) => ({
+        name,
+        team: getMostPointsTeam(name),
+        value: data.age,
+        season: `${data.season} (${data.points.toLocaleString()} pts)`,
+        age: data.age
+      }))
+      .sort((a, b) => a.value - b.value) // Sort by youngest peak age
+      .slice(0, 50);
+
+    // Age Brackets - average performance by age group
+    const ageBrackets: Record<string, { totalPoints: number; totalKOs: number; count: number; players: Set<string> }> = {
+      "20-22": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set() },
+      "23-25": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set() },
+      "26-28": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set() },
+      "29-31": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set() },
+      "32-34": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set() },
+      "35+": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set() }
+    };
+    
+    allPlayers.forEach(entry => {
+      if (entry.age <= 0) return;
+      let bracket = "";
+      if (entry.age >= 20 && entry.age <= 22) bracket = "20-22";
+      else if (entry.age >= 23 && entry.age <= 25) bracket = "23-25";
+      else if (entry.age >= 26 && entry.age <= 28) bracket = "26-28";
+      else if (entry.age >= 29 && entry.age <= 31) bracket = "29-31";
+      else if (entry.age >= 32 && entry.age <= 34) bracket = "32-34";
+      else if (entry.age >= 35) bracket = "35+";
+      
+      if (bracket && ageBrackets[bracket]) {
+        ageBrackets[bracket].totalPoints += entry.points;
+        ageBrackets[bracket].totalKOs += entry.kos;
+        ageBrackets[bracket].count++;
+        ageBrackets[bracket].players.add(entry.name);
+      }
+    });
+    
+    const ageBracketStats: { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number }[] = 
+      Object.entries(ageBrackets)
+        .filter(([_, data]) => data.count > 0)
+        .map(([bracket, data]) => ({
+          bracket,
+          avgPoints: Math.round(data.totalPoints / data.count),
+          avgKOs: Math.round((data.totalKOs / data.count) * 10) / 10,
+          seasons: data.count,
+          uniquePlayers: data.players.size
+        }));
 
     // Single season KOs (best individual season)
     const singleSeasonKOs: PlayerStats[] = [...allPlayers]
@@ -494,6 +554,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "avg-points": avgPoints,
       "consistency": consistencyRating,
       "peak-season": peakSeasons,
+      "peak-age": peakAges,
+      "age-brackets": ageBracketStats,
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
@@ -514,6 +576,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "avg-points": return "Average Points Per Season";
       case "consistency": return "Consistency Rating";
       case "peak-season": return "Peak Season Finder";
+      case "peak-age": return "Peak Age Analysis";
+      case "age-brackets": return "Performance by Age Bracket";
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
@@ -532,6 +596,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "avg-points": return "Avg Pts";
       case "consistency": return "Rating";
       case "peak-season": return "Score";
+      case "peak-age": return "Age";
+      case "age-brackets": return "Avg Pts";
       case "appearances": return "Seasons";
       case "avg-finish": return "Avg Rank";
       case "champ-ages": return "Age";
@@ -694,7 +760,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points" || type === "peak-season" || type === "consistency";
+    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points" || type === "peak-season" || type === "consistency" || type === "peak-age";
 
     return (
       <div className="overflow-x-auto">
@@ -744,6 +810,57 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             ))}
           </tbody>
         </table>
+      </div>
+    );
+  };
+
+  const renderAgeBracketsLeaderboard = () => {
+    const data = leaderboards["age-brackets"] as { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number }[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Age Range</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Avg Points</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Avg KOs</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Seasons</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Players</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((bracket) => {
+              const maxAvg = Math.max(...data.map(d => d.avgPoints));
+              const percentage = (bracket.avgPoints / maxAvg) * 100;
+              
+              return (
+                <tr key={bracket.bracket} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                  <td className="p-2 md:p-3">
+                    <div className="flex items-center gap-3">
+                      <span className="font-semibold text-foreground min-w-[60px]">{bracket.bracket}</span>
+                      <div className="flex-1 hidden lg:block">
+                        <div className="h-2 bg-muted rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary rounded-full transition-all"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="p-2 md:p-3 text-right font-bold text-foreground">{bracket.avgPoints.toLocaleString()}</td>
+                  <td className="p-2 md:p-3 text-right text-muted-foreground hidden sm:table-cell">{bracket.avgKOs}</td>
+                  <td className="p-2 md:p-3 text-right text-muted-foreground hidden md:table-cell">{bracket.seasons.toLocaleString()}</td>
+                  <td className="p-2 md:p-3 text-right text-muted-foreground hidden md:table-cell">{bracket.uniquePlayers}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> Shows average performance across different age groups. "Seasons" = total player-seasons in bracket. "Players" = unique players who competed at that age.</p>
+        </div>
       </div>
     );
   };
@@ -861,6 +978,12 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="peak-season" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Peak Season
             </TabsTrigger>
+            <TabsTrigger value="peak-age" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Peak Age
+            </TabsTrigger>
+            <TabsTrigger value="age-brackets" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Age Brackets
+            </TabsTrigger>
             <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Season KOs
             </TabsTrigger>
@@ -917,6 +1040,12 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="peak-season" className="mt-0">
             {renderPlayerLeaderboard("peak-season")}
+          </TabsContent>
+          <TabsContent value="peak-age" className="mt-0">
+            {renderPlayerLeaderboard("peak-age")}
+          </TabsContent>
+          <TabsContent value="age-brackets" className="mt-0">
+            {renderAgeBracketsLeaderboard()}
           </TabsContent>
           <TabsContent value="single-kos" className="mt-0">
             {renderPlayerLeaderboard("single-kos")}
