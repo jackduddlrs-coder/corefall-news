@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { pastStandings, pastTeamStandings, getTeamClass, seasons, majorWinners, apexDetailed, trophyData } from "@/data/corefallData";
+import { pastStandings, pastTeamStandings, getTeamClass, seasons, majorWinners, apexDetailed, trophyData, fullMatches } from "@/data/corefallData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface LeaderboardsSectionProps {
@@ -7,7 +7,7 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "champ-ages" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 
 interface PlayerStats {
   name: string;
@@ -148,6 +148,91 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
+
+    // Peak Season Finder - best individual season based on points, majors, apex finish, season star, CTT
+    const peakSeasonData: { name: string; team: string; season: string; points: number; majors: number; apexFinish: string; seasonStar: boolean; cttWin: boolean; score: number }[] = [];
+    
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      const yearNum = parseInt(season);
+      const seasonInfo = seasons.find(s => s.year === yearNum);
+      
+      players.forEach(player => {
+        // Count majors won this season (excluding Apex which is handled separately)
+        const majorsThisSeason = majorWinners.filter(
+          m => m.year === yearNum && m.winner === player.Name && m.tournament !== "Apex"
+        ).length;
+        
+        // Determine Apex finish
+        let apexFinish = "";
+        let apexBonus = 0;
+        if (seasonInfo?.apex === player.Name) {
+          apexFinish = "Winner";
+          apexBonus = 500;
+        } else {
+          const apexData = apexDetailed.find(a => a.year === yearNum);
+          if (apexData?.lose === player.Name) {
+            apexFinish = "Finals";
+            apexBonus = 250;
+          } else {
+            // Use fullMatches to check for SF, QF, R16 finishes (player lost at that round)
+            const matchData = fullMatches[season];
+            if (matchData) {
+              const sfLoss = matchData.find(r => r.round === "SF" && r.match.includes(player.Name) && !r.match.startsWith(player.Name));
+              const qfLoss = matchData.find(r => r.round === "QF" && r.match.includes(player.Name) && !r.match.startsWith(player.Name));
+              const r16Loss = matchData.find(r => r.round === "R16" && r.match.includes(player.Name) && !r.match.startsWith(player.Name));
+              if (sfLoss) { apexFinish = "Top 4"; apexBonus = 125; }
+              else if (qfLoss) { apexFinish = "Top 8"; apexBonus = 60; }
+              else if (r16Loss) { apexFinish = "Top 16"; apexBonus = 30; }
+            }
+          }
+        }
+        
+        const isStar = seasonInfo?.star === player.Name;
+        const isCttWin = trophyData.find(t => t.name === player.Name)?.list.includes(`CTT (${season})`) || false;
+        
+        // Score calculation: Points (base) + Majors (100 each) + Apex Finish + Season Star (150) + CTT (75)
+        const score = player.Points + (majorsThisSeason * 100) + apexBonus + (isStar ? 150 : 0) + (isCttWin ? 75 : 0);
+        
+        peakSeasonData.push({
+          name: player.Name,
+          team: player.Team,
+          season,
+          points: player.Points,
+          majors: majorsThisSeason,
+          apexFinish,
+          seasonStar: isStar,
+          cttWin: isCttWin,
+          score
+        });
+      });
+    });
+    
+    // Get best season per player
+    const playerBestSeason: Record<string, typeof peakSeasonData[0]> = {};
+    peakSeasonData.forEach(entry => {
+      if (!playerBestSeason[entry.name] || entry.score > playerBestSeason[entry.name].score) {
+        playerBestSeason[entry.name] = entry;
+      }
+    });
+    
+    const peakSeasons: PlayerStats[] = Object.values(playerBestSeason)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 50)
+      .map(entry => {
+        const details: string[] = [`${entry.points} pts`];
+        if (entry.majors > 0) details.push(`${entry.majors} major${entry.majors > 1 ? 's' : ''}`);
+        if (entry.apexFinish) details.push(`Apex ${entry.apexFinish}`);
+        if (entry.seasonStar) details.push('Star');
+        if (entry.cttWin) details.push('CTT');
+        
+        return {
+          name: entry.name,
+          team: entry.team,
+          value: entry.score,
+          season: `${entry.season} (${details.join(', ')})`
+        };
+      });
 
     // Single season KOs (best individual season)
     const singleSeasonKOs: PlayerStats[] = [...allPlayers]
@@ -408,6 +493,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "all-time-points": allTimePoints,
       "avg-points": avgPoints,
       "consistency": consistencyRating,
+      "peak-season": peakSeasons,
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
       "appearances": appearances,
@@ -427,6 +513,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "all-time-points": return "All-Time Career Points";
       case "avg-points": return "Average Points Per Season";
       case "consistency": return "Consistency Rating";
+      case "peak-season": return "Peak Season Finder";
       case "single-kos": return "Most Single Season KOs";
       case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
@@ -444,6 +531,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "legacy-score": return "Legacy Score";
       case "avg-points": return "Avg Pts";
       case "consistency": return "Rating";
+      case "peak-season": return "Score";
       case "appearances": return "Seasons";
       case "avg-finish": return "Avg Rank";
       case "champ-ages": return "Age";
@@ -770,6 +858,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="consistency" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Consistency
             </TabsTrigger>
+            <TabsTrigger value="peak-season" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Peak Season
+            </TabsTrigger>
             <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Season KOs
             </TabsTrigger>
@@ -823,6 +914,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="consistency" className="mt-0">
             {renderPlayerLeaderboard("consistency")}
+          </TabsContent>
+          <TabsContent value="peak-season" className="mt-0">
+            {renderPlayerLeaderboard("peak-season")}
           </TabsContent>
           <TabsContent value="single-kos" className="mt-0">
             {renderPlayerLeaderboard("single-kos")}
