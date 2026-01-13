@@ -88,6 +88,7 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
       points: careerPoints,
       kos,
       avgFinish: count > 0 ? (totalRanks / count).toFixed(1) : '-',
+      avgPoints: count > 0 ? Math.round(careerPoints / count) : 0,
       apexApps,
       yearsActive: count,
       legacyScore,
@@ -481,10 +482,14 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             ))}
           </div>
 
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-4 mb-6 md:mb-8">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 mb-6 md:mb-8">
             <div className="bg-background p-2 md:p-4 rounded-lg border border-border text-center">
               <div className="text-[9px] md:text-xs text-muted-foreground uppercase tracking-wider">Points</div>
               <div className="text-sm md:text-2xl text-white font-bold mt-0.5 md:mt-1">{careerTotals.points.toLocaleString()}</div>
+            </div>
+            <div className="bg-background p-2 md:p-4 rounded-lg border border-border text-center">
+              <div className="text-[9px] md:text-xs text-muted-foreground uppercase tracking-wider">Avg Pts</div>
+              <div className="text-sm md:text-2xl text-white font-bold mt-0.5 md:mt-1">{careerTotals.avgPoints.toLocaleString()}</div>
             </div>
             <div className="bg-background p-2 md:p-4 rounded-lg border border-border text-center">
               <div className="text-[9px] md:text-xs text-muted-foreground uppercase tracking-wider">KOs</div>
