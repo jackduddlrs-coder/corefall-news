@@ -124,24 +124,28 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       playerPointsBySeason[p.name].push(p.points);
     });
 
-    const consistencyRating: PlayerStats[] = Object.entries(playerPointsBySeason)
+    const consistencyRaw = Object.entries(playerPointsBySeason)
       .filter(([_, points]) => points.length >= 3)
       .map(([name, points]) => {
         const mean = points.reduce((a, b) => a + b, 0) / points.length;
         const variance = points.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / points.length;
         const stdDev = Math.sqrt(variance);
         const cv = mean > 0 ? (stdDev / mean) * 100 : 0;
-        const consistencyPct = Math.max(0, 100 - cv) / 100; // 0-1 scale
-        // Weighted score: mean points * consistency factor, rewards high + stable performers
-        const consistencyScore = Math.round(mean * consistencyPct);
+        const consistencyPct = Math.max(0, 100 - cv) / 100;
+        const rawScore = mean * consistencyPct;
         
-        return {
-          name,
-          team: getMostPointsTeam(name),
-          value: consistencyScore,
-          season: `${points.length} seasons, ${Math.round(mean)} avg`
-        };
-      })
+        return { name, mean, consistencyPct, rawScore, seasons: points.length };
+      });
+
+    const maxRawScore = Math.max(...consistencyRaw.map(p => p.rawScore), 1);
+    
+    const consistencyRating: PlayerStats[] = consistencyRaw
+      .map(({ name, mean, rawScore, seasons }) => ({
+        name,
+        team: getMostPointsTeam(name),
+        value: Math.round((rawScore / maxRawScore) * 1000) / 10, // 0-100 scale with 1 decimal
+        season: `${seasons} seasons, ${Math.round(mean)} avg`
+      }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
