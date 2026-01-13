@@ -780,6 +780,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           <TabsContent value="all-time-points" className="mt-0">
             {renderPlayerLeaderboard("all-time-points")}
           </TabsContent>
+          <TabsContent value="avg-points" className="mt-0">
+            {renderPlayerLeaderboard("avg-points")}
+          </TabsContent>
           <TabsContent value="single-kos" className="mt-0">
             {renderPlayerLeaderboard("single-kos")}
           </TabsContent>
