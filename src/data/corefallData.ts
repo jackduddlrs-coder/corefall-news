@@ -673,7 +673,7 @@ export const trophyData = [
   { name: "Hero Valii", total: 5, apex: 0, ctt: 1, major: 4, list: "CTT (702), New Life (700, 702), Heartland (701), Chaos Reigns (703)" },
   { name: "Blood Astur", total: 5, apex: 0, ctt: 3, major: 2, list: "CTT (703, 704, 705), Malice (703), Chaos Reigns (705)" },
   { name: "Zeus Ziki", total: 7, apex: 0, ctt: 1, major: 6, list: "CTT (706), Heartland Cup (708), Nightmare (708), Heritage (706), New Life (706, 707), Armageddon (709)" },
-  { name: "Cascade Juner", total: 16, apex: 2, ctt: 2, major: 11, list: "Apex (707, 708), CTT (707, 708), Armageddon (707), Descent (703, 707, 709), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708), Season Star (709)" },
+  { name: "Cascade Juner", total: 15, apex: 2, ctt: 2, major: 11, list: "Apex (707, 708), CTT (707, 708), Armageddon (707), Descent (703, 707, 709), Solar (707), Nightmare (704), New Life (704), Heartland (705), Chaos Reigns (706), Malice (706, 708)" },
   { name: "Wraith Cunelly", total: 6, apex: 0, ctt: 1, major: 5, list: "Solar (711), Chaos Reigns (709), Heritage (708), CTT (706), Solar (706), Armageddon (706)" },
   { name: "Storm Dayniel", total: 4, apex: 0, ctt: 3, major: 1, list: "CTT (703, 704, 705), Solar (704)" },
   { name: "Splash Gradey", total: 4, apex: 1, ctt: 1, major: 2, list: "Apex (700), CTT (701), Descent (700), Malice (701)" },
