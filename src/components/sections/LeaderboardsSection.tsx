@@ -299,13 +299,14 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       players: Set<string>; 
       majors: number; 
       apexWins: number;
+      apexAppearances: number;
       seasons: { name: string; team: string; points: number; kos: number; season: string }[];
     }> = {};
     
     allPlayers.forEach(entry => {
       if (entry.age <= 0) return;
       if (!individualAgeStats[entry.age]) {
-        individualAgeStats[entry.age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, seasons: [] };
+        individualAgeStats[entry.age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, seasons: [] };
       }
       individualAgeStats[entry.age].totalPoints += entry.points;
       individualAgeStats[entry.age].totalKOs += entry.kos;
@@ -325,13 +326,43 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       stats.seasons.sort((a, b) => b.points - a.points);
     });
 
+    // Count Apex appearances by age (top 16 finishers qualify for Apex)
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      if (season === "709") {
+        // For 709, use the qualified array from apexDetailed
+        const apex709 = apexDetailed.find(a => a.year === 709);
+        if (apex709?.qualified) {
+          apex709.qualified.forEach(name => {
+            const player = players.find(p => p.Name === name);
+            const age = player?.Age || 0;
+            if (age > 0) {
+              if (!individualAgeStats[age]) {
+                individualAgeStats[age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, seasons: [] };
+              }
+              individualAgeStats[age].apexAppearances++;
+            }
+          });
+        }
+      } else {
+        players.forEach(player => {
+          if (player.Rank <= 16 && player.Age > 0) {
+            if (!individualAgeStats[player.Age]) {
+              individualAgeStats[player.Age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, seasons: [] };
+            }
+            individualAgeStats[player.Age].apexAppearances++;
+          }
+        });
+      }
+    });
+
     // Count majors and apex wins by age
     majorWinners.forEach(win => {
       if (!selectedYears.has(win.year.toString())) return;
       const age = getPlayerAgeForSeason(win.winner, win.year);
       if (age > 0) {
         if (!individualAgeStats[age]) {
-          individualAgeStats[age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, seasons: [] };
+          individualAgeStats[age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, seasons: [] };
         }
         if (win.tournament === "Apex") {
           individualAgeStats[age].apexWins++;
@@ -349,16 +380,17 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       players: Set<string>;
       majors: number;
       apexWins: number;
-      individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[];
+      apexAppearances: number;
+      individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; apexAppearances: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[];
     }
     
     const ageBrackets: Record<string, AgeBracketData> = {
-      "20-22": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, individualAges: [] },
-      "23-25": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, individualAges: [] },
-      "26-28": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, individualAges: [] },
-      "29-31": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, individualAges: [] },
-      "32-34": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, individualAges: [] },
-      "35+": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, individualAges: [] }
+      "20-22": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, individualAges: [] },
+      "23-25": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, individualAges: [] },
+      "26-28": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, individualAges: [] },
+      "29-31": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, individualAges: [] },
+      "32-34": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, individualAges: [] },
+      "35+": { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, individualAges: [] }
     };
     
     allPlayers.forEach(entry => {
@@ -373,13 +405,14 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }
     });
 
-    // Aggregate majors/apex by bracket and build individual ages
+    // Aggregate majors/apex/appearances by bracket and build individual ages
     Object.entries(individualAgeStats).forEach(([ageStr, stats]) => {
       const age = parseInt(ageStr);
       const bracket = getBracketForAge(age);
       if (bracket && ageBrackets[bracket]) {
         ageBrackets[bracket].majors += stats.majors;
         ageBrackets[bracket].apexWins += stats.apexWins;
+        ageBrackets[bracket].apexAppearances += stats.apexAppearances;
         ageBrackets[bracket].individualAges.push({
           age,
           avgPoints: stats.count > 0 ? Math.round(stats.totalPoints / stats.count) : 0,
@@ -388,6 +421,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           players: Array.from(stats.players),
           majors: stats.majors,
           apexWins: stats.apexWins,
+          apexAppearances: stats.apexAppearances,
           seasons: stats.seasons
         });
       }
@@ -398,7 +432,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       bracket.individualAges.sort((a, b) => a.age - b.age);
     });
     
-    const ageBracketStats: { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[] }[] = 
+    const ageBracketStats: { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; apexAppearances: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; apexAppearances: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[] }[] = 
       Object.entries(ageBrackets)
         .filter(([_, data]) => data.count > 0)
         .map(([bracket, data]) => ({
@@ -409,6 +443,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           uniquePlayers: data.players.size,
           majors: data.majors,
           apexWins: data.apexWins,
+          apexAppearances: data.apexAppearances,
           individualAges: data.individualAges
         }));
 
@@ -493,12 +528,13 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       players: Set<string>;
       majors: number;
       apexWins: number;
-      playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number }[];
+      apexAppearances: number;
+      playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number; apexAppearances: number }[];
     }
 
     const podStats: Record<string, PodData> = {};
     podRanges.forEach(r => {
-      podStats[r.pod] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, playerStats: [] };
+      podStats[r.pod] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, playerStats: [] };
     });
 
     // Aggregate player career stats by pod
@@ -523,7 +559,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       playerCareerByPod[entry.name].seasons++;
     });
 
-    // Count majors/apex by pod
+    // Count majors/apex by pod and track apex appearances per player
     const playerMajorsByPod: Record<string, { majors: number; apexWins: number }> = {};
     majorWinners.forEach(win => {
       if (!selectedYears.has(win.year.toString())) return;
@@ -537,6 +573,26 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       }
     });
 
+    // Count Apex appearances per player (for pod aggregation)
+    const playerApexAppearances: Record<string, number> = {};
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      if (season === "709") {
+        const apex709 = apexDetailed.find(a => a.year === 709);
+        if (apex709?.qualified) {
+          apex709.qualified.forEach(name => {
+            playerApexAppearances[name] = (playerApexAppearances[name] || 0) + 1;
+          });
+        }
+      } else {
+        players.forEach(player => {
+          if (player.Rank <= 16) {
+            playerApexAppearances[player.Name] = (playerApexAppearances[player.Name] || 0) + 1;
+          }
+        });
+      }
+    });
+
     // Build individual player stats within each pod
     Object.entries(playerCareerByPod).forEach(([name, stats]) => {
       const debut = playerDebut[name];
@@ -545,8 +601,10 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       if (!podStats[pod]) return;
 
       const playerMajors = playerMajorsByPod[name] || { majors: 0, apexWins: 0 };
+      const playerApex = playerApexAppearances[name] || 0;
       podStats[pod].majors += playerMajors.majors;
       podStats[pod].apexWins += playerMajors.apexWins;
+      podStats[pod].apexAppearances += playerApex;
       
       podStats[pod].playerStats.push({
         name,
@@ -555,7 +613,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         kos: stats.kos,
         seasons: stats.seasons,
         majors: playerMajors.majors,
-        apexWins: playerMajors.apexWins
+        apexWins: playerMajors.apexWins,
+        apexAppearances: playerApex
       });
     });
 
@@ -564,7 +623,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       pod.playerStats.sort((a, b) => b.points - a.points);
     });
 
-    const podData: { pod: string; avgPoints: number; avgKOs: number; totalSeasons: number; uniquePlayers: number; majors: number; apexWins: number; playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number }[] }[] = 
+    const podData: { pod: string; avgPoints: number; avgKOs: number; totalSeasons: number; uniquePlayers: number; majors: number; apexWins: number; apexAppearances: number; playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number; apexAppearances: number }[] }[] = 
       podRanges.map(r => ({
         pod: r.pod,
         avgPoints: podStats[r.pod].count > 0 ? Math.round(podStats[r.pod].totalPoints / podStats[r.pod].count) : 0,
@@ -573,6 +632,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         uniquePlayers: podStats[r.pod].players.size,
         majors: podStats[r.pod].majors,
         apexWins: podStats[r.pod].apexWins,
+        apexAppearances: podStats[r.pod].apexAppearances,
         playerStats: podStats[r.pod].playerStats
       })).filter(p => p.uniquePlayers > 0);
 
@@ -1223,7 +1283,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   };
 
   const renderAgeBracketsLeaderboard = () => {
-    const data = leaderboards["age-brackets"] as { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[] }[];
+    const data = leaderboards["age-brackets"] as { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; apexAppearances: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; apexAppearances: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[] }[];
     const maxAvgPoints = Math.max(...data.map(d => d.avgPoints), 1);
 
     return (
@@ -1239,6 +1299,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
               <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Players</th>
               <th className="text-right p-2 md:p-3 text-amber-500 font-semibold">Majors</th>
               <th className="text-right p-2 md:p-3 text-cyan-500 font-semibold">Apex</th>
+              <th className="text-right p-2 md:p-3 text-purple-500 font-semibold hidden sm:table-cell">Apex App</th>
             </tr>
           </thead>
           <tbody>
@@ -1275,10 +1336,11 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                     <td className="p-2 md:p-3 text-right text-muted-foreground hidden md:table-cell">{bracket.uniquePlayers}</td>
                     <td className="p-2 md:p-3 text-right font-semibold text-amber-500">{bracket.majors}</td>
                     <td className="p-2 md:p-3 text-right font-semibold text-cyan-500">{bracket.apexWins}</td>
+                    <td className="p-2 md:p-3 text-right font-semibold text-purple-500 hidden sm:table-cell">{bracket.apexAppearances}</td>
                   </tr>
                   {isExpanded && bracket.individualAges.length > 0 && (
                     <tr>
-                      <td colSpan={8} className="p-0 bg-muted/20">
+                      <td colSpan={9} className="p-0 bg-muted/20">
                         <div className="p-3">
                           <div className="text-xs text-muted-foreground mb-2 font-medium">
                             Individual Ages in {bracket.bracket} - Click an age to see all seasons
@@ -1295,6 +1357,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                                   <th className="text-right p-2 text-muted-foreground hidden md:table-cell">Players</th>
                                   <th className="text-right p-2 text-amber-500">Majors</th>
                                   <th className="text-right p-2 text-cyan-500">Apex</th>
+                                  <th className="text-right p-2 text-purple-500 hidden sm:table-cell">App</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1319,10 +1382,11 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                                         <td className="p-2 text-right text-muted-foreground hidden md:table-cell">{ageData.players.length}</td>
                                         <td className="p-2 text-right font-medium text-amber-500">{ageData.majors || '-'}</td>
                                         <td className="p-2 text-right font-medium text-cyan-500">{ageData.apexWins || '-'}</td>
+                                        <td className="p-2 text-right font-medium text-purple-500 hidden sm:table-cell">{ageData.apexAppearances || '-'}</td>
                                       </tr>
                                       {isAgeExpanded && ageData.seasons.length > 0 && (
                                         <tr>
-                                          <td colSpan={8} className="p-0 bg-background/20">
+                                          <td colSpan={9} className="p-0 bg-background/20">
                                             <div className="p-2 pl-6">
                                               <div className="text-xs text-muted-foreground mb-1 font-medium">
                                                 All seasons at age {ageData.age} (sorted by points)
@@ -1634,7 +1698,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
 
   const renderPodsLeaderboard = () => {
-    const data = leaderboards["pods"] as { pod: string; avgPoints: number; avgKOs: number; totalSeasons: number; uniquePlayers: number; majors: number; apexWins: number; playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number }[] }[];
+    const data = leaderboards["pods"] as { pod: string; avgPoints: number; avgKOs: number; totalSeasons: number; uniquePlayers: number; majors: number; apexWins: number; apexAppearances: number; playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number; apexAppearances: number }[] }[];
     const maxAvgPoints = Math.max(...data.map(d => d.avgPoints), 1);
 
     return (
@@ -1653,6 +1717,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
               <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Players</th>
               <th className="text-right p-2 md:p-3 text-amber-500 font-semibold">Majors</th>
               <th className="text-right p-2 md:p-3 text-cyan-500 font-semibold">Apex</th>
+              <th className="text-right p-2 md:p-3 text-purple-500 font-semibold hidden sm:table-cell">Apex App</th>
             </tr>
           </thead>
           <tbody>
@@ -1686,10 +1751,11 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                     <td className="p-2 md:p-3 text-right text-muted-foreground">{pod.uniquePlayers}</td>
                     <td className="p-2 md:p-3 text-right font-semibold text-amber-500">{pod.majors}</td>
                     <td className="p-2 md:p-3 text-right font-semibold text-cyan-500">{pod.apexWins}</td>
+                    <td className="p-2 md:p-3 text-right font-semibold text-purple-500 hidden sm:table-cell">{pod.apexAppearances}</td>
                   </tr>
                   {isExpanded && pod.playerStats.length > 0 && (
                     <tr>
-                      <td colSpan={8} className="p-0 bg-muted/20">
+                      <td colSpan={9} className="p-0 bg-muted/20">
                         <div className="p-3">
                           <div className="text-xs text-muted-foreground mb-2 font-medium">
                             Players who debuted in {pod.pod}
@@ -1706,6 +1772,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                                   <th className="text-right p-2 text-muted-foreground hidden md:table-cell">Seasons</th>
                                   <th className="text-right p-2 text-amber-500">Majors</th>
                                   <th className="text-right p-2 text-cyan-500">Apex</th>
+                                  <th className="text-right p-2 text-purple-500 hidden sm:table-cell">App</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1733,6 +1800,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                                     <td className="p-2 text-right text-muted-foreground hidden md:table-cell">{player.seasons}</td>
                                     <td className="p-2 text-right font-medium text-amber-500">{player.majors || '-'}</td>
                                     <td className="p-2 text-right font-medium text-cyan-500">{player.apexWins || '-'}</td>
+                                    <td className="p-2 text-right font-medium text-purple-500 hidden sm:table-cell">{player.apexAppearances || '-'}</td>
                                   </tr>
                                 ))}
                               </tbody>
