@@ -9,7 +9,7 @@ interface LeaderboardsSectionProps {
 }
 
 type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "age-analytics" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
-type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "first-major" | "longevity" | "pods";
+type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "debut-season" | "longevity" | "pods";
 
 interface PlayerStats {
   name: string;
@@ -40,6 +40,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [expandedTeamSeason, setExpandedTeamSeason] = useState<string | null>(null);
   const [ageSubTab, setAgeSubTab] = useState<AgeSubTab>("peak-age");
   const [expandedAgeBracket, setExpandedAgeBracket] = useState<string | null>(null);
+  const [expandedAge, setExpandedAge] = useState<number | null>(null);
   const [expandedPod, setExpandedPod] = useState<string | null>(null);
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
@@ -284,18 +285,38 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       return "";
     };
 
-    // Individual age stats for expandable brackets
-    const individualAgeStats: Record<number, { totalPoints: number; totalKOs: number; count: number; players: Set<string>; majors: number; apexWins: number }> = {};
+    // Individual age stats for expandable brackets - now includes individual seasons
+    const individualAgeStats: Record<number, { 
+      totalPoints: number; 
+      totalKOs: number; 
+      count: number; 
+      players: Set<string>; 
+      majors: number; 
+      apexWins: number;
+      seasons: { name: string; team: string; points: number; kos: number; season: string }[];
+    }> = {};
     
     allPlayers.forEach(entry => {
       if (entry.age <= 0) return;
       if (!individualAgeStats[entry.age]) {
-        individualAgeStats[entry.age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0 };
+        individualAgeStats[entry.age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, seasons: [] };
       }
       individualAgeStats[entry.age].totalPoints += entry.points;
       individualAgeStats[entry.age].totalKOs += entry.kos;
       individualAgeStats[entry.age].count++;
       individualAgeStats[entry.age].players.add(entry.name);
+      individualAgeStats[entry.age].seasons.push({
+        name: entry.name,
+        team: entry.team,
+        points: entry.points,
+        kos: entry.kos,
+        season: entry.season
+      });
+    });
+    
+    // Sort seasons within each age by points descending
+    Object.values(individualAgeStats).forEach(stats => {
+      stats.seasons.sort((a, b) => b.points - a.points);
     });
 
     // Count majors and apex wins by age
@@ -304,7 +325,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       const age = getPlayerAgeForSeason(win.winner, win.year);
       if (age > 0) {
         if (!individualAgeStats[age]) {
-          individualAgeStats[age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0 };
+          individualAgeStats[age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, seasons: [] };
         }
         if (win.tournament === "Apex") {
           individualAgeStats[age].apexWins++;
@@ -322,7 +343,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       players: Set<string>;
       majors: number;
       apexWins: number;
-      individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number }[];
+      individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[];
     }
     
     const ageBrackets: Record<string, AgeBracketData> = {
@@ -360,7 +381,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           count: stats.count,
           players: Array.from(stats.players),
           majors: stats.majors,
-          apexWins: stats.apexWins
+          apexWins: stats.apexWins,
+          seasons: stats.seasons
         });
       }
     });
@@ -370,7 +392,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       bracket.individualAges.sort((a, b) => a.age - b.age);
     });
     
-    const ageBracketStats: { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number }[] }[] = 
+    const ageBracketStats: { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[] }[] = 
       Object.entries(ageBrackets)
         .filter(([_, data]) => data.count > 0)
         .map(([bracket, data]) => ({
@@ -384,27 +406,25 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           individualAges: data.individualAges
         }));
 
-    // Age at First Major - youngest age when a player won their first major
-    const playerFirstMajor: Record<string, { age: number; tournament: string; year: number }> = {};
-    majorWinners.forEach(win => {
-      if (!selectedYears.has(win.year.toString())) return;
-      const age = getPlayerAgeForSeason(win.winner, win.year);
-      if (age > 0) {
-        if (!playerFirstMajor[win.winner] || win.year < playerFirstMajor[win.winner].year) {
-          playerFirstMajor[win.winner] = { age, tournament: win.tournament, year: win.year };
-        }
+    // Debut Season - youngest players by debut age (first season they appeared)
+    const playerDebutAge: Record<string, { age: number; season: string; team: string }> = {};
+    allPlayers.forEach(entry => {
+      if (entry.age <= 0) return;
+      const seasonNum = parseInt(entry.season);
+      if (!playerDebutAge[entry.name] || seasonNum < parseInt(playerDebutAge[entry.name].season)) {
+        playerDebutAge[entry.name] = { age: entry.age, season: entry.season, team: entry.team };
       }
     });
     
-    const firstMajorAges: PlayerStats[] = Object.entries(playerFirstMajor)
+    const debutSeasons: PlayerStats[] = Object.entries(playerDebutAge)
       .map(([name, data]) => ({
         name,
-        team: getMostPointsTeam(name),
+        team: data.team,
         value: data.age,
-        season: `${data.year} ${data.tournament}`,
+        season: data.season,
         age: data.age
       }))
-      .sort((a, b) => a.value - b.value) // Youngest first
+      .sort((a, b) => a.value - b.value) // Youngest debut first
       .slice(0, 50);
 
     // Longevity Leaders - players who competed across widest age range
@@ -817,7 +837,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "appearances": appearances,
       "avg-finish": avgFinish,
       "champ-ages": champAges,
-      "first-major": firstMajorAges,
+      "debut-season": debutSeasons,
       "longevity": longevityLeaders,
       "pods": podData,
       "team-points": teamPoints,
@@ -853,7 +873,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "peak-age": return "Best Seasons by Age";
       case "age-brackets": return "Performance by Age Bracket";
       case "champ-ages": return `Champion Ages (${(leaderboards["champ-ages"] as PlayerStats[]).length} titles)`;
-      case "first-major": return "Age at First Major";
+      case "debut-season": return "Debut Season";
       case "longevity": return "Longevity Leaders";
       case "pods": return "Generation Pods";
       default: return "Age Analytics";
@@ -1083,7 +1103,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   };
 
   const renderAgeBracketsLeaderboard = () => {
-    const data = leaderboards["age-brackets"] as { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number }[] }[];
+    const data = leaderboards["age-brackets"] as { bracket: string; avgPoints: number; avgKOs: number; seasons: number; uniquePlayers: number; majors: number; apexWins: number; individualAges: { age: number; avgPoints: number; avgKOs: number; count: number; players: string[]; majors: number; apexWins: number; seasons: { name: string; team: string; points: number; kos: number; season: string }[] }[] }[];
     const maxAvgPoints = Math.max(...data.map(d => d.avgPoints), 1);
 
     return (
@@ -1110,7 +1130,10 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                 <React.Fragment key={bracket.bracket}>
                   <tr 
                     className={`border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer ${isExpanded ? 'bg-muted/30' : ''}`}
-                    onClick={() => setExpandedAgeBracket(isExpanded ? null : bracket.bracket)}
+                    onClick={() => {
+                      setExpandedAgeBracket(isExpanded ? null : bracket.bracket);
+                      setExpandedAge(null); // Reset expanded age when changing bracket
+                    }}
                   >
                     <td className="p-2 md:p-3 text-muted-foreground">
                       {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -1138,12 +1161,13 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                       <td colSpan={8} className="p-0 bg-muted/20">
                         <div className="p-3">
                           <div className="text-xs text-muted-foreground mb-2 font-medium">
-                            Individual Ages in {bracket.bracket}
+                            Individual Ages in {bracket.bracket} - Click an age to see all seasons
                           </div>
                           <div className="overflow-x-auto">
                             <table className="w-full text-xs">
                               <thead>
                                 <tr className="border-b border-border/30">
+                                  <th className="text-left p-2 text-muted-foreground w-6"></th>
                                   <th className="text-left p-2 text-muted-foreground">Age</th>
                                   <th className="text-right p-2 text-muted-foreground">Avg Pts</th>
                                   <th className="text-right p-2 text-muted-foreground hidden sm:table-cell">Avg KOs</th>
@@ -1154,17 +1178,88 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
                                 </tr>
                               </thead>
                               <tbody>
-                                {bracket.individualAges.map(ageData => (
-                                  <tr key={ageData.age} className="border-b border-border/20 hover:bg-background/30">
-                                    <td className="p-2 font-semibold text-foreground">{ageData.age}</td>
-                                    <td className="p-2 text-right text-foreground">{ageData.avgPoints.toLocaleString()}</td>
-                                    <td className="p-2 text-right text-muted-foreground hidden sm:table-cell">{ageData.avgKOs}</td>
-                                    <td className="p-2 text-right text-muted-foreground hidden sm:table-cell">{ageData.count}</td>
-                                    <td className="p-2 text-right text-muted-foreground hidden md:table-cell">{ageData.players.length}</td>
-                                    <td className="p-2 text-right font-medium text-amber-500">{ageData.majors || '-'}</td>
-                                    <td className="p-2 text-right font-medium text-cyan-500">{ageData.apexWins || '-'}</td>
-                                  </tr>
-                                ))}
+                                {bracket.individualAges.map(ageData => {
+                                  const isAgeExpanded = expandedAge === ageData.age;
+                                  return (
+                                    <React.Fragment key={ageData.age}>
+                                      <tr 
+                                        className={`border-b border-border/20 hover:bg-background/30 cursor-pointer ${isAgeExpanded ? 'bg-background/40' : ''}`}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setExpandedAge(isAgeExpanded ? null : ageData.age);
+                                        }}
+                                      >
+                                        <td className="p-2 text-muted-foreground">
+                                          {isAgeExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                                        </td>
+                                        <td className="p-2 font-semibold text-foreground">{ageData.age}</td>
+                                        <td className="p-2 text-right text-foreground">{ageData.avgPoints.toLocaleString()}</td>
+                                        <td className="p-2 text-right text-muted-foreground hidden sm:table-cell">{ageData.avgKOs}</td>
+                                        <td className="p-2 text-right text-muted-foreground hidden sm:table-cell">{ageData.count}</td>
+                                        <td className="p-2 text-right text-muted-foreground hidden md:table-cell">{ageData.players.length}</td>
+                                        <td className="p-2 text-right font-medium text-amber-500">{ageData.majors || '-'}</td>
+                                        <td className="p-2 text-right font-medium text-cyan-500">{ageData.apexWins || '-'}</td>
+                                      </tr>
+                                      {isAgeExpanded && ageData.seasons.length > 0 && (
+                                        <tr>
+                                          <td colSpan={8} className="p-0 bg-background/20">
+                                            <div className="p-2 pl-6">
+                                              <div className="text-xs text-muted-foreground mb-1 font-medium">
+                                                All seasons at age {ageData.age} (sorted by points)
+                                              </div>
+                                              <div className="max-h-[200px] overflow-y-auto">
+                                                <table className="w-full text-xs">
+                                                  <thead>
+                                                    <tr className="border-b border-border/20">
+                                                      <th className="text-left p-1 text-muted-foreground w-8">#</th>
+                                                      <th className="text-left p-1 text-muted-foreground">Player</th>
+                                                      <th className="text-left p-1 text-muted-foreground hidden sm:table-cell">Team</th>
+                                                      <th className="text-right p-1 text-muted-foreground hidden sm:table-cell">Season</th>
+                                                      <th className="text-right p-1 text-muted-foreground">Pts</th>
+                                                      <th className="text-right p-1 text-muted-foreground hidden sm:table-cell">KOs</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    {ageData.seasons.map((s, idx) => (
+                                                      <tr key={`${s.name}-${s.season}-${idx}`} className="border-b border-border/10 hover:bg-muted/20">
+                                                        <td className="p-1 text-muted-foreground font-mono">{idx + 1}</td>
+                                                        <td className="p-1">
+                                                          <span 
+                                                            onClick={(e) => {
+                                                              e.stopPropagation();
+                                                              onPlayerClick(s.name);
+                                                            }}
+                                                            className="text-primary hover:underline cursor-pointer"
+                                                          >
+                                                            {s.name}
+                                                          </span>
+                                                        </td>
+                                                        <td className="p-1 hidden sm:table-cell">
+                                                          <span 
+                                                            onClick={(e) => {
+                                                              e.stopPropagation();
+                                                              onTeamClick(s.team);
+                                                            }}
+                                                            className={`text-xs px-1 py-0.5 rounded cursor-pointer ${getTeamClass(s.team)}`}
+                                                          >
+                                                            {s.team}
+                                                          </span>
+                                                        </td>
+                                                        <td className="p-1 text-right text-muted-foreground hidden sm:table-cell">{s.season}</td>
+                                                        <td className="p-1 text-right font-semibold text-foreground">{s.points.toLocaleString()}</td>
+                                                        <td className="p-1 text-right text-muted-foreground hidden sm:table-cell">{s.kos}</td>
+                                                      </tr>
+                                                    ))}
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      )}
+                                    </React.Fragment>
+                                  );
+                                })}
                               </tbody>
                             </table>
                           </div>
@@ -1178,7 +1273,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </tbody>
         </table>
         <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
-          <p><strong>Insights:</strong> Click any bracket to expand individual ages. Shows average performance, major wins, and Apex titles won at each age. "Seasons" = total player-seasons in bracket.</p>
+          <p><strong>Insights:</strong> Click any bracket to expand individual ages. Click an age to see every season at that age, sorted by points. "Seasons" = total player-seasons.</p>
         </div>
       </div>
     );
@@ -1220,14 +1315,14 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             Champion Ages
           </button>
           <button
-            onClick={() => setAgeSubTab("first-major")}
+            onClick={() => setAgeSubTab("debut-season")}
             className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
-              ageSubTab === "first-major"
+              ageSubTab === "debut-season"
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             }`}
           >
-            First Major
+            Debut Season
           </button>
           <button
             onClick={() => setAgeSubTab("longevity")}
@@ -1255,7 +1350,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         {ageSubTab === "peak-age" && renderPeakAgeLeaderboard()}
         {ageSubTab === "age-brackets" && renderAgeBracketsLeaderboard()}
         {ageSubTab === "champ-ages" && renderChampAgesLeaderboard()}
-        {ageSubTab === "first-major" && renderFirstMajorLeaderboard()}
+        {ageSubTab === "debut-season" && renderDebutSeasonLeaderboard()}
         {ageSubTab === "longevity" && renderLongevityLeaderboard()}
         {ageSubTab === "pods" && renderPodsLeaderboard()}
       </div>
@@ -1315,13 +1410,13 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     );
   };
 
-  const renderFirstMajorLeaderboard = () => {
-    const data = leaderboards["first-major"] as PlayerStats[];
+  const renderDebutSeasonLeaderboard = () => {
+    const data = leaderboards["debut-season"] as PlayerStats[];
     
     return (
       <div className="overflow-x-auto">
         <div className="mb-3 text-sm text-muted-foreground">
-          The youngest age at which each player won their first major championship.
+          The 50 youngest debut seasons - players ranked by age when they first appeared in the top 40.
         </div>
         <table className="w-full text-sm">
           <thead>
@@ -1329,8 +1424,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
               <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
               <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Player</th>
               <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Team</th>
-              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">First Major</th>
-              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Age</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Season</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Debut Age</th>
             </tr>
           </thead>
           <tbody>
@@ -1360,7 +1455,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </tbody>
         </table>
         <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
-          <p><strong>Insights:</strong> Identifies "early bloomers" who won their first major at a young age vs "late bloomers" who broke through later in their careers.</p>
+          <p><strong>Insights:</strong> Shows the youngest players to break into the top 40. Early debuts often indicate exceptional talent, though some late bloomers have gone on to become legends.</p>
         </div>
       </div>
     );
