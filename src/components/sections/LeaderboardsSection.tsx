@@ -8,7 +8,10 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "age-analytics" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "points" | "kos" | "averages" | "consistency" | "peak-season" | "age-analytics" | "appearances" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type PointsSubTab = "season" | "career";
+type KOsSubTab = "season" | "career";
+type AvgSubTab = "avg-points" | "avg-finish";
 type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "debut-season" | "longevity" | "pods";
 
 interface PlayerStats {
@@ -39,6 +42,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [champAgeSortAsc, setChampAgeSortAsc] = useState<boolean>(true);
   const [expandedTeamSeason, setExpandedTeamSeason] = useState<string | null>(null);
   const [ageSubTab, setAgeSubTab] = useState<AgeSubTab>("peak-age");
+  const [pointsSubTab, setPointsSubTab] = useState<PointsSubTab>("season");
+  const [kosSubTab, setKOsSubTab] = useState<KOsSubTab>("season");
+  const [avgSubTab, setAvgSubTab] = useState<AvgSubTab>("avg-points");
   const [expandedAgeBracket, setExpandedAgeBracket] = useState<string | null>(null);
   const [expandedAge, setExpandedAge] = useState<number | null>(null);
   const [expandedPod, setExpandedPod] = useState<string | null>(null);
@@ -850,16 +856,13 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const getTitle = (type: LeaderboardType): string => {
     switch (type) {
       case "legacy-score": return "All-Time Legacy Rankings";
-      case "single-points": return "Most Single Season Points";
-      case "all-time-points": return "All-Time Career Points";
-      case "avg-points": return "Average Points Per Season";
+      case "points": return getPointsSubTabTitle();
+      case "kos": return getKOsSubTabTitle();
+      case "averages": return getAvgSubTabTitle();
       case "consistency": return "Consistency Rating";
       case "peak-season": return "Peak Season Finder";
       case "age-analytics": return getAgeSubTabTitle();
-      case "single-kos": return "Most Single Season KOs";
-      case "all-time-kos": return "All-Time Career KOs";
       case "appearances": return "Most Apex Appearances";
-      case "avg-finish": return "Best Average Finish";
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
@@ -880,20 +883,33 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     }
   };
 
+  const getPointsSubTabTitle = (): string => {
+    return pointsSubTab === "season" ? "Most Single Season Points" : "All-Time Career Points";
+  };
+
+  const getKOsSubTabTitle = (): string => {
+    return kosSubTab === "season" ? "Most Single Season KOs" : "All-Time Career KOs";
+  };
+
+  const getAvgSubTabTitle = (): string => {
+    return avgSubTab === "avg-points" ? "Average Points Per Season" : "Best Average Finish";
+  };
+
   const getValueLabel = (type: LeaderboardType): string => {
     switch (type) {
       case "legacy-score": return "Legacy Score";
-      case "avg-points": return "Avg Pts";
+      case "points": return "Points";
+      case "kos": return "KOs";
+      case "averages": return avgSubTab === "avg-points" ? "Avg Pts" : "Avg Rank";
       case "consistency": return "Rating";
       case "peak-season": return "Score";
       case "age-analytics": return ageSubTab === "age-brackets" ? "Avg Pts" : "Age";
       case "appearances": return "Seasons";
-      case "avg-finish": return "Avg Rank";
       case "team-points": return "Points";
       case "team-championships": return "Titles";
       case "team-players": return "Players";
       case "team-season-pts": return "Points";
-      default: return type.includes("points") ? "Points" : "KOs";
+      default: return "Value";
     }
   };
 
@@ -1046,9 +1062,20 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     );
   };
 
-  const renderPlayerLeaderboard = (type: LeaderboardType) => {
-    const data = leaderboards[type] as PlayerStats[];
-    const showSeason = type === "single-points" || type === "single-kos" || type === "avg-finish" || type === "avg-points" || type === "peak-season" || type === "consistency";
+  const renderPlayerLeaderboard = (dataKey: string) => {
+    const data = leaderboards[dataKey] as PlayerStats[];
+    const showSeason = dataKey === "single-points" || dataKey === "single-kos" || dataKey === "avg-finish" || dataKey === "avg-points" || dataKey === "peak-season" || dataKey === "consistency";
+    
+    const getDataValueLabel = (): string => {
+      if (dataKey === "avg-points") return "Avg Pts";
+      if (dataKey === "avg-finish") return "Avg Rank";
+      if (dataKey.includes("points")) return "Points";
+      if (dataKey.includes("kos")) return "KOs";
+      if (dataKey === "consistency") return "Rating";
+      if (dataKey === "peak-season") return "Score";
+      if (dataKey === "appearances") return "Seasons";
+      return "Value";
+    };
 
     return (
       <div className="overflow-x-auto">
@@ -1061,7 +1088,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
               {showSeason && (
                 <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Season</th>
               )}
-              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">{getValueLabel(type)}</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">{getDataValueLabel()}</th>
             </tr>
           </thead>
           <tbody>
@@ -1098,6 +1125,99 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             ))}
           </tbody>
         </table>
+      </div>
+    );
+  };
+
+  const renderPointsSection = () => {
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          <button
+            onClick={() => setPointsSubTab("season")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              pointsSubTab === "season"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Season Pts
+          </button>
+          <button
+            onClick={() => setPointsSubTab("career")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              pointsSubTab === "career"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Career Pts
+          </button>
+        </div>
+        {pointsSubTab === "season" && renderPlayerLeaderboard("single-points")}
+        {pointsSubTab === "career" && renderPlayerLeaderboard("all-time-points")}
+      </div>
+    );
+  };
+
+  const renderKOsSection = () => {
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          <button
+            onClick={() => setKOsSubTab("season")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              kosSubTab === "season"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Season KOs
+          </button>
+          <button
+            onClick={() => setKOsSubTab("career")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              kosSubTab === "career"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Career KOs
+          </button>
+        </div>
+        {kosSubTab === "season" && renderPlayerLeaderboard("single-kos")}
+        {kosSubTab === "career" && renderPlayerLeaderboard("all-time-kos")}
+      </div>
+    );
+  };
+
+  const renderAveragesSection = () => {
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          <button
+            onClick={() => setAvgSubTab("avg-points")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              avgSubTab === "avg-points"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Avg Pts
+          </button>
+          <button
+            onClick={() => setAvgSubTab("avg-finish")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              avgSubTab === "avg-finish"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Avg Finish
+          </button>
+        </div>
+        {avgSubTab === "avg-points" && renderPlayerLeaderboard("avg-points")}
+        {avgSubTab === "avg-finish" && renderPlayerLeaderboard("avg-finish")}
       </div>
     );
   };
@@ -1732,14 +1852,14 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="legacy-score" className="flex-1 min-w-[100px] text-xs md:text-sm py-2 font-bold text-secondary">
               Legacy Score
             </TabsTrigger>
-            <TabsTrigger value="single-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Season Pts
+            <TabsTrigger value="points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Points
             </TabsTrigger>
-            <TabsTrigger value="all-time-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Career Pts
+            <TabsTrigger value="kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              KOs
             </TabsTrigger>
-            <TabsTrigger value="avg-points" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Avg Pts
+            <TabsTrigger value="averages" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Average
             </TabsTrigger>
             <TabsTrigger value="consistency" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Consistency
@@ -1750,17 +1870,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="age-analytics" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Age Analytics
             </TabsTrigger>
-            <TabsTrigger value="single-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Season KOs
-            </TabsTrigger>
-            <TabsTrigger value="all-time-kos" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Career KOs
-            </TabsTrigger>
             <TabsTrigger value="appearances" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Appearances
-            </TabsTrigger>
-            <TabsTrigger value="avg-finish" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
-              Avg Finish
             </TabsTrigger>
           </TabsList>
         </div>
@@ -1789,14 +1900,14 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           <TabsContent value="legacy-score" className="mt-0">
             {renderPlayerLeaderboard("legacy-score")}
           </TabsContent>
-          <TabsContent value="single-points" className="mt-0">
-            {renderPlayerLeaderboard("single-points")}
+          <TabsContent value="points" className="mt-0">
+            {renderPointsSection()}
           </TabsContent>
-          <TabsContent value="all-time-points" className="mt-0">
-            {renderPlayerLeaderboard("all-time-points")}
+          <TabsContent value="kos" className="mt-0">
+            {renderKOsSection()}
           </TabsContent>
-          <TabsContent value="avg-points" className="mt-0">
-            {renderPlayerLeaderboard("avg-points")}
+          <TabsContent value="averages" className="mt-0">
+            {renderAveragesSection()}
           </TabsContent>
           <TabsContent value="consistency" className="mt-0">
             {renderPlayerLeaderboard("consistency")}
@@ -1807,17 +1918,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           <TabsContent value="age-analytics" className="mt-0">
             {renderAgeAnalyticsSection()}
           </TabsContent>
-          <TabsContent value="single-kos" className="mt-0">
-            {renderPlayerLeaderboard("single-kos")}
-          </TabsContent>
-          <TabsContent value="all-time-kos" className="mt-0">
-            {renderPlayerLeaderboard("all-time-kos")}
-          </TabsContent>
           <TabsContent value="appearances" className="mt-0">
             {renderPlayerLeaderboard("appearances")}
-          </TabsContent>
-          <TabsContent value="avg-finish" className="mt-0">
-            {renderPlayerLeaderboard("avg-finish")}
           </TabsContent>
           <TabsContent value="team-points" className="mt-0">
             {renderTeamLeaderboard("team-points")}
