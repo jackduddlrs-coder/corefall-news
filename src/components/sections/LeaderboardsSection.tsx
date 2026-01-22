@@ -8,11 +8,12 @@ interface LeaderboardsSectionProps {
   onTeamClick: (name: string) => void;
 }
 
-type LeaderboardType = "legacy-score" | "points" | "kos" | "averages" | "consistency" | "peak-season" | "age-analytics" | "appearances" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
+type LeaderboardType = "legacy-score" | "points" | "kos" | "averages" | "consistency" | "peak-season" | "age-analytics" | "appearances" | "misc" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
 type PointsSubTab = "season" | "career";
-type KOsSubTab = "season" | "career";
+type KOsSubTab = "season" | "career" | "ko-rate" | "ko-specialist";
 type AvgSubTab = "avg-points" | "avg-finish";
 type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "debut-season" | "longevity" | "pods";
+type MiscSubTab = "dominance" | "era-dominance" | "teammate-pairs" | "journeymen";
 
 interface PlayerStats {
   name: string;
@@ -48,6 +49,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [expandedAgeBracket, setExpandedAgeBracket] = useState<string | null>(null);
   const [expandedAge, setExpandedAge] = useState<number | null>(null);
   const [expandedPod, setExpandedPod] = useState<string | null>(null);
+  const [miscSubTab, setMiscSubTab] = useState<MiscSubTab>("dominance");
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
       const newSet = new Set(prev);
@@ -652,6 +654,41 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
+    // KO Rate: KOs per 100 points (who's most "exciting")
+    // Requires at least 2 seasons to avoid outliers
+    const koRate: PlayerStats[] = Object.entries(playerTotalPoints)
+      .filter(([name]) => playerSeasonCounts[name] >= 2)
+      .map(([name, points]) => {
+        const kos = playerTotalKOs[name] || 0;
+        const rate = points > 0 ? Math.round((kos / points) * 1000) / 10 : 0; // KOs per 100 points, 1 decimal
+        return {
+          name,
+          team: getMostPointsTeam(name),
+          value: rate,
+          season: `${kos} KOs / ${points} pts`
+        };
+      })
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
+    // KO Specialists: Best single-season KOs relative to rank
+    // Formula: kos * (41 - rank) / 40 to weight lower-ranked players with high KOs
+    const koSpecialists: PlayerStats[] = [];
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      players.forEach(player => {
+        const adjustedScore = Math.round((player.KOs * (41 - player.Rank) / 40) * 10) / 10;
+        koSpecialists.push({
+          name: player.Name,
+          team: player.Team,
+          value: adjustedScore,
+          season: `${season} - Rank #${player.Rank}, ${player.KOs} KOs`
+        });
+      });
+    });
+    koSpecialists.sort((a, b) => b.value - a.value);
+    const topKoSpecialists = koSpecialists.slice(0, 50);
+
     // Most Apex Appearances (top 16 finishes - the Apex bracket)
     const playerAppearances: Record<string, number> = {};
     Object.entries(pastStandings).forEach(([season, players]) => {
@@ -889,6 +926,120 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value)
       .slice(0, 50);
 
+    // === MISC TAB CALCULATIONS ===
+
+    // Season Dominance Score: Points gap between #1 and #2 each season
+    const seasonDominance: { player: string; team: string; season: string; points: number; gap: number; runnerUp: string; runnerUpPoints: number }[] = [];
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      const sorted = [...players].sort((a, b) => b.Points - a.Points);
+      if (sorted.length >= 2) {
+        seasonDominance.push({
+          player: sorted[0].Name,
+          team: sorted[0].Team,
+          season,
+          points: sorted[0].Points,
+          gap: sorted[0].Points - sorted[1].Points,
+          runnerUp: sorted[1].Name,
+          runnerUpPoints: sorted[1].Points
+        });
+      }
+    });
+    seasonDominance.sort((a, b) => b.gap - a.gap);
+
+    // Era Dominance: Who dominated each 2-3 season period
+    const eraRanges = [
+      { era: "701-703", years: [701, 702, 703] },
+      { era: "704-706", years: [704, 705, 706] },
+      { era: "707-709", years: [707, 708, 709] },
+      { era: "710-711", years: [710, 711] }
+    ];
+    
+    const eraDominance: { era: string; player: string; team: string; points: number; seasons: number }[] = [];
+    eraRanges.forEach(({ era, years }) => {
+      const eraPlayerPoints: Record<string, { points: number; seasons: number }> = {};
+      years.forEach(year => {
+        const season = year.toString();
+        if (!selectedYears.has(season)) return;
+        const players = pastStandings[season];
+        if (players) {
+          players.forEach(p => {
+            if (!eraPlayerPoints[p.Name]) eraPlayerPoints[p.Name] = { points: 0, seasons: 0 };
+            eraPlayerPoints[p.Name].points += p.Points;
+            eraPlayerPoints[p.Name].seasons++;
+          });
+        }
+      });
+      
+      // Get top player for this era
+      const eraLeaders = Object.entries(eraPlayerPoints)
+        .map(([name, data]) => ({ name, ...data }))
+        .sort((a, b) => b.points - a.points)
+        .slice(0, 5);
+      
+      eraLeaders.forEach(leader => {
+        eraDominance.push({
+          era,
+          player: leader.name,
+          team: getMostPointsTeam(leader.name),
+          points: leader.points,
+          seasons: leader.seasons
+        });
+      });
+    });
+
+    // Best Teammate Pairs: Two players from same team with combined highest points
+    const teammatePairsBySeason: { player1: string; player2: string; team: string; combinedPoints: number; season: string }[] = [];
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      
+      // Group players by team
+      const teamPlayers: Record<string, { name: string; points: number }[]> = {};
+      players.forEach(p => {
+        if (!teamPlayers[p.Team]) teamPlayers[p.Team] = [];
+        teamPlayers[p.Team].push({ name: p.Name, points: p.Points });
+      });
+      
+      // For each team with 2+ players, create pairs
+      Object.entries(teamPlayers).forEach(([team, teamPlayerList]) => {
+        if (teamPlayerList.length < 2) return;
+        teamPlayerList.sort((a, b) => b.points - a.points);
+        
+        // Get the top pair (could iterate for all pairs but top pair is most relevant)
+        for (let i = 0; i < teamPlayerList.length - 1; i++) {
+          for (let j = i + 1; j < teamPlayerList.length; j++) {
+            teammatePairsBySeason.push({
+              player1: teamPlayerList[i].name,
+              player2: teamPlayerList[j].name,
+              team,
+              combinedPoints: teamPlayerList[i].points + teamPlayerList[j].points,
+              season
+            });
+          }
+        }
+      });
+    });
+    teammatePairsBySeason.sort((a, b) => b.combinedPoints - a.combinedPoints);
+    const topTeammatePairs = teammatePairsBySeason.slice(0, 50);
+
+    // Journeymen: Players who played for the most teams
+    const playerTeams: Record<string, Set<string>> = {};
+    allPlayers.forEach(p => {
+      if (!playerTeams[p.name]) playerTeams[p.name] = new Set();
+      playerTeams[p.name].add(p.team);
+    });
+    
+    const journeymen: PlayerStats[] = Object.entries(playerTeams)
+      .filter(([_, teams]) => teams.size >= 2)
+      .map(([name, teams]) => ({
+        name,
+        team: getMostPointsTeam(name),
+        value: teams.size,
+        season: Array.from(teams).join(", ")
+      }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 50);
+
     return {
       "legacy-score": legacyRankings,
       "single-points": singleSeasonPoints,
@@ -900,12 +1051,18 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "age-brackets": ageBracketStats,
       "single-kos": singleSeasonKOs,
       "all-time-kos": allTimeKOs,
+      "ko-rate": koRate,
+      "ko-specialists": topKoSpecialists,
       "appearances": appearances,
       "avg-finish": avgFinish,
       "champ-ages": champAges,
       "debut-season": debutSeasons,
       "longevity": longevityLeaders,
       "pods": podData,
+      "season-dominance": seasonDominance,
+      "era-dominance": eraDominance,
+      "teammate-pairs": topTeammatePairs,
+      "journeymen": journeymen,
       "team-points": teamPoints,
       "team-championships": teamChamps,
       "team-players": teamPlayers,
@@ -923,11 +1080,22 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "peak-season": return "Peak Season Finder";
       case "age-analytics": return getAgeSubTabTitle();
       case "appearances": return "Most Apex Appearances";
+      case "misc": return getMiscSubTabTitle();
       case "team-points": return "Team Total Points";
       case "team-championships": return "Team Championships";
       case "team-players": return "Top 40 Players Produced";
       case "team-season-pts": return "Best Team Season Points";
       default: return "";
+    }
+  };
+
+  const getMiscSubTabTitle = (): string => {
+    switch (miscSubTab) {
+      case "dominance": return "Season Dominance Score";
+      case "era-dominance": return "Era Dominance";
+      case "teammate-pairs": return "Best Teammate Pairs";
+      case "journeymen": return "Journeymen (Most Teams)";
+      default: return "Misc";
     }
   };
 
@@ -948,7 +1116,13 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   };
 
   const getKOsSubTabTitle = (): string => {
-    return kosSubTab === "season" ? "Most Single Season KOs" : "All-Time Career KOs";
+    switch (kosSubTab) {
+      case "season": return "Most Single Season KOs";
+      case "career": return "All-Time Career KOs";
+      case "ko-rate": return "KO Rate (KOs per 100 Points)";
+      case "ko-specialist": return "KO Specialists (Rank-Adjusted)";
+      default: return "KOs";
+    }
   };
 
   const getAvgSubTabTitle = (): string => {
@@ -1244,9 +1418,31 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           >
             Career KOs
           </button>
+          <button
+            onClick={() => setKOsSubTab("ko-rate")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              kosSubTab === "ko-rate"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            KO Rate
+          </button>
+          <button
+            onClick={() => setKOsSubTab("ko-specialist")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              kosSubTab === "ko-specialist"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Specialists
+          </button>
         </div>
         {kosSubTab === "season" && renderPlayerLeaderboard("single-kos")}
         {kosSubTab === "career" && renderPlayerLeaderboard("all-time-kos")}
+        {kosSubTab === "ko-rate" && renderPlayerLeaderboard("ko-rate")}
+        {kosSubTab === "ko-specialist" && renderPlayerLeaderboard("ko-specialists")}
       </div>
     );
   };
@@ -1822,6 +2018,248 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     );
   };
 
+  const renderMiscSection = () => {
+    return (
+      <div className="space-y-4">
+        {/* Sub-tabs for misc analytics */}
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          <button
+            onClick={() => setMiscSubTab("dominance")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              miscSubTab === "dominance"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Dominance
+          </button>
+          <button
+            onClick={() => setMiscSubTab("era-dominance")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              miscSubTab === "era-dominance"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Era Dominance
+          </button>
+          <button
+            onClick={() => setMiscSubTab("teammate-pairs")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              miscSubTab === "teammate-pairs"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Best Pairs
+          </button>
+          <button
+            onClick={() => setMiscSubTab("journeymen")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              miscSubTab === "journeymen"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Journeymen
+          </button>
+        </div>
+
+        {miscSubTab === "dominance" && renderSeasonDominanceLeaderboard()}
+        {miscSubTab === "era-dominance" && renderEraDominanceLeaderboard()}
+        {miscSubTab === "teammate-pairs" && renderTeammatePairsLeaderboard()}
+        {miscSubTab === "journeymen" && renderPlayerLeaderboard("journeymen")}
+      </div>
+    );
+  };
+
+  const renderSeasonDominanceLeaderboard = () => {
+    const data = leaderboards["season-dominance"] as { player: string; team: string; season: string; points: number; gap: number; runnerUp: string; runnerUpPoints: number }[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <div className="mb-3 text-sm text-muted-foreground">
+          Seasons ranked by how dominant the #1 player was - the point gap over #2.
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Player</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Team</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Season</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden lg:table-cell">Points</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Gap</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden xl:table-cell">Over</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((entry, index) => (
+              <tr key={`${entry.player}-${entry.season}`} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                <td className="p-2 md:p-3">
+                  <span
+                    onClick={() => onPlayerClick(entry.player)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {entry.player}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 hidden sm:table-cell">
+                  <span 
+                    onClick={() => onTeamClick(entry.team)}
+                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(entry.team)}`}
+                  >
+                    {entry.team}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 text-muted-foreground hidden md:table-cell">{entry.season}</td>
+                <td className="p-2 md:p-3 text-right text-muted-foreground hidden lg:table-cell">{entry.points.toLocaleString()}</td>
+                <td className="p-2 md:p-3 text-right font-bold text-emerald-400">+{entry.gap.toLocaleString()}</td>
+                <td className="p-2 md:p-3 hidden xl:table-cell">
+                  <span 
+                    onClick={() => onPlayerClick(entry.runnerUp)}
+                    className="text-primary hover:underline cursor-pointer text-sm"
+                  >
+                    {entry.runnerUp}
+                  </span>
+                  <span className="text-muted-foreground text-xs ml-1">({entry.runnerUpPoints.toLocaleString()})</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> Higher gaps indicate seasons where one player truly dominated the competition, putting significant distance between themselves and the field.</p>
+        </div>
+      </div>
+    );
+  };
+
+  const renderEraDominanceLeaderboard = () => {
+    const data = leaderboards["era-dominance"] as { era: string; player: string; team: string; points: number; seasons: number }[];
+    
+    // Group by era for display
+    const eras = ["701-703", "704-706", "707-709", "710-711"];
+    
+    return (
+      <div className="overflow-x-auto">
+        <div className="mb-3 text-sm text-muted-foreground">
+          Who dominated each multi-season era? Top 5 point scorers per era shown.
+        </div>
+        <div className="space-y-6">
+          {eras.map(era => {
+            const eraData = data.filter(d => d.era === era);
+            if (eraData.length === 0) return null;
+            
+            return (
+              <div key={era} className="bg-muted/20 rounded-lg p-3">
+                <h4 className="font-semibold text-foreground mb-2">Era: {era}</h4>
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border/30">
+                      <th className="text-left p-2 text-muted-foreground font-semibold w-10">#</th>
+                      <th className="text-left p-2 text-muted-foreground font-semibold">Player</th>
+                      <th className="text-left p-2 text-muted-foreground font-semibold hidden sm:table-cell">Team</th>
+                      <th className="text-right p-2 text-muted-foreground font-semibold">Total Pts</th>
+                      <th className="text-right p-2 text-muted-foreground font-semibold hidden md:table-cell">Seasons</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {eraData.map((entry, idx) => (
+                      <tr key={entry.player} className="border-b border-border/20 hover:bg-muted/20">
+                        <td className="p-2 text-muted-foreground font-mono">{idx + 1}</td>
+                        <td className="p-2">
+                          <span
+                            onClick={() => onPlayerClick(entry.player)}
+                            className="text-primary hover:underline cursor-pointer font-medium"
+                          >
+                            {entry.player}
+                          </span>
+                        </td>
+                        <td className="p-2 hidden sm:table-cell">
+                          <span 
+                            onClick={() => onTeamClick(entry.team)}
+                            className={`text-xs px-1.5 py-0.5 rounded cursor-pointer ${getTeamClass(entry.team)}`}
+                          >
+                            {entry.team}
+                          </span>
+                        </td>
+                        <td className="p-2 text-right font-bold text-foreground">{entry.points.toLocaleString()}</td>
+                        <td className="p-2 text-right text-muted-foreground hidden md:table-cell">{entry.seasons}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> Shows who accumulated the most points during each defined era. "Seasons" indicates how many of the era's seasons that player competed in.</p>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTeammatePairsLeaderboard = () => {
+    const data = leaderboards["teammate-pairs"] as { player1: string; player2: string; team: string; combinedPoints: number; season: string }[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <div className="mb-3 text-sm text-muted-foreground">
+          Best single-season teammate combinations by combined points.
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Players</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Team</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Season</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Combined</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((entry, index) => (
+              <tr key={`${entry.player1}-${entry.player2}-${entry.season}`} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                <td className="p-2 md:p-3">
+                  <span
+                    onClick={() => onPlayerClick(entry.player1)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {entry.player1}
+                  </span>
+                  <span className="text-muted-foreground mx-1">&</span>
+                  <span
+                    onClick={() => onPlayerClick(entry.player2)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {entry.player2}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 hidden sm:table-cell">
+                  <span 
+                    onClick={() => onTeamClick(entry.team)}
+                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(entry.team)}`}
+                  >
+                    {entry.team}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 text-muted-foreground hidden md:table-cell">{entry.season}</td>
+                <td className="p-2 md:p-3 text-right font-bold text-foreground">{entry.combinedPoints.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> Highlights the most productive teammate duos in a single season. Great chemistry and team depth often leads to high combined totals.</p>
+        </div>
+      </div>
+    );
+  };
+
   const renderTeamLeaderboard = (type: LeaderboardType) => {
     const data = leaderboards[type] as TeamStats[];
     const showDetails = type === "team-championships";
@@ -1941,6 +2379,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             <TabsTrigger value="appearances" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
               Appearances
             </TabsTrigger>
+            <TabsTrigger value="misc" className="flex-1 min-w-[100px] text-xs md:text-sm py-2">
+              Misc
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -1988,6 +2429,9 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           </TabsContent>
           <TabsContent value="appearances" className="mt-0">
             {renderPlayerLeaderboard("appearances")}
+          </TabsContent>
+          <TabsContent value="misc" className="mt-0">
+            {renderMiscSection()}
           </TabsContent>
           <TabsContent value="team-points" className="mt-0">
             {renderTeamLeaderboard("team-points")}
