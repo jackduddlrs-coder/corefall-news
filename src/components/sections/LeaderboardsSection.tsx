@@ -9,7 +9,7 @@ interface LeaderboardsSectionProps {
 }
 
 type LeaderboardType = "legacy-score" | "single-points" | "all-time-points" | "avg-points" | "consistency" | "peak-season" | "age-analytics" | "single-kos" | "all-time-kos" | "appearances" | "avg-finish" | "team-points" | "team-championships" | "team-players" | "team-season-pts";
-type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "first-major" | "longevity";
+type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "first-major" | "longevity" | "pods";
 
 interface PlayerStats {
   name: string;
@@ -40,6 +40,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [expandedTeamSeason, setExpandedTeamSeason] = useState<string | null>(null);
   const [ageSubTab, setAgeSubTab] = useState<AgeSubTab>("peak-age");
   const [expandedAgeBracket, setExpandedAgeBracket] = useState<string | null>(null);
+  const [expandedPod, setExpandedPod] = useState<string | null>(null);
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
       const newSet = new Set(prev);
@@ -431,6 +432,124 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       .sort((a, b) => b.value - a.value) // Most years first
       .slice(0, 50);
 
+    // Pods - group players by their debut era
+    const podRanges: { pod: string; startYear: number; endYear: number }[] = [
+      { pod: "701-702", startYear: 701, endYear: 702 },
+      { pod: "703-704", startYear: 703, endYear: 704 },
+      { pod: "705-706", startYear: 705, endYear: 706 },
+      { pod: "707-708", startYear: 707, endYear: 708 },
+      { pod: "709-710", startYear: 709, endYear: 710 },
+      { pod: "711", startYear: 711, endYear: 711 }
+    ];
+
+    // Find each player's debut season
+    const playerDebut: Record<string, number> = {};
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      const yearNum = parseInt(season);
+      players.forEach(player => {
+        if (!playerDebut[player.Name] || yearNum < playerDebut[player.Name]) {
+          playerDebut[player.Name] = yearNum;
+        }
+      });
+    });
+
+    // Get pod for a debut year
+    const getPodForYear = (year: number): string => {
+      const range = podRanges.find(r => year >= r.startYear && year <= r.endYear);
+      return range?.pod || "Unknown";
+    };
+
+    // Aggregate pod statistics
+    interface PodData {
+      totalPoints: number;
+      totalKOs: number;
+      count: number;
+      players: Set<string>;
+      majors: number;
+      apexWins: number;
+      playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number }[];
+    }
+
+    const podStats: Record<string, PodData> = {};
+    podRanges.forEach(r => {
+      podStats[r.pod] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, playerStats: [] };
+    });
+
+    // Aggregate player career stats by pod
+    const playerCareerByPod: Record<string, { points: number; kos: number; seasons: number; team: string }> = {};
+    
+    allPlayers.forEach(entry => {
+      const debut = playerDebut[entry.name];
+      if (!debut) return;
+      const pod = getPodForYear(debut);
+      if (!podStats[pod]) return;
+
+      podStats[pod].totalPoints += entry.points;
+      podStats[pod].totalKOs += entry.kos;
+      podStats[pod].count++;
+      podStats[pod].players.add(entry.name);
+
+      if (!playerCareerByPod[entry.name]) {
+        playerCareerByPod[entry.name] = { points: 0, kos: 0, seasons: 0, team: getMostPointsTeam(entry.name) };
+      }
+      playerCareerByPod[entry.name].points += entry.points;
+      playerCareerByPod[entry.name].kos += entry.kos;
+      playerCareerByPod[entry.name].seasons++;
+    });
+
+    // Count majors/apex by pod
+    const playerMajorsByPod: Record<string, { majors: number; apexWins: number }> = {};
+    majorWinners.forEach(win => {
+      if (!selectedYears.has(win.year.toString())) return;
+      if (!playerMajorsByPod[win.winner]) {
+        playerMajorsByPod[win.winner] = { majors: 0, apexWins: 0 };
+      }
+      if (win.tournament === "Apex") {
+        playerMajorsByPod[win.winner].apexWins++;
+      } else {
+        playerMajorsByPod[win.winner].majors++;
+      }
+    });
+
+    // Build individual player stats within each pod
+    Object.entries(playerCareerByPod).forEach(([name, stats]) => {
+      const debut = playerDebut[name];
+      if (!debut) return;
+      const pod = getPodForYear(debut);
+      if (!podStats[pod]) return;
+
+      const playerMajors = playerMajorsByPod[name] || { majors: 0, apexWins: 0 };
+      podStats[pod].majors += playerMajors.majors;
+      podStats[pod].apexWins += playerMajors.apexWins;
+      
+      podStats[pod].playerStats.push({
+        name,
+        team: stats.team,
+        points: stats.points,
+        kos: stats.kos,
+        seasons: stats.seasons,
+        majors: playerMajors.majors,
+        apexWins: playerMajors.apexWins
+      });
+    });
+
+    // Sort players within each pod by points
+    Object.values(podStats).forEach(pod => {
+      pod.playerStats.sort((a, b) => b.points - a.points);
+    });
+
+    const podData: { pod: string; avgPoints: number; avgKOs: number; totalSeasons: number; uniquePlayers: number; majors: number; apexWins: number; playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number }[] }[] = 
+      podRanges.map(r => ({
+        pod: r.pod,
+        avgPoints: podStats[r.pod].count > 0 ? Math.round(podStats[r.pod].totalPoints / podStats[r.pod].count) : 0,
+        avgKOs: podStats[r.pod].count > 0 ? Math.round((podStats[r.pod].totalKOs / podStats[r.pod].count) * 10) / 10 : 0,
+        totalSeasons: podStats[r.pod].count,
+        uniquePlayers: podStats[r.pod].players.size,
+        majors: podStats[r.pod].majors,
+        apexWins: podStats[r.pod].apexWins,
+        playerStats: podStats[r.pod].playerStats
+      })).filter(p => p.uniquePlayers > 0);
+
     // Single season KOs (best individual season)
     const singleSeasonKOs: PlayerStats[] = [...allPlayers]
       .sort((a, b) => b.kos - a.kos)
@@ -700,6 +819,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "champ-ages": champAges,
       "first-major": firstMajorAges,
       "longevity": longevityLeaders,
+      "pods": podData,
       "team-points": teamPoints,
       "team-championships": teamChamps,
       "team-players": teamPlayers,
@@ -735,6 +855,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "champ-ages": return `Champion Ages (${(leaderboards["champ-ages"] as PlayerStats[]).length} titles)`;
       case "first-major": return "Age at First Major";
       case "longevity": return "Longevity Leaders";
+      case "pods": return "Generation Pods";
       default: return "Age Analytics";
     }
   };
@@ -1118,6 +1239,16 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           >
             Longevity
           </button>
+          <button
+            onClick={() => setAgeSubTab("pods")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              ageSubTab === "pods"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Pods
+          </button>
         </div>
 
         {/* Render the appropriate sub-section */}
@@ -1126,6 +1257,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         {ageSubTab === "champ-ages" && renderChampAgesLeaderboard()}
         {ageSubTab === "first-major" && renderFirstMajorLeaderboard()}
         {ageSubTab === "longevity" && renderLongevityLeaderboard()}
+        {ageSubTab === "pods" && renderPodsLeaderboard()}
       </div>
     );
   };
@@ -1280,6 +1412,128 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         </table>
         <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
           <p><strong>Insights:</strong> Celebrates players with the longest competitive careers, showing the age range they competed at the top level.</p>
+        </div>
+      </div>
+    );
+  };
+
+
+  const renderPodsLeaderboard = () => {
+    const data = leaderboards["pods"] as { pod: string; avgPoints: number; avgKOs: number; totalSeasons: number; uniquePlayers: number; majors: number; apexWins: number; playerStats: { name: string; team: string; points: number; kos: number; seasons: number; majors: number; apexWins: number }[] }[];
+    const maxAvgPoints = Math.max(...data.map(d => d.avgPoints), 1);
+
+    return (
+      <div className="overflow-x-auto">
+        <div className="mb-3 text-sm text-muted-foreground">
+          Players grouped by their debut era. Click any pod to see individual players who debuted in that era.
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-8"></th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Pod</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Avg Pts</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden sm:table-cell">Avg KOs</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Seasons</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Players</th>
+              <th className="text-right p-2 md:p-3 text-amber-500 font-semibold">Majors</th>
+              <th className="text-right p-2 md:p-3 text-cyan-500 font-semibold">Apex</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((pod) => {
+              const percentage = (pod.avgPoints / maxAvgPoints) * 100;
+              const isExpanded = expandedPod === pod.pod;
+              
+              return (
+                <React.Fragment key={pod.pod}>
+                  <tr 
+                    className={`border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer ${isExpanded ? 'bg-muted/30' : ''}`}
+                    onClick={() => setExpandedPod(isExpanded ? null : pod.pod)}
+                  >
+                    <td className="p-2 md:p-3 text-muted-foreground">
+                      {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                    </td>
+                    <td className="p-2 md:p-3">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-foreground">{pod.pod}</span>
+                        <div className="flex-1 max-w-[100px] h-2 bg-muted rounded-full overflow-hidden hidden lg:block">
+                          <div 
+                            className="h-full bg-primary rounded-full transition-all"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-2 md:p-3 text-right font-bold text-foreground">{pod.avgPoints.toLocaleString()}</td>
+                    <td className="p-2 md:p-3 text-right text-muted-foreground hidden sm:table-cell">{pod.avgKOs}</td>
+                    <td className="p-2 md:p-3 text-right text-muted-foreground hidden md:table-cell">{pod.totalSeasons.toLocaleString()}</td>
+                    <td className="p-2 md:p-3 text-right text-muted-foreground">{pod.uniquePlayers}</td>
+                    <td className="p-2 md:p-3 text-right font-semibold text-amber-500">{pod.majors}</td>
+                    <td className="p-2 md:p-3 text-right font-semibold text-cyan-500">{pod.apexWins}</td>
+                  </tr>
+                  {isExpanded && pod.playerStats.length > 0 && (
+                    <tr>
+                      <td colSpan={8} className="p-0 bg-muted/20">
+                        <div className="p-3">
+                          <div className="text-xs text-muted-foreground mb-2 font-medium">
+                            Players who debuted in {pod.pod}
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="border-b border-border/30">
+                                  <th className="text-left p-2 text-muted-foreground">#</th>
+                                  <th className="text-left p-2 text-muted-foreground">Player</th>
+                                  <th className="text-left p-2 text-muted-foreground hidden sm:table-cell">Team</th>
+                                  <th className="text-right p-2 text-muted-foreground">Points</th>
+                                  <th className="text-right p-2 text-muted-foreground hidden sm:table-cell">KOs</th>
+                                  <th className="text-right p-2 text-muted-foreground hidden md:table-cell">Seasons</th>
+                                  <th className="text-right p-2 text-amber-500">Majors</th>
+                                  <th className="text-right p-2 text-cyan-500">Apex</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {pod.playerStats.map((player, idx) => (
+                                  <tr key={player.name} className="border-b border-border/20 hover:bg-background/30">
+                                    <td className="p-2 text-muted-foreground font-mono">{idx + 1}</td>
+                                    <td className="p-2">
+                                      <span 
+                                        onClick={(e) => { e.stopPropagation(); onPlayerClick(player.name); }}
+                                        className="text-primary hover:underline cursor-pointer font-medium"
+                                      >
+                                        {player.name}
+                                      </span>
+                                    </td>
+                                    <td className="p-2 hidden sm:table-cell">
+                                      <span 
+                                        onClick={(e) => { e.stopPropagation(); onTeamClick(player.team); }}
+                                        className={`text-xs px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80 ${getTeamClass(player.team)}`}
+                                      >
+                                        {player.team}
+                                      </span>
+                                    </td>
+                                    <td className="p-2 text-right font-semibold text-foreground">{player.points.toLocaleString()}</td>
+                                    <td className="p-2 text-right text-muted-foreground hidden sm:table-cell">{player.kos}</td>
+                                    <td className="p-2 text-right text-muted-foreground hidden md:table-cell">{player.seasons}</td>
+                                    <td className="p-2 text-right font-medium text-amber-500">{player.majors || '-'}</td>
+                                    <td className="p-2 text-right font-medium text-cyan-500">{player.apexWins || '-'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> Compares different "generations" of players based on when they debuted. Click any pod to see which players belong to that era and their career stats.</p>
         </div>
       </div>
     );
