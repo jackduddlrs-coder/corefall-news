@@ -2068,7 +2068,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         {miscSubTab === "dominance" && renderSeasonDominanceLeaderboard()}
         {miscSubTab === "era-dominance" && renderEraDominanceLeaderboard()}
         {miscSubTab === "teammate-pairs" && renderTeammatePairsLeaderboard()}
-        {miscSubTab === "journeymen" && renderPlayerLeaderboard("journeymen")}
+        {miscSubTab === "journeymen" && renderJourneymenLeaderboard()}
       </div>
     );
   };
@@ -2255,6 +2255,63 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         </table>
         <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
           <p><strong>Insights:</strong> Highlights the most productive teammate duos in a single season. Great chemistry and team depth often leads to high combined totals.</p>
+        </div>
+      </div>
+    );
+  };
+
+  const renderJourneymenLeaderboard = () => {
+    const data = leaderboards["journeymen"] as PlayerStats[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <div className="mb-3 text-sm text-muted-foreground">
+          Players who competed for the most different teams throughout their careers.
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Player</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold w-16">Teams</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Team History</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((player, index) => {
+              const teamList = player.season?.split(", ") || [];
+              return (
+                <tr key={player.name} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                  <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                  <td className="p-2 md:p-3">
+                    <span
+                      onClick={() => onPlayerClick(player.name)}
+                      className="text-primary hover:underline cursor-pointer font-medium"
+                    >
+                      {player.name}
+                    </span>
+                  </td>
+                  <td className="p-2 md:p-3 text-right font-bold text-foreground">{player.value}</td>
+                  <td className="p-2 md:p-3">
+                    <div className="flex flex-wrap gap-1">
+                      {teamList.map((team, idx) => (
+                        <span 
+                          key={`${player.name}-${team}-${idx}`}
+                          onClick={() => onTeamClick(team)}
+                          className={`text-xs px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80 transition-opacity ${getTeamClass(team)}`}
+                        >
+                          {team}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> "Journeymen" are players who moved between multiple organizations during their careers. This can reflect adaptability, team needs, or career reinvention.</p>
         </div>
       </div>
     );
