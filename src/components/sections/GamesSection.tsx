@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Grid3X3, User, Link2, Calendar, BarChart3, Camera } from "lucide-react";
+import { Grid3X3, User, Link2, Trophy, BarChart3, Camera } from "lucide-react";
 import { ImmaculateGridSection } from "./ImmaculateGridSection";
 import { PlayerGuessSection } from "./PlayerGuessSection";
 import { ConnectionsSection } from "./ConnectionsSection";
-import { TimelineOrderSection } from "./TimelineOrderSection";
+import { ApexMatchGuesserSection } from "./ApexMatchGuesserSection";
 import { StatGuesserSection } from "./StatGuesserSection";
 import { SeasonSnapshotSection } from "./SeasonSnapshotSection";
 
@@ -12,7 +12,7 @@ interface GamesSectionProps {
   onPlayerClick: (name: string) => void;
 }
 
-type GameType = "grid" | "guess" | "connections" | "timeline" | "stats" | "snapshot";
+type GameType = "grid" | "guess" | "connections" | "apex" | "stats" | "snapshot";
 
 export const GamesSection = ({ onPlayerClick }: GamesSectionProps) => {
   const [activeGame, setActiveGame] = useState<GameType>("grid");
@@ -33,9 +33,9 @@ export const GamesSection = ({ onPlayerClick }: GamesSectionProps) => {
             <Link2 className="h-3 w-3 md:h-4 md:w-4" />
             <span className="hidden sm:inline">Links</span>
           </TabsTrigger>
-          <TabsTrigger value="timeline" className="flex items-center gap-1 text-xs md:text-sm px-2 py-2">
-            <Calendar className="h-3 w-3 md:h-4 md:w-4" />
-            <span className="hidden sm:inline">Timeline</span>
+          <TabsTrigger value="apex" className="flex items-center gap-1 text-xs md:text-sm px-2 py-2">
+            <Trophy className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">Apex</span>
           </TabsTrigger>
           <TabsTrigger value="stats" className="flex items-center gap-1 text-xs md:text-sm px-2 py-2">
             <BarChart3 className="h-3 w-3 md:h-4 md:w-4" />
@@ -59,8 +59,8 @@ export const GamesSection = ({ onPlayerClick }: GamesSectionProps) => {
           <ConnectionsSection onPlayerClick={onPlayerClick} />
         </TabsContent>
         
-        <TabsContent value="timeline">
-          <TimelineOrderSection onPlayerClick={onPlayerClick} />
+        <TabsContent value="apex">
+          <ApexMatchGuesserSection onPlayerClick={onPlayerClick} />
         </TabsContent>
         
         <TabsContent value="stats">
