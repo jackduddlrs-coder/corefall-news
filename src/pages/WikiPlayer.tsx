@@ -48,7 +48,9 @@ const WikiPlayer = () => {
       if (s.year === 709) {
         const apex709 = apexDetailed.find(a => a.year === 709);
         if (apex709?.qualified?.includes(decodedName)) apexApps++;
-      } else if (s.rank <= 16) {
+      } else if (s.year === 711 && s.rank <= 18) {
+        apexApps++;
+      } else if (s.year !== 711 && s.rank <= 16) {
         apexApps++;
       }
     });

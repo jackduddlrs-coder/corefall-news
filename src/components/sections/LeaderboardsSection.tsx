@@ -347,8 +347,10 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           });
         }
       } else {
+        // For 711, top 18 qualify for Apex; for other seasons, top 16
+        const qualifyRank = season === "711" ? 18 : 16;
         players.forEach(player => {
-          if (player.Rank <= 16 && player.Age > 0) {
+          if (player.Rank <= qualifyRank && player.Age > 0) {
             if (!individualAgeStats[player.Age]) {
               individualAgeStats[player.Age] = { totalPoints: 0, totalKOs: 0, count: 0, players: new Set(), majors: 0, apexWins: 0, apexAppearances: 0, seasons: [] };
             }
@@ -587,8 +589,10 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           });
         }
       } else {
+        // For 711, top 18 qualify for Apex; for other seasons, top 16
+        const qualifyRank = season === "711" ? 18 : 16;
         players.forEach(player => {
-          if (player.Rank <= 16) {
+          if (player.Rank <= qualifyRank) {
             playerApexAppearances[player.Name] = (playerApexAppearances[player.Name] || 0) + 1;
           }
         });
@@ -702,8 +706,10 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           });
         }
       } else {
+        // For 711, top 18 qualify for Apex; for other seasons, top 16
+        const qualifyRank = season === "711" ? 18 : 16;
         players.forEach(player => {
-          if (player.Rank <= 16) {
+          if (player.Rank <= qualifyRank) {
             playerAppearances[player.Name] = (playerAppearances[player.Name] || 0) + 1;
           }
         });
@@ -870,8 +876,10 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           });
         }
       } else {
+        // For 711, top 18 qualify for Apex; for other seasons, top 16
+        const qualifyRank = season === "711" ? 18 : 16;
         players.forEach(player => {
-          if (player.Rank <= 16) {
+          if (player.Rank <= qualifyRank) {
             if (!playerLegacyMap[player.Name]) playerLegacyMap[player.Name] = { points: 0, kos: 0, elite: 0, apexApps: 0, apex: 0, majors: 0, ctt: 0, star: 0, apexFinals: 0 };
             playerLegacyMap[player.Name].apexApps++;
           }

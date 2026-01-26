@@ -54,11 +54,13 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
         totalRanks += s.rank;
         count++;
         if (s.points >= 2000) eliteSeasons++;
-        // For 709, check the qualified array; for other years check rank <= 16
+        // For 709, check the qualified array; for 711, top 18; for other years check rank <= 16
         if (s.year === 709) {
           const apex709 = apexDetailed.find(a => a.year === 709);
           if (apex709?.qualified?.includes(playerName)) apexApps++;
-        } else if (s.rank <= 16) {
+        } else if (s.year === 711 && s.rank <= 18) {
+          apexApps++;
+        } else if (s.year !== 711 && s.rank <= 16) {
           apexApps++;
         }
       }
@@ -121,12 +123,14 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
         playerLegacyMap[player.Name] += player.Points;
         playerLegacyMap[player.Name] += player.KOs * 10; // 10 points per KO
         if (player.Points >= 2000) playerLegacyMap[player.Name] += 100; // Elite bonus
-        // Apex appearance bonus (rank <= 16 or qualified for 709)
+        // Apex appearance bonus (rank <= 16 or qualified for 709, or <= 18 for 711)
         const yearNum = parseInt(year);
         if (yearNum === 709) {
           const apex709 = apexDetailed.find(a => a.year === 709);
           if (apex709?.qualified?.includes(player.Name)) playerLegacyMap[player.Name] += 100;
-        } else if (player.Rank <= 16) {
+        } else if (yearNum === 711 && player.Rank <= 18) {
+          playerLegacyMap[player.Name] += 100;
+        } else if (yearNum !== 711 && player.Rank <= 16) {
           playerLegacyMap[player.Name] += 100;
         }
       });
