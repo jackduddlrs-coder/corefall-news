@@ -622,8 +622,9 @@ export const pastStandings: Record<string, { Rank: number; Name: string; Team: s
   ]
 };
 
-// Season History (679-710)
+// Season History (679-711)
 export const seasons = [
+  { year: 711, apex: "", team: "", apexAge: 0, ctt: "Dashlol", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 29 },
   { year: 710, apex: "Mega Hawnnon", team: "Dashlol", apexAge: 28, ctt: "Gastro", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 28 },
   { year: 709, apex: "Nothing Sawryr", team: "Gastro", apexAge: 28, ctt: "Qalf", star: "Cascade Juner", starTeam: "Damage", starAge: 30 },
   { year: 708, apex: "Cascade Juner", team: "Damage", apexAge: 29, ctt: "Damage", star: "Zeus Ziki", starTeam: "Cal Hal", starAge: 29 },
