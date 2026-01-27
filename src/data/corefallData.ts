@@ -704,7 +704,7 @@ export const trophyData = [
   { name: "Sky Sunyer", total: 5, apex: 0, ctt: 2, major: 3, list: "CTT (707, 708), Wind Breakers (709), Descent (710, 711)" },
   
   { name: "Daredevil Gaffe", total: 3, apex: 0, ctt: 1, major: 2, list: "Heartland Cup (709), CTT (709), New Life (710)" },
-  { name: "Rem Asamtoy", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (709), Malice Cup (711)" },
+  { name: "Rem Asamtoy", total: 3, apex: 0, ctt: 1, major: 2, list: "CTT (709), Malice Cup (711), New Life (711)" },
   { name: "Jam Naze", total: 3, apex: 0, ctt: 1, major: 2, list: "CTT (710), Wind Breakers (710), Nightmare (711)" },
   { name: "Titan Aui", total: 2, apex: 0, ctt: 0, major: 2, list: "Armageddon (710), Wind Breakers (711)" },
   { name: "Club Faxzin", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (710)" },
