@@ -13,7 +13,7 @@ type PointsSubTab = "season" | "career";
 type KOsSubTab = "season" | "career" | "ko-rate" | "ko-specialist";
 type AvgSubTab = "avg-points" | "avg-finish";
 type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "debut-season" | "longevity" | "pods";
-type MiscSubTab = "dominance" | "era-dominance" | "teammate-pairs" | "journeymen";
+type MiscSubTab = "dominance" | "era-dominance" | "teammate-pairs" | "total-pairs" | "journeymen";
 
 interface PlayerStats {
   name: string;
@@ -1030,6 +1030,49 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     teammatePairsBySeason.sort((a, b) => b.combinedPoints - a.combinedPoints);
     const topTeammatePairs = teammatePairsBySeason.slice(0, 50);
 
+    // Best Total Pairs: Combined points only from seasons where players were teammates
+    const totalTeammatePairs: Record<string, { player1: string; player2: string; team: string; combinedPoints: number; seasons: string[] }> = {};
+    Object.entries(pastStandings).forEach(([season, players]) => {
+      if (!selectedYears.has(season)) return;
+      
+      // Group players by team for this season
+      const teamPlayers: Record<string, { name: string; points: number }[]> = {};
+      players.forEach(p => {
+        if (!teamPlayers[p.Team]) teamPlayers[p.Team] = [];
+        teamPlayers[p.Team].push({ name: p.Name, points: p.Points });
+      });
+      
+      // For each team with 2+ players, aggregate teammate pairs
+      Object.entries(teamPlayers).forEach(([team, teamPlayerList]) => {
+        if (teamPlayerList.length < 2) return;
+        
+        for (let i = 0; i < teamPlayerList.length - 1; i++) {
+          for (let j = i + 1; j < teamPlayerList.length; j++) {
+            const [p1, p2] = [teamPlayerList[i].name, teamPlayerList[j].name].sort();
+            const key = `${p1}|${p2}`;
+            
+            if (!totalTeammatePairs[key]) {
+              totalTeammatePairs[key] = {
+                player1: p1,
+                player2: p2,
+                team, // Use first team found, will be updated if needed
+                combinedPoints: 0,
+                seasons: []
+              };
+            }
+            totalTeammatePairs[key].combinedPoints += teamPlayerList[i].points + teamPlayerList[j].points;
+            if (!totalTeammatePairs[key].seasons.includes(season)) {
+              totalTeammatePairs[key].seasons.push(season);
+            }
+          }
+        }
+      });
+    });
+    
+    const topTotalPairs = Object.values(totalTeammatePairs)
+      .sort((a, b) => b.combinedPoints - a.combinedPoints)
+      .slice(0, 50);
+
     // Journeymen: Players who played for the most teams
     const playerTeams: Record<string, Set<string>> = {};
     allPlayers.forEach(p => {
@@ -1070,6 +1113,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "season-dominance": seasonDominance,
       "era-dominance": eraDominance,
       "teammate-pairs": topTeammatePairs,
+      "total-pairs": topTotalPairs,
       "journeymen": journeymen,
       "team-points": teamPoints,
       "team-championships": teamChamps,
@@ -1102,6 +1146,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       case "dominance": return "Season Dominance Score";
       case "era-dominance": return "Era Dominance";
       case "teammate-pairs": return "Best Teammate Pairs";
+      case "total-pairs": return "Best Total Pairs";
       case "journeymen": return "Journeymen (Most Teams)";
       default: return "Misc";
     }
@@ -2062,6 +2107,16 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             Best Pairs
           </button>
           <button
+            onClick={() => setMiscSubTab("total-pairs")}
+            className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+              miscSubTab === "total-pairs"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            Total Pairs
+          </button>
+          <button
             onClick={() => setMiscSubTab("journeymen")}
             className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
               miscSubTab === "journeymen"
@@ -2076,6 +2131,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         {miscSubTab === "dominance" && renderSeasonDominanceLeaderboard()}
         {miscSubTab === "era-dominance" && renderEraDominanceLeaderboard()}
         {miscSubTab === "teammate-pairs" && renderTeammatePairsLeaderboard()}
+        {miscSubTab === "total-pairs" && renderTotalPairsLeaderboard()}
         {miscSubTab === "journeymen" && renderJourneymenLeaderboard()}
       </div>
     );
@@ -2263,6 +2319,57 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         </table>
         <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
           <p><strong>Insights:</strong> Highlights the most productive teammate duos in a single season. Great chemistry and team depth often leads to high combined totals.</p>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTotalPairsLeaderboard = () => {
+    const data = leaderboards["total-pairs"] as { player1: string; player2: string; team: string; combinedPoints: number; seasons: string[] }[];
+    
+    return (
+      <div className="overflow-x-auto">
+        <div className="mb-3 text-sm text-muted-foreground">
+          Total combined points across all seasons where players were teammates.
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold w-12">#</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold">Players</th>
+              <th className="text-left p-2 md:p-3 text-muted-foreground font-semibold hidden md:table-cell">Seasons Together</th>
+              <th className="text-right p-2 md:p-3 text-muted-foreground font-semibold">Total Combined</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((entry, index) => (
+              <tr key={`${entry.player1}-${entry.player2}`} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                <td className="p-2 md:p-3 text-muted-foreground font-mono">{index + 1}</td>
+                <td className="p-2 md:p-3">
+                  <span
+                    onClick={() => onPlayerClick(entry.player1)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {entry.player1}
+                  </span>
+                  <span className="text-muted-foreground mx-1">&</span>
+                  <span
+                    onClick={() => onPlayerClick(entry.player2)}
+                    className="text-primary hover:underline cursor-pointer font-medium"
+                  >
+                    {entry.player2}
+                  </span>
+                </td>
+                <td className="p-2 md:p-3 text-muted-foreground hidden md:table-cell">
+                  {entry.seasons.sort().join(", ")} ({entry.seasons.length})
+                </td>
+                <td className="p-2 md:p-3 text-right font-bold text-foreground">{entry.combinedPoints.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="mt-4 p-3 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+          <p><strong>Insights:</strong> Shows the most successful teammate combinations over their entire shared tenure. Points are only counted from seasons where both players were on the same team.</p>
         </div>
       </div>
     );
