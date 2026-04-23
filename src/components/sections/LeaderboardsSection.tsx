@@ -2666,7 +2666,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             {renderPlayerLeaderboard("consistency")}
           </TabsContent>
           <TabsContent value="peak-season" className="mt-0">
-            {renderPlayerLeaderboard("peak-season")}
+            {renderPeakSeasonSection()}
           </TabsContent>
           <TabsContent value="age-analytics" className="mt-0">
             {renderAgeAnalyticsSection()}
