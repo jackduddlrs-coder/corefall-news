@@ -259,7 +259,7 @@ const Wiki = () => {
 
       {/* Footer */}
       <footer className="text-center p-6 md:p-10 mt-8 md:mt-12 bg-header text-muted-foreground border-t border-border text-sm">
-        <p>&copy; 707 Corefall News.</p>
+        <p>&copy; 711 Corefall News.</p>
         <Link to="/" className="text-primary hover:underline text-xs">← Back to Home</Link>
       </footer>
     </div>

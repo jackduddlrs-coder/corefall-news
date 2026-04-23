@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 711 COMPLETE • Rem Asamtoy Wins New Life 711 • Mega Hawnnon Finishes 711 with 3250 Points
+        🏆 SEASON 711 COMPLETE • Sky Sunyer Wins Apex 711 • Mega Hawnnon Finishes 711 with 3250 Points
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-qalf mb-2 inline-block">NEW LIFE 711 CHAMPION</span>
+          <span className="team-tag team-zemigamar mb-2 inline-block">APEX 711 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            REM ASAMTOY<br/>WINS NEW LIFE 711
+            SKY SUNYER<br/>WINS APEX 711
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Qalf star claims his 2nd major of the season, surging to 6th place with 2400 points.
+            The Zemiga-Mar star claims the ultimate prize, defeating Nothing Sawryr 2-0 in the Grand Finals.
           </p>
         </div>
       </div>
@@ -26,10 +26,18 @@ export function FeedSection() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-zemigamar">Apex Champion</span>
+          <h3 className="text-white mt-3">Sky Sunyer Wins Apex 711</h3>
+          <p className="text-foreground">
+            The Zemiga-Mar star captures the Apex World Championship, sweeping Nothing Sawryr <span className="stat-highlight">2-0</span> in the Grand Finals.
+          </p>
+        </div>
+
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-qalf">New Life Champion</span>
           <h3 className="text-white mt-3">Rem Asamtoy Claims 2nd Major of 711</h3>
           <p className="text-foreground">
-            The Qalf star adds New Life to his Malice Cup title, climbing to 6th with <span className="stat-highlight">2400 points</span>.
+            The Qalf star adds New Life to his Malice Cup title, finishing the season with <span className="stat-highlight">2400 points</span>.
           </p>
         </div>
         
