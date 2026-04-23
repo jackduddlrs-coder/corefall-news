@@ -126,7 +126,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="text-center p-6 md:p-10 mt-8 md:mt-12 bg-header text-muted-foreground border-t border-border text-sm">
-        <p>&copy; 707 Corefall News.</p>
+        <p>&copy; 711 Corefall News.</p>
         <p className="text-xs md:text-sm">This site is a fan creation based on the world of Zera.</p>
       </footer>
 
