@@ -14,6 +14,7 @@ type KOsSubTab = "season" | "career" | "ko-rate" | "ko-specialist";
 type AvgSubTab = "avg-points" | "avg-finish";
 type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "debut-season" | "longevity" | "pods";
 type MiscSubTab = "dominance" | "era-dominance" | "teammate-pairs" | "total-pairs" | "journeymen";
+type PeakSeasonSubTab = "season" | "3-year" | "5-year";
 
 interface PlayerStats {
   name: string;
