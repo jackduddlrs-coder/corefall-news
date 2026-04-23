@@ -1137,6 +1137,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "avg-points": avgPoints,
       "consistency": consistencyRating,
       "peak-season": peakSeasons,
+      "peak-season-3year": peakSeasons3Year,
+      "peak-season-5year": peakSeasons5Year,
       "peak-age": peakAges,
       "age-brackets": ageBracketStats,
       "single-kos": singleSeasonKOs,
