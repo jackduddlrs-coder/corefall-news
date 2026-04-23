@@ -1489,7 +1489,35 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
     );
   };
 
-  const renderKOsSection = () => {
+  const renderPeakSeasonSection = () => {
+    const tabs: { key: PeakSeasonSubTab; label: string }[] = [
+      { key: "season", label: "Best Season" },
+      { key: "3-year", label: "Best 3-Year Stretch" },
+      { key: "5-year", label: "Best 5-Year Stretch" },
+    ];
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setPeakSeasonSubTab(t.key)}
+              className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+                peakSeasonSubTab === t.key
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {peakSeasonSubTab === "season" && renderPlayerLeaderboard("peak-season")}
+        {peakSeasonSubTab === "3-year" && renderPlayerLeaderboard("peak-season-3year")}
+        {peakSeasonSubTab === "5-year" && renderPlayerLeaderboard("peak-season-5year")}
+      </div>
+    );
+  };
     return (
       <div className="space-y-4">
         <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
