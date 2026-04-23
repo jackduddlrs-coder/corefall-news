@@ -14,6 +14,7 @@ type KOsSubTab = "season" | "career" | "ko-rate" | "ko-specialist";
 type AvgSubTab = "avg-points" | "avg-finish";
 type AgeSubTab = "peak-age" | "age-brackets" | "champ-ages" | "debut-season" | "longevity" | "pods";
 type MiscSubTab = "dominance" | "era-dominance" | "teammate-pairs" | "total-pairs" | "journeymen";
+type PeakSeasonSubTab = "season" | "3-year" | "5-year";
 
 interface PlayerStats {
   name: string;
@@ -50,6 +51,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [expandedAge, setExpandedAge] = useState<number | null>(null);
   const [expandedPod, setExpandedPod] = useState<string | null>(null);
   const [miscSubTab, setMiscSubTab] = useState<MiscSubTab>("dominance");
+  const [peakSeasonSubTab, setPeakSeasonSubTab] = useState<PeakSeasonSubTab>("season");
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
       const newSet = new Set(prev);
@@ -222,15 +224,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       });
     });
     
-    // Get best season per player
-    const playerBestSeason: Record<string, typeof peakSeasonData[0]> = {};
-    peakSeasonData.forEach(entry => {
-      if (!playerBestSeason[entry.name] || entry.score > playerBestSeason[entry.name].score) {
-        playerBestSeason[entry.name] = entry;
-      }
-    });
-    
-    const peakSeasons: PlayerStats[] = Object.values(playerBestSeason)
+    // ALL seasons listing (top 50 single-season scores, players can appear multiple times)
+    const peakSeasons: PlayerStats[] = [...peakSeasonData]
       .sort((a, b) => b.score - a.score)
       .slice(0, 50)
       .map(entry => {
@@ -247,6 +242,50 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
           season: `${entry.season} (${details.join(', ')})`
         };
       });
+
+    // Multi-year stretch helper: best N consecutive seasons by total score
+    const buildStretchLeaderboard = (windowSize: number): PlayerStats[] => {
+      // Group entries by player
+      const byPlayer: Record<string, typeof peakSeasonData> = {};
+      peakSeasonData.forEach(e => {
+        if (!byPlayer[e.name]) byPlayer[e.name] = [];
+        byPlayer[e.name].push(e);
+      });
+
+      const results: { name: string; team: string; startYear: number; endYear: number; totalScore: number; totalPoints: number; totalMajors: number }[] = [];
+
+      Object.entries(byPlayer).forEach(([name, entries]) => {
+        const sorted = [...entries].sort((a, b) => parseInt(a.season) - parseInt(b.season));
+        for (let i = 0; i + windowSize - 1 < sorted.length; i++) {
+          const startYear = parseInt(sorted[i].season);
+          const endYear = parseInt(sorted[i + windowSize - 1].season);
+          // Only count truly consecutive seasons
+          if (endYear - startYear !== windowSize - 1) continue;
+          const window = sorted.slice(i, i + windowSize);
+          const totalScore = window.reduce((s, e) => s + e.score, 0);
+          const totalPoints = window.reduce((s, e) => s + e.points, 0);
+          const totalMajors = window.reduce((s, e) => s + e.majors, 0);
+          // Team = most-played team during the stretch
+          const teamCounts: Record<string, number> = {};
+          window.forEach(e => { teamCounts[e.team] = (teamCounts[e.team] || 0) + 1; });
+          const team = Object.entries(teamCounts).sort((a, b) => b[1] - a[1])[0][0];
+          results.push({ name, team, startYear, endYear, totalScore, totalPoints, totalMajors });
+        }
+      });
+
+      return results
+        .sort((a, b) => b.totalScore - a.totalScore)
+        .slice(0, 50)
+        .map(r => ({
+          name: r.name,
+          team: r.team,
+          value: Math.round(r.totalScore),
+          season: `${r.startYear}-${r.endYear} (${r.totalPoints} pts${r.totalMajors > 0 ? `, ${r.totalMajors} major${r.totalMajors > 1 ? 's' : ''}` : ''})`
+        }));
+    };
+
+    const peakSeasons3Year = buildStretchLeaderboard(3);
+    const peakSeasons5Year = buildStretchLeaderboard(5);
 
     // Peak Age - at what age each player had their best season (by points) - NOW SORTED BY POINTS
     const playerBestByAge: Record<string, { age: number; points: number; season: string; team: string }> = {};
@@ -1098,6 +1137,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       "avg-points": avgPoints,
       "consistency": consistencyRating,
       "peak-season": peakSeasons,
+      "peak-season-3year": peakSeasons3Year,
+      "peak-season-5year": peakSeasons5Year,
       "peak-age": peakAges,
       "age-brackets": ageBracketStats,
       "single-kos": singleSeasonKOs,
@@ -1351,7 +1392,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (dataKey: string) => {
     const data = leaderboards[dataKey] as PlayerStats[];
-    const showSeason = dataKey === "single-points" || dataKey === "single-kos" || dataKey === "avg-finish" || dataKey === "avg-points" || dataKey === "peak-season" || dataKey === "consistency";
+    const isPeakStretch = dataKey === "peak-season-3year" || dataKey === "peak-season-5year";
+    const showSeason = dataKey === "single-points" || dataKey === "single-kos" || dataKey === "avg-finish" || dataKey === "avg-points" || dataKey === "peak-season" || dataKey === "consistency" || isPeakStretch;
     
     const getDataValueLabel = (): string => {
       if (dataKey === "avg-points") return "Avg Pts";
@@ -1359,7 +1401,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       if (dataKey.includes("points")) return "Points";
       if (dataKey.includes("kos")) return "KOs";
       if (dataKey === "consistency") return "Rating";
-      if (dataKey === "peak-season") return "Score";
+      if (dataKey === "peak-season" || isPeakStretch) return "Score";
       if (dataKey === "appearances") return "Seasons";
       return "Value";
     };
@@ -1443,6 +1485,36 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         </div>
         {pointsSubTab === "season" && renderPlayerLeaderboard("single-points")}
         {pointsSubTab === "career" && renderPlayerLeaderboard("all-time-points")}
+      </div>
+    );
+  };
+
+  const renderPeakSeasonSection = () => {
+    const tabs: { key: PeakSeasonSubTab; label: string }[] = [
+      { key: "season", label: "Best Season" },
+      { key: "3-year", label: "Best 3-Year Stretch" },
+      { key: "5-year", label: "Best 5-Year Stretch" },
+    ];
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setPeakSeasonSubTab(t.key)}
+              className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+                peakSeasonSubTab === t.key
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {peakSeasonSubTab === "season" && renderPlayerLeaderboard("peak-season")}
+        {peakSeasonSubTab === "3-year" && renderPlayerLeaderboard("peak-season-3year")}
+        {peakSeasonSubTab === "5-year" && renderPlayerLeaderboard("peak-season-5year")}
       </div>
     );
   };
@@ -2594,7 +2666,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
             {renderPlayerLeaderboard("consistency")}
           </TabsContent>
           <TabsContent value="peak-season" className="mt-0">
-            {renderPlayerLeaderboard("peak-season")}
+            {renderPeakSeasonSection()}
           </TabsContent>
           <TabsContent value="age-analytics" className="mt-0">
             {renderAgeAnalyticsSection()}
