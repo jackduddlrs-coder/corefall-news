@@ -1392,7 +1392,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
 
   const renderPlayerLeaderboard = (dataKey: string) => {
     const data = leaderboards[dataKey] as PlayerStats[];
-    const showSeason = dataKey === "single-points" || dataKey === "single-kos" || dataKey === "avg-finish" || dataKey === "avg-points" || dataKey === "peak-season" || dataKey === "consistency";
+    const isPeakStretch = dataKey === "peak-season-3year" || dataKey === "peak-season-5year";
+    const showSeason = dataKey === "single-points" || dataKey === "single-kos" || dataKey === "avg-finish" || dataKey === "avg-points" || dataKey === "peak-season" || dataKey === "consistency" || isPeakStretch;
     
     const getDataValueLabel = (): string => {
       if (dataKey === "avg-points") return "Avg Pts";
@@ -1400,7 +1401,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       if (dataKey.includes("points")) return "Points";
       if (dataKey.includes("kos")) return "KOs";
       if (dataKey === "consistency") return "Rating";
-      if (dataKey === "peak-season") return "Score";
+      if (dataKey === "peak-season" || isPeakStretch) return "Score";
       if (dataKey === "appearances") return "Seasons";
       return "Value";
     };
