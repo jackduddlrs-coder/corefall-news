@@ -273,7 +273,15 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
         }
       });
 
-      return results
+      // Keep only each player's single best stretch
+      const bestPerPlayer: Record<string, typeof results[0]> = {};
+      results.forEach(r => {
+        if (!bestPerPlayer[r.name] || r.totalScore > bestPerPlayer[r.name].totalScore) {
+          bestPerPlayer[r.name] = r;
+        }
+      });
+
+      return Object.values(bestPerPlayer)
         .sort((a, b) => b.totalScore - a.totalScore)
         .slice(0, 50)
         .map(r => ({
