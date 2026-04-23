@@ -1518,6 +1518,8 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
       </div>
     );
   };
+
+  const renderKOsSection = () => {
     return (
       <div className="space-y-4">
         <div className="flex gap-1 flex-wrap bg-muted/30 p-1 rounded-lg">
