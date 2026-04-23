@@ -51,6 +51,7 @@ export const LeaderboardsSection = ({ onPlayerClick, onTeamClick }: Leaderboards
   const [expandedAge, setExpandedAge] = useState<number | null>(null);
   const [expandedPod, setExpandedPod] = useState<string | null>(null);
   const [miscSubTab, setMiscSubTab] = useState<MiscSubTab>("dominance");
+  const [peakSeasonSubTab, setPeakSeasonSubTab] = useState<PeakSeasonSubTab>("season");
   const toggleYear = (year: string) => {
     setSelectedYears(prev => {
       const newSet = new Set(prev);
