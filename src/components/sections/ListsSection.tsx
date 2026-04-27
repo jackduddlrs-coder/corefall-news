@@ -166,9 +166,11 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
         <div className="flex flex-wrap gap-1.5 mb-1.5">
           {values.map((chip, i) => {
             const entry = lookupEntry(chip.name);
-            const playerTeam = entry?.type === "player" ? resolvePlayerTeam(chip.name, chip.year) : undefined;
-            const teamClass = entry?.type === "player" && playerTeam
-              ? getTeamClass(playerTeam)
+            const resolvedTeam = entry?.type === "player"
+              ? (chip.team || resolvePlayerTeam(chip.name, chip.year))
+              : undefined;
+            const teamClass = entry?.type === "player" && resolvedTeam
+              ? getTeamClass(resolvedTeam)
               : entry?.type === "team"
               ? getTeamClass(chip.name)
               : "";
@@ -178,15 +180,31 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
                 className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${teamClass || "bg-[#2c323d] text-white"}`}
               >
                 <span>{chip.name}</span>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  value={chip.year ?? ""}
-                  onChange={e => updateChipYear(i, e.target.value)}
-                  placeholder="year"
-                  className="w-14 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
-                  title="Optional year"
-                />
+                {entry?.type === "player" && (
+                  <>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      value={chip.year ?? ""}
+                      onChange={e => updateChipYear(i, e.target.value)}
+                      placeholder="year"
+                      className="w-14 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
+                      title="Optional year"
+                    />
+                    <input
+                      type="text"
+                      list={`teamlist-${i}`}
+                      value={chip.team ?? ""}
+                      onChange={e => updateChipTeam(i, e.target.value)}
+                      placeholder="team"
+                      className="w-20 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
+                      title="Optional team override (color)"
+                    />
+                    <datalist id={`teamlist-${i}`}>
+                      {teamOptions.map(t => <option key={t} value={t} />)}
+                    </datalist>
+                  </>
+                )}
                 <button
                   type="button"
                   onClick={() => removeChip(i)}
