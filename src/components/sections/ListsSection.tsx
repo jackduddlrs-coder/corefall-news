@@ -464,17 +464,30 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
             Last updated: {new Date(viewingList.updated_at).toLocaleString()}
           </p>
           <ol className="space-y-2">
-            {viewingList.items.map((item, idx) => (
-              <li key={idx} className="flex gap-3 p-3 bg-[#1f242b] rounded border border-[#2a2f38]">
-                <span className="text-primary font-bold text-lg w-10 text-right">#{item.rank}</span>
-                <div className="flex-1">
-                  <div className="flex flex-wrap gap-1.5">
-                    {(item.names && item.names.length > 0 ? item.names : ((item as any).name ? [(item as any).name] : [])).map((n: string, i: number) => <NameCard key={`${n}-${i}`} name={n} />)}
+            {viewingList.items.map((item, idx) => {
+              const entries = item.entries && item.entries.length > 0
+                ? item.entries
+                : ((item as any).names ? ((item as any).names as string[]).map(n => ({ name: n })) : ((item as any).name ? [{ name: (item as any).name as string }] : []));
+              const sep = item.separator === "vs" ? "VS" : "and";
+              return (
+                <li key={idx} className="flex gap-3 p-3 bg-[#1f242b] rounded border border-[#2a2f38]">
+                  <span className="text-primary font-bold text-lg w-10 text-right">#{item.rank}</span>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {entries.map((e: NameEntry, i: number) => (
+                        <span key={`${e.name}-${i}`} className="inline-flex items-center gap-1.5">
+                          {i > 0 && (
+                            <span className="text-xs text-muted-foreground font-semibold uppercase px-1">{sep}</span>
+                          )}
+                          <NameCard name={e.name} year={e.year} />
+                        </span>
+                      ))}
+                    </div>
+                    {item.note && <div className="text-sm text-muted-foreground mt-1.5">{item.note}</div>}
                   </div>
-                  {item.note && <div className="text-sm text-muted-foreground mt-1.5">{item.note}</div>}
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ol>
         </div>
       </div>
