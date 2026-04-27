@@ -5,7 +5,55 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2, Edit, Save, X, ArrowLeft, Download } from "lucide-react";
-import { pastStandings, pastTeamStandings, getTeamClass } from "@/data/corefallData";
+import { pastStandings, pastTeamStandings, getTeamClass, apexDetailed } from "@/data/corefallData";
+
+// ---------- Player team color resolution ----------
+// Returns the team that best represents a player. Priority:
+//  1. If `year` is given AND the player appears in that season → that season's team.
+//  2. If the player appears in pastStandings (700+) → team where they scored most points (sum across seasons).
+//  3. If the player only appears in pre-700 finals history (apexDetailed) → team they appeared with most often in finals.
+const resolvePlayerTeam = (name: string, year?: number): string | undefined => {
+  // 1. Specific year match
+  if (typeof year === "number") {
+    const season = pastStandings[String(year)];
+    if (season) {
+      const row = season.find(p => p.Name === name);
+      if (row) return row.Team;
+    }
+  }
+  // 2. Most-points team across modern seasons
+  const pointsByTeam = new Map<string, number>();
+  Object.values(pastStandings).forEach(season => {
+    season.forEach(p => {
+      if (p.Name === name) {
+        pointsByTeam.set(p.Team, (pointsByTeam.get(p.Team) || 0) + p.Points);
+      }
+    });
+  });
+  if (pointsByTeam.size > 0) {
+    let bestTeam: string | undefined;
+    let bestPts = -1;
+    pointsByTeam.forEach((pts, team) => {
+      if (pts > bestPts) { bestPts = pts; bestTeam = team; }
+    });
+    return bestTeam;
+  }
+  // 3. Pre-700: most-frequent team in finals appearances
+  const finalsByTeam = new Map<string, number>();
+  apexDetailed.forEach(f => {
+    if (f.win === name) finalsByTeam.set(f.wTeam, (finalsByTeam.get(f.wTeam) || 0) + 1);
+    if (f.lose === name) finalsByTeam.set(f.lTeam, (finalsByTeam.get(f.lTeam) || 0) + 1);
+  });
+  if (finalsByTeam.size > 0) {
+    let bestTeam: string | undefined;
+    let bestCount = -1;
+    finalsByTeam.forEach((c, team) => {
+      if (c > bestCount) { bestCount = c; bestTeam = team; }
+    });
+    return bestTeam;
+  }
+  return undefined;
+};
 
 // Build a unique, deduped index of every player and team across all seasons (active + inactive)
 type SearchEntry = { name: string; type: "player" | "team"; team?: string };
@@ -105,8 +153,9 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
         <div className="flex flex-wrap gap-1.5 mb-1.5">
           {values.map((chip, i) => {
             const entry = lookupEntry(chip.name);
-            const teamClass = entry?.type === "player" && entry.team
-              ? getTeamClass(entry.team)
+            const playerTeam = entry?.type === "player" ? resolvePlayerTeam(chip.name, chip.year) : undefined;
+            const teamClass = entry?.type === "player" && playerTeam
+              ? getTeamClass(playerTeam)
               : entry?.type === "team"
               ? getTeamClass(chip.name)
               : "";
@@ -172,9 +221,10 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
             >
               <span className="text-white truncate">{m.name}</span>
               <span className="flex items-center gap-2 shrink-0">
-                {m.type === "player" && m.team && (
-                  <span className={`team-tag text-xs ${getTeamClass(m.team)}`}>{m.team}</span>
-                )}
+                {m.type === "player" && (() => {
+                  const t = resolvePlayerTeam(m.name);
+                  return t ? <span className={`team-tag text-xs ${getTeamClass(t)}`}>{t}</span> : null;
+                })()}
                 <span className="text-xs text-muted-foreground uppercase">{m.type}</span>
               </span>
             </button>
@@ -417,8 +467,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   // Renders one clickable name "card" (chip) — colored by team, with optional year
   const NameCard = ({ name, year }: { name: string; year?: number }) => {
     const entry = lookupEntry(name);
-    const teamClass = entry?.type === "player" && entry.team
-      ? getTeamClass(entry.team)
+    const playerTeam = entry?.type === "player" ? resolvePlayerTeam(name, year) : undefined;
+    const teamClass = entry?.type === "player" && playerTeam
+      ? getTeamClass(playerTeam)
       : entry?.type === "team"
       ? getTeamClass(name)
       : "";
