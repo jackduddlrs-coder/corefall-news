@@ -500,11 +500,13 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   };
 
   // Renders one clickable name "card" (chip) — colored by team, with optional year
-  const NameCard = ({ name, year }: { name: string; year?: number }) => {
+  const NameCard = ({ name, year, team }: { name: string; year?: number; team?: string }) => {
     const entry = lookupEntry(name);
-    const playerTeam = entry?.type === "player" ? resolvePlayerTeam(name, year) : undefined;
-    const teamClass = entry?.type === "player" && playerTeam
-      ? getTeamClass(playerTeam)
+    const resolvedTeam = entry?.type === "player"
+      ? (team || resolvePlayerTeam(name, year))
+      : undefined;
+    const teamClass = entry?.type === "player" && resolvedTeam
+      ? getTeamClass(resolvedTeam)
       : entry?.type === "team"
       ? getTeamClass(name)
       : "";
