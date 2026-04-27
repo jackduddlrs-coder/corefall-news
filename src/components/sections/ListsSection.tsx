@@ -374,11 +374,11 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                     >▼</button>
                   </div>
                   <div className="flex-1 space-y-1">
-                    <Input
+                    <AutocompleteInput
                       value={item.name}
-                      onChange={e => updateItem(idx, "name", e.target.value)}
-                      placeholder="Player / team / item name"
-                      className="bg-[#222] text-white border-border h-9"
+                      onChange={val => updateItem(idx, "name", val)}
+                      placeholder="Type to search players & teams..."
+                      index={searchIndex}
                     />
                     <Input
                       value={item.note || ""}
