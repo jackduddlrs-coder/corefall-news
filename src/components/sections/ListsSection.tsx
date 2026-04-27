@@ -188,27 +188,37 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
 
 interface ListItem {
   rank: number;
-  names: string[];
+  entries: NameEntry[];
+  separator?: "and" | "vs"; // how to render multi-entry items
   note?: string;
 }
 
-// Raw stored item shape supports legacy `name: string` for backwards compat
+// Raw stored item shape supports legacy `name: string` and legacy `names: string[]`
 interface StoredItem {
   rank: number;
   name?: string;
   names?: string[];
+  entries?: NameEntry[];
+  separator?: "and" | "vs";
   note?: string;
 }
 
-const normalizeItem = (raw: StoredItem, idx: number): ListItem => ({
-  rank: raw.rank ?? idx + 1,
-  names: Array.isArray(raw.names) && raw.names.length > 0
-    ? raw.names
-    : raw.name
-    ? [raw.name]
-    : [],
-  note: raw.note || "",
-});
+const normalizeItem = (raw: StoredItem, idx: number): ListItem => {
+  let entries: NameEntry[] = [];
+  if (Array.isArray(raw.entries) && raw.entries.length > 0) {
+    entries = raw.entries.map(e => ({ name: e.name, year: typeof e.year === "number" ? e.year : undefined }));
+  } else if (Array.isArray(raw.names) && raw.names.length > 0) {
+    entries = raw.names.map(n => ({ name: n }));
+  } else if (raw.name) {
+    entries = [{ name: raw.name }];
+  }
+  return {
+    rank: raw.rank ?? idx + 1,
+    entries,
+    separator: raw.separator === "vs" ? "vs" : "and",
+    note: raw.note || "",
+  };
+};
 
 interface FanList {
   id: string;
