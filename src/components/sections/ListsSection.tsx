@@ -578,6 +578,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                 <Button size="sm" variant="outline" className="flex-1" onClick={() => startEdit(list)}>
                   <Edit className="h-3 w-3 mr-1" /> Edit
                 </Button>
+                <Button size="sm" variant="outline" onClick={() => exportList(list)} title="Export as .txt">
+                  <Download className="h-3 w-3" />
+                </Button>
                 <Button size="sm" variant="destructive" onClick={() => deleteList(list)}>
                   <Trash2 className="h-3 w-3" />
                 </Button>
