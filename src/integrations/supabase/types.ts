@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      fan_lists: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          items: Json
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          items?: Json
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          items?: Json
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       wiki_edits: {
         Row: {
           created_at: string
