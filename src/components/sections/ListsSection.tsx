@@ -30,11 +30,17 @@ const buildSearchIndex = (): SearchEntry[] => {
 };
 
 // ---------- MultiNameSelector ----------
-// Holds a list of confirmed "chips" (names picked from dropdown) plus a search buffer.
-// Typing only ever updates the search buffer — picking from the dropdown adds a new chip.
+// Holds a list of confirmed "chips" (names picked from dropdown, each with optional year)
+// plus a search buffer. Typing only ever updates the search buffer — picking from the
+// dropdown adds a new chip.
+export interface NameEntry {
+  name: string;
+  year?: number;
+}
+
 interface MultiNameSelectorProps {
-  values: string[];
-  onChange: (vals: string[]) => void;
+  values: NameEntry[];
+  onChange: (vals: NameEntry[]) => void;
   index: SearchEntry[];
   placeholder?: string;
 }
@@ -70,8 +76,8 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
   }, []);
 
   const addChip = (entry: SearchEntry) => {
-    if (!values.includes(entry.name)) {
-      onChange([...values, entry.name]);
+    if (!values.some(v => v.name === entry.name)) {
+      onChange([...values, { name: entry.name }]);
     }
     setQuery("");
     setOpen(false);
@@ -82,6 +88,13 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
     onChange(values.filter((_, i) => i !== idx));
   };
 
+  const updateChipYear = (idx: number, yearStr: string) => {
+    const next = [...values];
+    const y = parseInt(yearStr, 10);
+    next[idx] = { ...next[idx], year: Number.isFinite(y) ? y : undefined };
+    onChange(next);
+  };
+
   const lookupEntry = (name: string): SearchEntry | undefined =>
     index.find(e => e.name === name);
 
@@ -90,19 +103,28 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
       {/* Chips */}
       {values.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-1.5">
-          {values.map((name, i) => {
-            const entry = lookupEntry(name);
+          {values.map((chip, i) => {
+            const entry = lookupEntry(chip.name);
             const teamClass = entry?.type === "player" && entry.team
               ? getTeamClass(entry.team)
               : entry?.type === "team"
-              ? getTeamClass(name)
+              ? getTeamClass(chip.name)
               : "";
             return (
               <span
-                key={`${name}-${i}`}
+                key={`${chip.name}-${i}`}
                 className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${teamClass || "bg-[#2c323d] text-white"}`}
               >
-                <span>{name}</span>
+                <span>{chip.name}</span>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={chip.year ?? ""}
+                  onChange={e => updateChipYear(i, e.target.value)}
+                  placeholder="year"
+                  className="w-14 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
+                  title="Optional year"
+                />
                 <button
                   type="button"
                   onClick={() => removeChip(i)}
@@ -166,27 +188,37 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
 
 interface ListItem {
   rank: number;
-  names: string[];
+  entries: NameEntry[];
+  separator?: "and" | "vs"; // how to render multi-entry items
   note?: string;
 }
 
-// Raw stored item shape supports legacy `name: string` for backwards compat
+// Raw stored item shape supports legacy `name: string` and legacy `names: string[]`
 interface StoredItem {
   rank: number;
   name?: string;
   names?: string[];
+  entries?: NameEntry[];
+  separator?: "and" | "vs";
   note?: string;
 }
 
-const normalizeItem = (raw: StoredItem, idx: number): ListItem => ({
-  rank: raw.rank ?? idx + 1,
-  names: Array.isArray(raw.names) && raw.names.length > 0
-    ? raw.names
-    : raw.name
-    ? [raw.name]
-    : [],
-  note: raw.note || "",
-});
+const normalizeItem = (raw: StoredItem, idx: number): ListItem => {
+  let entries: NameEntry[] = [];
+  if (Array.isArray(raw.entries) && raw.entries.length > 0) {
+    entries = raw.entries.map(e => ({ name: e.name, year: typeof e.year === "number" ? e.year : undefined }));
+  } else if (Array.isArray(raw.names) && raw.names.length > 0) {
+    entries = raw.names.map(n => ({ name: n }));
+  } else if (raw.name) {
+    entries = [{ name: raw.name }];
+  }
+  return {
+    rank: raw.rank ?? idx + 1,
+    entries,
+    separator: raw.separator === "vs" ? "vs" : "and",
+    note: raw.note || "",
+  };
+};
 
 interface FanList {
   id: string;
@@ -245,7 +277,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditingList(null);
     setEditName("");
     setEditDescription("");
-    setEditItems([{ rank: 1, names: [], note: "" }]);
+    setEditItems([{ rank: 1, entries: [], separator: "and", note: "" }]);
   };
 
   const startEdit = (list: FanList) => {
@@ -253,7 +285,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditingList(list);
     setEditName(list.name);
     setEditDescription(list.description || "");
-    setEditItems(list.items.length ? [...list.items] : [{ rank: 1, names: [], note: "" }]);
+    setEditItems(list.items.length ? [...list.items] : [{ rank: 1, entries: [], separator: "and", note: "" }]);
   };
 
   const cancelEdit = () => {
@@ -262,7 +294,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   };
 
   const addItem = () => {
-    setEditItems([...editItems, { rank: editItems.length + 1, names: [], note: "" }]);
+    setEditItems([...editItems, { rank: editItems.length + 1, entries: [], separator: "and", note: "" }]);
   };
 
   const removeItem = (idx: number) => {
@@ -270,9 +302,15 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditItems(newItems);
   };
 
-  const updateItemNames = (idx: number, names: string[]) => {
+  const updateItemEntries = (idx: number, entries: NameEntry[]) => {
     const newItems = [...editItems];
-    newItems[idx] = { ...newItems[idx], names };
+    newItems[idx] = { ...newItems[idx], entries };
+    setEditItems(newItems);
+  };
+
+  const updateItemSeparator = (idx: number, separator: "and" | "vs") => {
+    const newItems = [...editItems];
+    newItems[idx] = { ...newItems[idx], separator };
     setEditItems(newItems);
   };
 
@@ -296,10 +334,11 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
       return;
     }
     const cleanedItems = editItems
-      .filter(it => it.names.length > 0)
+      .filter(it => it.entries.length > 0)
       .map((it, i) => ({
         rank: i + 1,
-        names: it.names,
+        entries: it.entries,
+        separator: it.separator || "and",
         note: (it.note || "").trim(),
       }));
 
@@ -343,10 +382,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     }
     lines.push("");
     list.items.forEach(item => {
-      const names = (item.names && item.names.length > 0
-        ? item.names
-        : (item as any).name ? [(item as any).name] : []) as string[];
-      lines.push(`#${item.rank}. ${names.join(" / ")}`);
+      const sep = item.separator === "vs" ? " VS " : " and ";
+      const parts = item.entries.map(e => e.year ? `${e.name} (${e.year})` : e.name);
+      lines.push(`#${item.rank}. ${parts.join(parts.length > 2 ? " / " : sep)}`);
       if (item.note) lines.push(`    ${item.note}`);
     });
     lines.push("");
@@ -376,8 +414,8 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     loadLists();
   };
 
-  // Renders one clickable name "card" (chip) — colored by team
-  const NameCard = ({ name }: { name: string }) => {
+  // Renders one clickable name "card" (chip) — colored by team, with optional year
+  const NameCard = ({ name, year }: { name: string; year?: number }) => {
     const entry = lookupEntry(name);
     const teamClass = entry?.type === "player" && entry.team
       ? getTeamClass(entry.team)
@@ -386,10 +424,13 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
       : "";
     return (
       <span
-        className={`inline-flex items-center px-2 py-1 rounded text-sm font-semibold ${teamClass || "bg-[#2c323d] text-white"} ${onPlayerClick ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+        className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-semibold ${teamClass || "bg-[#2c323d] text-white"} ${onPlayerClick ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
         onClick={onPlayerClick ? (e) => { e.stopPropagation(); onPlayerClick(name); } : undefined}
       >
-        {name}
+        <span>{name}</span>
+        {typeof year === "number" && (
+          <span className="text-[10px] font-normal opacity-80">({year})</span>
+        )}
       </span>
     );
   };
@@ -423,17 +464,30 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
             Last updated: {new Date(viewingList.updated_at).toLocaleString()}
           </p>
           <ol className="space-y-2">
-            {viewingList.items.map((item, idx) => (
-              <li key={idx} className="flex gap-3 p-3 bg-[#1f242b] rounded border border-[#2a2f38]">
-                <span className="text-primary font-bold text-lg w-10 text-right">#{item.rank}</span>
-                <div className="flex-1">
-                  <div className="flex flex-wrap gap-1.5">
-                    {(item.names && item.names.length > 0 ? item.names : ((item as any).name ? [(item as any).name] : [])).map((n: string, i: number) => <NameCard key={`${n}-${i}`} name={n} />)}
+            {viewingList.items.map((item, idx) => {
+              const entries = item.entries && item.entries.length > 0
+                ? item.entries
+                : ((item as any).names ? ((item as any).names as string[]).map(n => ({ name: n })) : ((item as any).name ? [{ name: (item as any).name as string }] : []));
+              const sep = item.separator === "vs" ? "VS" : "and";
+              return (
+                <li key={idx} className="flex gap-3 p-3 bg-[#1f242b] rounded border border-[#2a2f38]">
+                  <span className="text-primary font-bold text-lg w-10 text-right">#{item.rank}</span>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {entries.map((e: NameEntry, i: number) => (
+                        <span key={`${e.name}-${i}`} className="inline-flex items-center gap-1.5">
+                          {i > 0 && (
+                            <span className="text-xs text-muted-foreground font-semibold uppercase px-1">{sep}</span>
+                          )}
+                          <NameCard name={e.name} year={e.year} />
+                        </span>
+                      ))}
+                    </div>
+                    {item.note && <div className="text-sm text-muted-foreground mt-1.5">{item.note}</div>}
                   </div>
-                  {item.note && <div className="text-sm text-muted-foreground mt-1.5">{item.note}</div>}
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ol>
         </div>
       </div>
@@ -507,10 +561,25 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                   </div>
                   <div className="flex-1 space-y-1">
                     <MultiNameSelector
-                      values={item.names ?? []}
-                      onChange={vals => updateItemNames(idx, vals)}
+                      values={item.entries ?? []}
+                      onChange={vals => updateItemEntries(idx, vals)}
                       index={searchIndex}
                     />
+                    {item.entries && item.entries.length >= 2 && (
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="text-muted-foreground">Show as:</span>
+                        <button
+                          type="button"
+                          onClick={() => updateItemSeparator(idx, "and")}
+                          className={`px-2 py-0.5 rounded border ${item.separator !== "vs" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-white"}`}
+                        >Fighter 1 and Fighter 2</button>
+                        <button
+                          type="button"
+                          onClick={() => updateItemSeparator(idx, "vs")}
+                          className={`px-2 py-0.5 rounded border ${item.separator === "vs" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-white"}`}
+                        >Fighter 1 VS Fighter 2</button>
+                      </div>
+                    )}
                     <Input
                       value={item.note || ""}
                       onChange={e => updateItemNote(idx, e.target.value)}
