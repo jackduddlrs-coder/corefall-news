@@ -76,8 +76,8 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
   }, []);
 
   const addChip = (entry: SearchEntry) => {
-    if (!values.includes(entry.name)) {
-      onChange([...values, entry.name]);
+    if (!values.some(v => v.name === entry.name)) {
+      onChange([...values, { name: entry.name }]);
     }
     setQuery("");
     setOpen(false);
@@ -88,6 +88,13 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
     onChange(values.filter((_, i) => i !== idx));
   };
 
+  const updateChipYear = (idx: number, yearStr: string) => {
+    const next = [...values];
+    const y = parseInt(yearStr, 10);
+    next[idx] = { ...next[idx], year: Number.isFinite(y) ? y : undefined };
+    onChange(next);
+  };
+
   const lookupEntry = (name: string): SearchEntry | undefined =>
     index.find(e => e.name === name);
 
@@ -96,19 +103,28 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
       {/* Chips */}
       {values.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-1.5">
-          {values.map((name, i) => {
-            const entry = lookupEntry(name);
+          {values.map((chip, i) => {
+            const entry = lookupEntry(chip.name);
             const teamClass = entry?.type === "player" && entry.team
               ? getTeamClass(entry.team)
               : entry?.type === "team"
-              ? getTeamClass(name)
+              ? getTeamClass(chip.name)
               : "";
             return (
               <span
-                key={`${name}-${i}`}
+                key={`${chip.name}-${i}`}
                 className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${teamClass || "bg-[#2c323d] text-white"}`}
               >
-                <span>{name}</span>
+                <span>{chip.name}</span>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={chip.year ?? ""}
+                  onChange={e => updateChipYear(i, e.target.value)}
+                  placeholder="year"
+                  className="w-14 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
+                  title="Optional year"
+                />
                 <button
                   type="button"
                   onClick={() => removeChip(i)}
