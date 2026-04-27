@@ -333,6 +333,37 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     loadLists();
   };
 
+  const exportList = (list: FanList) => {
+    const lines: string[] = [];
+    lines.push(list.name);
+    lines.push("=".repeat(list.name.length));
+    if (list.description) {
+      lines.push("");
+      lines.push(list.description);
+    }
+    lines.push("");
+    list.items.forEach(item => {
+      const names = (item.names && item.names.length > 0
+        ? item.names
+        : (item as any).name ? [(item as any).name] : []) as string[];
+      lines.push(`#${item.rank}. ${names.join(" / ")}`);
+      if (item.note) lines.push(`    ${item.note}`);
+    });
+    lines.push("");
+    lines.push(`Exported ${new Date().toLocaleString()}`);
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${list.name.replace(/[^a-z0-9]+/gi, "_").toLowerCase() || "list"}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({ title: "List exported" });
+  };
+
   const deleteList = async (list: FanList) => {
     if (!confirm(`Delete list "${list.name}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("fan_lists").delete().eq("id", list.id);
