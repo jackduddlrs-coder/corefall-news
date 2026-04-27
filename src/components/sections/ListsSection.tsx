@@ -561,10 +561,25 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                   </div>
                   <div className="flex-1 space-y-1">
                     <MultiNameSelector
-                      values={item.names ?? []}
-                      onChange={vals => updateItemNames(idx, vals)}
+                      values={item.entries ?? []}
+                      onChange={vals => updateItemEntries(idx, vals)}
                       index={searchIndex}
                     />
+                    {item.entries && item.entries.length >= 2 && (
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="text-muted-foreground">Show as:</span>
+                        <button
+                          type="button"
+                          onClick={() => updateItemSeparator(idx, "and")}
+                          className={`px-2 py-0.5 rounded border ${item.separator !== "vs" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-white"}`}
+                        >Fighter 1 and Fighter 2</button>
+                        <button
+                          type="button"
+                          onClick={() => updateItemSeparator(idx, "vs")}
+                          className={`px-2 py-0.5 rounded border ${item.separator === "vs" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-white"}`}
+                        >Fighter 1 VS Fighter 2</button>
+                      </div>
+                    )}
                     <Input
                       value={item.note || ""}
                       onChange={e => updateItemNote(idx, e.target.value)}
