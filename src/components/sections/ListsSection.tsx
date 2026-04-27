@@ -403,6 +403,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
             <ArrowLeft className="h-4 w-4 mr-1" /> Back to Lists
           </Button>
           <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => exportList(viewingList)}>
+              <Download className="h-4 w-4 mr-1" /> Export
+            </Button>
             <Button size="sm" onClick={() => startEdit(viewingList)}>
               <Edit className="h-4 w-4 mr-1" /> Edit
             </Button>
