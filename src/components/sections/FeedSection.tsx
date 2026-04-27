@@ -2,7 +2,24 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🏆 SEASON 711 COMPLETE • Sky Sunyer Wins Apex 711 • Mega Hawnnon Finishes 711 with 3250 Points
+        🔄 712 OFFSEASON • Vampire Ortez Signs with Damage • Bat Bornoil Joins Fadee
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-damage">712 Transfer</span>
+          <h3 className="text-white mt-3">Vampire Ortez Leaves Dashlol for Damage</h3>
+          <p className="text-foreground">
+            After finishing 711 at <span className="stat-highlight">2nd place with 2650 points</span>, Vampire Ortez departs Dashlol and joins Damage for the 712 season.
+          </p>
+        </div>
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-fadee">712 Transfer</span>
+          <h3 className="text-white mt-3">Bat Bornoil Departs Damage for Fadee</h3>
+          <p className="text-foreground">
+            Bat Bornoil leaves Damage to join <span className="stat-highlight">Fadee</span> ahead of the 712 season.
+          </p>
+        </div>
       </div>
 
       <div 

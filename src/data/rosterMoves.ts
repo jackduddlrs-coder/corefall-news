@@ -110,6 +110,12 @@ export const rosterMoves: RosterMove[] = [
   { player: "Supernova Aloi", oldTeam: "Gastro", newTeam: "AFE", season: "711" },
   { player: "Pepper Teraa", oldTeam: "QW", newTeam: "Varcity", season: "711" },
   { player: "Pulse Farward", oldTeam: "Varcity", newTeam: "Engery", season: "711" },
+
+  // Season 712 (moves before 712)
+  { player: "Vampire Ortez", oldTeam: "Dashlol", newTeam: "Damage", season: "712" },
+  { player: "Bat Bornoil", oldTeam: "Damage", newTeam: "Fadee", season: "712" },
+  { player: "Pulse Farward", oldTeam: "Engery", newTeam: "Juire", season: "712" },
+  { player: "Marked Xazvin", oldTeam: "QW", newTeam: "Zemiga-Mar", season: "712" },
 ];
 
 // Get all available seasons with roster moves
