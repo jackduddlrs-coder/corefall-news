@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners, apexDetailed } from "@/data/corefallData";
+import { getPre700ApexWinYears, getPre700CttWinYears } from "@/data/historicalHonors";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight, Trophy, Info, BookOpen } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
@@ -110,6 +111,10 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
   const seasonStars = useMemo(() => {
     return seasons.filter(s => s.star === playerName).map(s => s.year);
   }, [playerName]);
+
+  // Pre-700 historical honors (for retired legends with no post-700 activity)
+  const pre700ApexYears = useMemo(() => getPre700ApexWinYears(playerName), [playerName]);
+  const pre700CttYears = useMemo(() => getPre700CttWinYears(playerName), [playerName]);
 
   // Calculate all players' legacy scores to determine ranking
   const legacyRank = useMemo(() => {
@@ -360,19 +365,35 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
             ].includes(playerName) && (
               <span className="award-badge bg-gradient-to-r from-amber-500/20 to-amber-600/20 border border-amber-500/50 text-amber-400 text-xs">👑 Hall of Immortals</span>
             )}
-            {(trophies || seasonStars.length > 0) ? (
+            {(trophies || seasonStars.length > 0 || pre700ApexYears.length > 0 || pre700CttYears.length > 0) ? (
               <>
                 {trophies && Array(trophies.apex).fill(0).map((_, i) => (
                   <span key={`apex-${i}`} className="award-badge award-apex text-xs">🏆 Apex</span>
                 ))}
+                {pre700ApexYears.map((yr) => (
+                  <span key={`apex-pre-${yr}`} className="award-badge award-apex text-xs">🏆 Apex</span>
+                ))}
                 {trophies && Array(trophies.ctt).fill(0).map((_, i) => (
                   <span key={`ctt-${i}`} className="award-badge award-ctt text-xs">🛡️ CTT</span>
+                ))}
+                {pre700CttYears.map((yr) => (
+                  <span key={`ctt-pre-${yr}`} className="award-badge award-ctt text-xs">🛡️ CTT</span>
                 ))}
                 {seasonStars.length > 0 && (
                   <span className="award-badge award-star text-xs">⭐ {seasonStars.length}x Star</span>
                 )}
                 {trophies && trophies.major > 0 && (
                   <span className="award-badge award-major text-xs">⚔️ {trophies.major} Majors</span>
+                )}
+                {pre700ApexYears.length > 0 && (
+                  <div className="w-full mt-2 text-xs text-muted-foreground">
+                    Apex: {pre700ApexYears.join(", ")}
+                  </div>
+                )}
+                {pre700CttYears.length > 0 && (
+                  <div className="w-full mt-1 text-xs text-muted-foreground">
+                    CTT: {pre700CttYears.join(", ")}
+                  </div>
                 )}
                 {seasonStars.length > 0 && (
                   <div className="w-full mt-2 text-xs text-muted-foreground">
