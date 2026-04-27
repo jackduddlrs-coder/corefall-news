@@ -102,6 +102,7 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
 
     const titleData = apexTitlesData[playerName] || { count: 0, years: [] };
     const starYears = seasonStarData[playerName] || [];
+    const cttYears = getPre700CttWinYears(playerName);
 
     return {
       name: playerName,
@@ -111,7 +112,9 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
       careerKOs,
       apexTitles: titleData.count,
       championshipYears: titleData.years,
-      seasonStarYears: starYears
+      seasonStarYears: starYears,
+      cttTitles: cttYears.length,
+      cttYears
     };
   };
 
