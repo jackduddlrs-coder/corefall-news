@@ -1,10 +1,119 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Edit, Save, X, GripVertical, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, Edit, Save, X, ArrowLeft } from "lucide-react";
+import { pastStandings, pastTeamStandings, getTeamClass } from "@/data/corefallData";
+
+// Build a unique, deduped index of every player and team across all seasons (active + inactive)
+type SearchEntry = { name: string; type: "player" | "team"; team?: string };
+
+const buildSearchIndex = (): SearchEntry[] => {
+  const playerMap = new Map<string, SearchEntry>();
+  const teamSet = new Set<string>();
+  Object.values(pastStandings).forEach(season => {
+    season.forEach(p => {
+      if (!playerMap.has(p.Name)) {
+        playerMap.set(p.Name, { name: p.Name, type: "player", team: p.Team });
+      }
+      teamSet.add(p.Team);
+    });
+  });
+  Object.values(pastTeamStandings).forEach(season => {
+    season.forEach(t => teamSet.add(t.team));
+  });
+  const teams: SearchEntry[] = Array.from(teamSet).sort().map(t => ({ name: t, type: "team" }));
+  const players = Array.from(playerMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  return [...players, ...teams];
+};
+
+interface AutocompleteInputProps {
+  value: string;
+  onChange: (val: string) => void;
+  placeholder?: string;
+  index: SearchEntry[];
+}
+
+const AutocompleteInput = ({ value, onChange, placeholder, index }: AutocompleteInputProps) => {
+  const [open, setOpen] = useState(false);
+  const [highlight, setHighlight] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const matches = useMemo(() => {
+    const q = value.trim().toLowerCase();
+    if (!q) return [];
+    return index
+      .filter(e => e.name.toLowerCase().includes(q))
+      .sort((a, b) => {
+        const aStarts = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+        const bStarts = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+        if (aStarts !== bStarts) return aStarts - bStarts;
+        return a.name.localeCompare(b.name);
+      })
+      .slice(0, 8);
+  }, [value, index]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const select = (entry: SearchEntry) => {
+    onChange(entry.name);
+    setOpen(false);
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      <Input
+        value={value}
+        onChange={e => { onChange(e.target.value); setOpen(true); setHighlight(0); }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={e => {
+          if (!open || matches.length === 0) return;
+          if (e.key === "ArrowDown") { e.preventDefault(); setHighlight(h => Math.min(h + 1, matches.length - 1)); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); setHighlight(h => Math.max(h - 1, 0)); }
+          else if (e.key === "Enter") { e.preventDefault(); select(matches[highlight]); }
+          else if (e.key === "Escape") { setOpen(false); }
+        }}
+        placeholder={placeholder}
+        className="bg-[#222] text-white border-border h-9"
+      />
+      {open && matches.length > 0 && (
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-[#1a1f25] border border-[#2a2f38] rounded shadow-lg max-h-64 overflow-y-auto">
+          {matches.map((m, i) => (
+            <button
+              key={`${m.type}-${m.name}`}
+              type="button"
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => select(m)}
+              onMouseEnter={() => setHighlight(i)}
+              className={`w-full text-left px-3 py-2 flex items-center justify-between gap-2 text-sm ${
+                i === highlight ? "bg-[#2c323d]" : "hover:bg-[#2c323d]"
+              }`}
+            >
+              <span className="text-white truncate">{m.name}</span>
+              <span className="flex items-center gap-2 shrink-0">
+                {m.type === "player" && m.team && (
+                  <span className={`team-tag text-xs ${getTeamClass(m.team)}`}>{m.team}</span>
+                )}
+                <span className="text-xs text-muted-foreground uppercase">{m.type}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 interface ListItem {
   rank: number;
