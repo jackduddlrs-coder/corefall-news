@@ -7,13 +7,14 @@ import { HallOfImmortalsSection } from "./HallOfImmortalsSection";
 import { RosterMovesSection } from "./RosterMovesSection";
 import { RivalriesSection } from "./RivalriesSection";
 import { MajorHistorySection } from "./MajorHistorySection";
+import { ListsSection } from "./ListsSection";
 
 interface ArchiveHubSectionProps {
   onPlayerClick: (name: string) => void;
   onTeamClick: (name: string) => void;
 }
 
-type ArchiveTab = "leaderboards" | "standings" | "seasons" | "immortals" | "moves" | "rivalries" | "majors";
+type ArchiveTab = "leaderboards" | "standings" | "seasons" | "immortals" | "moves" | "rivalries" | "majors" | "lists";
 
 export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSectionProps) => {
   const [activeTab, setActiveTab] = useState<ArchiveTab>("leaderboards");
