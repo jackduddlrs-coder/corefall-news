@@ -382,10 +382,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     }
     lines.push("");
     list.items.forEach(item => {
-      const names = (item.names && item.names.length > 0
-        ? item.names
-        : (item as any).name ? [(item as any).name] : []) as string[];
-      lines.push(`#${item.rank}. ${names.join(" / ")}`);
+      const sep = item.separator === "vs" ? " VS " : " and ";
+      const parts = item.entries.map(e => e.year ? `${e.name} (${e.year})` : e.name);
+      lines.push(`#${item.rank}. ${parts.join(parts.length > 2 ? " / " : sep)}`);
       if (item.note) lines.push(`    ${item.note}`);
     });
     lines.push("");
