@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Trophy, Star, Crown } from "lucide-react";
+import { Trophy, Star, Crown, Shield } from "lucide-react";
 import { pastStandings } from "@/data/corefallData";
+import { getPre700CttWinYears } from "@/data/historicalHonors";
 
 interface HallOfImmortalsProps {
   onPlayerClick: (name: string) => void;
