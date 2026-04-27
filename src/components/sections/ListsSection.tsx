@@ -144,6 +144,18 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
     onChange(next);
   };
 
+  const updateChipTeam = (idx: number, team: string) => {
+    const next = [...values];
+    const t = team.trim();
+    next[idx] = { ...next[idx], team: t ? t : undefined };
+    onChange(next);
+  };
+
+  const teamOptions = useMemo(
+    () => index.filter(e => e.type === "team").map(e => e.name),
+    [index]
+  );
+
   const lookupEntry = (name: string): SearchEntry | undefined =>
     index.find(e => e.name === name);
 
