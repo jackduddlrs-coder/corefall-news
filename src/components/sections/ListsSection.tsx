@@ -473,7 +473,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                   </div>
                   <div className="flex-1 space-y-1">
                     <MultiNameSelector
-                      values={item.names}
+                      values={item.names ?? []}
                       onChange={vals => updateItemNames(idx, vals)}
                       index={searchIndex}
                     />
