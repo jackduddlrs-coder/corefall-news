@@ -84,6 +84,7 @@ const buildSearchIndex = (): SearchEntry[] => {
 export interface NameEntry {
   name: string;
   year?: number;
+  team?: string; // optional manual team override (for color)
 }
 
 interface MultiNameSelectorProps {
