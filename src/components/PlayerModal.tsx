@@ -112,6 +112,10 @@ export function PlayerModal({ playerName, onClose }: PlayerModalProps) {
     return seasons.filter(s => s.star === playerName).map(s => s.year);
   }, [playerName]);
 
+  // Pre-700 historical honors (for retired legends with no post-700 activity)
+  const pre700ApexYears = useMemo(() => getPre700ApexWinYears(playerName), [playerName]);
+  const pre700CttYears = useMemo(() => getPre700CttWinYears(playerName), [playerName]);
+
   // Calculate all players' legacy scores to determine ranking
   const legacyRank = useMemo(() => {
     const allSeasons = Object.keys(pastStandings);
