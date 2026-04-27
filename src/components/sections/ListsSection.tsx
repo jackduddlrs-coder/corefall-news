@@ -567,7 +567,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                           {i > 0 && (
                             <span className="text-xs text-muted-foreground font-semibold uppercase px-1">{sep}</span>
                           )}
-                          <NameCard name={e.name} year={e.year} />
+                          <NameCard name={e.name} year={e.year} team={e.team} />
                         </span>
                       ))}
                     </div>
