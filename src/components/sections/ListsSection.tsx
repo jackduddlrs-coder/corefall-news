@@ -153,8 +153,9 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
         <div className="flex flex-wrap gap-1.5 mb-1.5">
           {values.map((chip, i) => {
             const entry = lookupEntry(chip.name);
-            const teamClass = entry?.type === "player" && entry.team
-              ? getTeamClass(entry.team)
+            const playerTeam = entry?.type === "player" ? resolvePlayerTeam(chip.name, chip.year) : undefined;
+            const teamClass = entry?.type === "player" && playerTeam
+              ? getTeamClass(playerTeam)
               : entry?.type === "team"
               ? getTeamClass(chip.name)
               : "";
