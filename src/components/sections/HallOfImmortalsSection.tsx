@@ -16,6 +16,8 @@ interface Immortal {
   apexTitles: number;
   championshipYears: number[];
   seasonStarYears: number[];
+  cttTitles: number;
+  cttYears: number[];
 }
 
 const inducteeNames = [
