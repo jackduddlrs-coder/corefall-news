@@ -175,6 +175,18 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
                 </div>
               )}
 
+              {immortal.cttYears.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                    <Shield className="h-3 w-3 text-emerald-400" />
+                    CTT Titles
+                  </p>
+                  <p className="text-xs md:text-sm font-medium text-emerald-400/90">
+                    {immortal.cttYears.join(", ")}
+                  </p>
+                </div>
+              )}
+
               {immortal.seasonStarYears.length > 0 && (
                 <div className="mb-3">
                   <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
