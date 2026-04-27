@@ -414,8 +414,8 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     loadLists();
   };
 
-  // Renders one clickable name "card" (chip) — colored by team
-  const NameCard = ({ name }: { name: string }) => {
+  // Renders one clickable name "card" (chip) — colored by team, with optional year
+  const NameCard = ({ name, year }: { name: string; year?: number }) => {
     const entry = lookupEntry(name);
     const teamClass = entry?.type === "player" && entry.team
       ? getTeamClass(entry.team)
@@ -424,10 +424,13 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
       : "";
     return (
       <span
-        className={`inline-flex items-center px-2 py-1 rounded text-sm font-semibold ${teamClass || "bg-[#2c323d] text-white"} ${onPlayerClick ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+        className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-semibold ${teamClass || "bg-[#2c323d] text-white"} ${onPlayerClick ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
         onClick={onPlayerClick ? (e) => { e.stopPropagation(); onPlayerClick(name); } : undefined}
       >
-        {name}
+        <span>{name}</span>
+        {typeof year === "number" && (
+          <span className="text-[10px] font-normal opacity-80">({year})</span>
+        )}
       </span>
     );
   };
