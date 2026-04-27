@@ -49,6 +49,9 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
           <TabsTrigger value="immortals" className="flex-1 text-xs md:text-sm py-2.5">
             Immortals
           </TabsTrigger>
+          <TabsTrigger value="lists" className="flex-1 text-xs md:text-sm py-2.5">
+            Lists
+          </TabsTrigger>
         </TabsList>
 
         <div className="mt-6">
