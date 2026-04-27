@@ -29,20 +29,24 @@ const buildSearchIndex = (): SearchEntry[] => {
   return [...players, ...teams];
 };
 
-interface AutocompleteInputProps {
-  value: string;
-  onChange: (val: string) => void;
-  placeholder?: string;
+// ---------- MultiNameSelector ----------
+// Holds a list of confirmed "chips" (names picked from dropdown) plus a search buffer.
+// Typing only ever updates the search buffer — picking from the dropdown adds a new chip.
+interface MultiNameSelectorProps {
+  values: string[];
+  onChange: (vals: string[]) => void;
   index: SearchEntry[];
+  placeholder?: string;
 }
 
-const AutocompleteInput = ({ value, onChange, placeholder, index }: AutocompleteInputProps) => {
+const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSelectorProps) => {
+  const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const matches = useMemo(() => {
-    const q = value.trim().toLowerCase();
+    const q = query.trim().toLowerCase();
     if (!q) return [];
     return index
       .filter(e => e.name.toLowerCase().includes(q))
@@ -53,7 +57,7 @@ const AutocompleteInput = ({ value, onChange, placeholder, index }: Autocomplete
         return a.name.localeCompare(b.name);
       })
       .slice(0, 8);
-  }, [value, index]);
+  }, [query, index]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -65,25 +69,70 @@ const AutocompleteInput = ({ value, onChange, placeholder, index }: Autocomplete
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const select = (entry: SearchEntry) => {
-    onChange(entry.name);
+  const addChip = (entry: SearchEntry) => {
+    if (!values.includes(entry.name)) {
+      onChange([...values, entry.name]);
+    }
+    setQuery("");
     setOpen(false);
+    setHighlight(0);
   };
+
+  const removeChip = (idx: number) => {
+    onChange(values.filter((_, i) => i !== idx));
+  };
+
+  const lookupEntry = (name: string): SearchEntry | undefined =>
+    index.find(e => e.name === name);
 
   return (
     <div ref={containerRef} className="relative">
+      {/* Chips */}
+      {values.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-1.5">
+          {values.map((name, i) => {
+            const entry = lookupEntry(name);
+            const teamClass = entry?.type === "player" && entry.team
+              ? getTeamClass(entry.team)
+              : entry?.type === "team"
+              ? getTeamClass(name)
+              : "";
+            return (
+              <span
+                key={`${name}-${i}`}
+                className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${teamClass || "bg-[#2c323d] text-white"}`}
+              >
+                <span>{name}</span>
+                <button
+                  type="button"
+                  onClick={() => removeChip(i)}
+                  className="ml-1 opacity-70 hover:opacity-100"
+                  title="Remove"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      )}
       <Input
-        value={value}
-        onChange={e => { onChange(e.target.value); setOpen(true); setHighlight(0); }}
+        value={query}
+        onChange={e => { setQuery(e.target.value); setOpen(true); setHighlight(0); }}
         onFocus={() => setOpen(true)}
         onKeyDown={e => {
+          if (e.key === "Backspace" && !query && values.length > 0) {
+            e.preventDefault();
+            removeChip(values.length - 1);
+            return;
+          }
           if (!open || matches.length === 0) return;
           if (e.key === "ArrowDown") { e.preventDefault(); setHighlight(h => Math.min(h + 1, matches.length - 1)); }
           else if (e.key === "ArrowUp") { e.preventDefault(); setHighlight(h => Math.max(h - 1, 0)); }
-          else if (e.key === "Enter") { e.preventDefault(); select(matches[highlight]); }
+          else if (e.key === "Enter") { e.preventDefault(); addChip(matches[highlight]); }
           else if (e.key === "Escape") { setOpen(false); }
         }}
-        placeholder={placeholder}
+        placeholder={values.length === 0 ? (placeholder || "Type to search players & teams...") : "Add another..."}
         className="bg-[#222] text-white border-border h-9"
       />
       {open && matches.length > 0 && (
@@ -93,7 +142,7 @@ const AutocompleteInput = ({ value, onChange, placeholder, index }: Autocomplete
               key={`${m.type}-${m.name}`}
               type="button"
               onMouseDown={e => e.preventDefault()}
-              onClick={() => select(m)}
+              onClick={() => addChip(m)}
               onMouseEnter={() => setHighlight(i)}
               className={`w-full text-left px-3 py-2 flex items-center justify-between gap-2 text-sm ${
                 i === highlight ? "bg-[#2c323d]" : "hover:bg-[#2c323d]"
@@ -117,9 +166,27 @@ const AutocompleteInput = ({ value, onChange, placeholder, index }: Autocomplete
 
 interface ListItem {
   rank: number;
-  name: string;
+  names: string[];
   note?: string;
 }
+
+// Raw stored item shape supports legacy `name: string` for backwards compat
+interface StoredItem {
+  rank: number;
+  name?: string;
+  names?: string[];
+  note?: string;
+}
+
+const normalizeItem = (raw: StoredItem, idx: number): ListItem => ({
+  rank: raw.rank ?? idx + 1,
+  names: Array.isArray(raw.names) && raw.names.length > 0
+    ? raw.names
+    : raw.name
+    ? [raw.name]
+    : [],
+  note: raw.note || "",
+});
 
 interface FanList {
   id: string;
@@ -144,6 +211,8 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
 
   // Search index of all players + teams (active and inactive)
   const searchIndex = useMemo(() => buildSearchIndex(), []);
+  const lookupEntry = (name: string): SearchEntry | undefined =>
+    searchIndex.find(e => e.name === name);
 
   // Edit form state
   const [editName, setEditName] = useState("");
@@ -161,7 +230,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     } else {
       setLists((data || []).map(d => ({
         ...d,
-        items: Array.isArray(d.items) ? d.items as unknown as ListItem[] : [],
+        items: Array.isArray(d.items)
+          ? (d.items as unknown as StoredItem[]).map(normalizeItem)
+          : [],
       })));
     }
     setLoading(false);
@@ -174,7 +245,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditingList(null);
     setEditName("");
     setEditDescription("");
-    setEditItems([{ rank: 1, name: "", note: "" }]);
+    setEditItems([{ rank: 1, names: [], note: "" }]);
   };
 
   const startEdit = (list: FanList) => {
@@ -182,7 +253,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditingList(list);
     setEditName(list.name);
     setEditDescription(list.description || "");
-    setEditItems(list.items.length ? [...list.items] : [{ rank: 1, name: "", note: "" }]);
+    setEditItems(list.items.length ? [...list.items] : [{ rank: 1, names: [], note: "" }]);
   };
 
   const cancelEdit = () => {
@@ -191,7 +262,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   };
 
   const addItem = () => {
-    setEditItems([...editItems, { rank: editItems.length + 1, name: "", note: "" }]);
+    setEditItems([...editItems, { rank: editItems.length + 1, names: [], note: "" }]);
   };
 
   const removeItem = (idx: number) => {
@@ -199,9 +270,15 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditItems(newItems);
   };
 
-  const updateItem = (idx: number, field: "name" | "note", value: string) => {
+  const updateItemNames = (idx: number, names: string[]) => {
     const newItems = [...editItems];
-    newItems[idx] = { ...newItems[idx], [field]: value };
+    newItems[idx] = { ...newItems[idx], names };
+    setEditItems(newItems);
+  };
+
+  const updateItemNote = (idx: number, note: string) => {
+    const newItems = [...editItems];
+    newItems[idx] = { ...newItems[idx], note };
     setEditItems(newItems);
   };
 
@@ -219,8 +296,12 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
       return;
     }
     const cleanedItems = editItems
-      .filter(it => it.name.trim())
-      .map((it, i) => ({ rank: i + 1, name: it.name.trim(), note: (it.note || "").trim() }));
+      .filter(it => it.names.length > 0)
+      .map((it, i) => ({
+        rank: i + 1,
+        names: it.names,
+        note: (it.note || "").trim(),
+      }));
 
     if (isCreating) {
       const { error } = await supabase.from("fan_lists").insert({
@@ -264,6 +345,24 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     loadLists();
   };
 
+  // Renders one clickable name "card" (chip) — colored by team
+  const NameCard = ({ name }: { name: string }) => {
+    const entry = lookupEntry(name);
+    const teamClass = entry?.type === "player" && entry.team
+      ? getTeamClass(entry.team)
+      : entry?.type === "team"
+      ? getTeamClass(name)
+      : "";
+    return (
+      <span
+        className={`inline-flex items-center px-2 py-1 rounded text-sm font-semibold ${teamClass || "bg-[#2c323d] text-white"} ${onPlayerClick ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
+        onClick={onPlayerClick ? (e) => { e.stopPropagation(); onPlayerClick(name); } : undefined}
+      >
+        {name}
+      </span>
+    );
+  };
+
   // ---------- VIEW MODE: viewing a single list ----------
   if (viewingList && !editingList && !isCreating) {
     return (
@@ -291,16 +390,13 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
           </p>
           <ol className="space-y-2">
             {viewingList.items.map((item, idx) => (
-              <li key={idx} className="flex gap-3 p-3 bg-[#1f242b] rounded border border-[#2a2f38] hover:bg-[#2c323d] transition-colors">
+              <li key={idx} className="flex gap-3 p-3 bg-[#1f242b] rounded border border-[#2a2f38]">
                 <span className="text-primary font-bold text-lg w-10 text-right">#{item.rank}</span>
                 <div className="flex-1">
-                  <div
-                    className={onPlayerClick ? "clickable-name font-semibold text-white" : "font-semibold text-white"}
-                    onClick={onPlayerClick ? () => onPlayerClick(item.name) : undefined}
-                  >
-                    {item.name}
+                  <div className="flex flex-wrap gap-1.5">
+                    {item.names.map((n, i) => <NameCard key={`${n}-${i}`} name={n} />)}
                   </div>
-                  {item.note && <div className="text-sm text-muted-foreground mt-1">{item.note}</div>}
+                  {item.note && <div className="text-sm text-muted-foreground mt-1.5">{item.note}</div>}
                 </div>
               </li>
             ))}
@@ -350,7 +446,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm text-muted-foreground">Items (in ranked order)</label>
+              <label className="block text-sm text-muted-foreground">
+                Items (in ranked order) — pick one or more players/teams per entry
+              </label>
               <Button size="sm" variant="outline" onClick={addItem}>
                 <Plus className="h-4 w-4 mr-1" /> Add Item
               </Button>
@@ -374,15 +472,14 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                     >▼</button>
                   </div>
                   <div className="flex-1 space-y-1">
-                    <AutocompleteInput
-                      value={item.name}
-                      onChange={val => updateItem(idx, "name", val)}
-                      placeholder="Type to search players & teams..."
+                    <MultiNameSelector
+                      values={item.names}
+                      onChange={vals => updateItemNames(idx, vals)}
                       index={searchIndex}
                     />
                     <Input
                       value={item.note || ""}
-                      onChange={e => updateItem(idx, "note", e.target.value)}
+                      onChange={e => updateItemNote(idx, e.target.value)}
                       placeholder="Optional note (vote %, reason, etc.)"
                       className="bg-[#222] text-white border-border h-9 text-sm"
                     />
