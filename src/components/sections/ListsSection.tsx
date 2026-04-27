@@ -142,6 +142,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   const [viewingList, setViewingList] = useState<FanList | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
+  // Search index of all players + teams (active and inactive)
+  const searchIndex = useMemo(() => buildSearchIndex(), []);
+
   // Edit form state
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
