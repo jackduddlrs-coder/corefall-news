@@ -257,7 +257,11 @@ interface StoredItem {
 const normalizeItem = (raw: StoredItem, idx: number): ListItem => {
   let entries: NameEntry[] = [];
   if (Array.isArray(raw.entries) && raw.entries.length > 0) {
-    entries = raw.entries.map(e => ({ name: e.name, year: typeof e.year === "number" ? e.year : undefined }));
+    entries = raw.entries.map(e => ({
+      name: e.name,
+      year: typeof e.year === "number" ? e.year : undefined,
+      team: typeof e.team === "string" && e.team.trim() ? e.team : undefined,
+    }));
   } else if (Array.isArray(raw.names) && raw.names.length > 0) {
     entries = raw.names.map(n => ({ name: n }));
   } else if (raw.name) {
