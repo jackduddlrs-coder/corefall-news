@@ -76,6 +76,9 @@ export const ArchiveHubSection = ({ onPlayerClick, onTeamClick }: ArchiveHubSect
           <TabsContent value="immortals" className="mt-0">
             <HallOfImmortalsSection onPlayerClick={onPlayerClick} />
           </TabsContent>
+          <TabsContent value="lists" className="mt-0">
+            <ListsSection onPlayerClick={onPlayerClick} />
+          </TabsContent>
         </div>
       </Tabs>
     </div>
