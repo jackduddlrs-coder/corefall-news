@@ -84,6 +84,7 @@ const buildSearchIndex = (): SearchEntry[] => {
 export interface NameEntry {
   name: string;
   year?: number;
+  team?: string; // optional manual team override (for color)
 }
 
 interface MultiNameSelectorProps {
@@ -143,6 +144,18 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
     onChange(next);
   };
 
+  const updateChipTeam = (idx: number, team: string) => {
+    const next = [...values];
+    const t = team.trim();
+    next[idx] = { ...next[idx], team: t ? t : undefined };
+    onChange(next);
+  };
+
+  const teamOptions = useMemo(
+    () => index.filter(e => e.type === "team").map(e => e.name),
+    [index]
+  );
+
   const lookupEntry = (name: string): SearchEntry | undefined =>
     index.find(e => e.name === name);
 
@@ -153,9 +166,11 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
         <div className="flex flex-wrap gap-1.5 mb-1.5">
           {values.map((chip, i) => {
             const entry = lookupEntry(chip.name);
-            const playerTeam = entry?.type === "player" ? resolvePlayerTeam(chip.name, chip.year) : undefined;
-            const teamClass = entry?.type === "player" && playerTeam
-              ? getTeamClass(playerTeam)
+            const resolvedTeam = entry?.type === "player"
+              ? (chip.team || resolvePlayerTeam(chip.name, chip.year))
+              : undefined;
+            const teamClass = entry?.type === "player" && resolvedTeam
+              ? getTeamClass(resolvedTeam)
               : entry?.type === "team"
               ? getTeamClass(chip.name)
               : "";
@@ -165,15 +180,31 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
                 className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${teamClass || "bg-[#2c323d] text-white"}`}
               >
                 <span>{chip.name}</span>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  value={chip.year ?? ""}
-                  onChange={e => updateChipYear(i, e.target.value)}
-                  placeholder="year"
-                  className="w-14 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
-                  title="Optional year"
-                />
+                {entry?.type === "player" && (
+                  <>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      value={chip.year ?? ""}
+                      onChange={e => updateChipYear(i, e.target.value)}
+                      placeholder="year"
+                      className="w-14 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
+                      title="Optional year"
+                    />
+                    <input
+                      type="text"
+                      list={`teamlist-${i}`}
+                      value={chip.team ?? ""}
+                      onChange={e => updateChipTeam(i, e.target.value)}
+                      placeholder="team"
+                      className="w-20 h-5 px-1 text-[10px] rounded bg-black/30 text-white placeholder:text-white/50 border border-white/20 focus:outline-none focus:border-white/60"
+                      title="Optional team override (color)"
+                    />
+                    <datalist id={`teamlist-${i}`}>
+                      {teamOptions.map(t => <option key={t} value={t} />)}
+                    </datalist>
+                  </>
+                )}
                 <button
                   type="button"
                   onClick={() => removeChip(i)}
@@ -256,7 +287,11 @@ interface StoredItem {
 const normalizeItem = (raw: StoredItem, idx: number): ListItem => {
   let entries: NameEntry[] = [];
   if (Array.isArray(raw.entries) && raw.entries.length > 0) {
-    entries = raw.entries.map(e => ({ name: e.name, year: typeof e.year === "number" ? e.year : undefined }));
+    entries = raw.entries.map(e => ({
+      name: e.name,
+      year: typeof e.year === "number" ? e.year : undefined,
+      team: typeof e.team === "string" && e.team.trim() ? e.team : undefined,
+    }));
   } else if (Array.isArray(raw.names) && raw.names.length > 0) {
     entries = raw.names.map(n => ({ name: n }));
   } else if (raw.name) {
@@ -465,11 +500,13 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   };
 
   // Renders one clickable name "card" (chip) — colored by team, with optional year
-  const NameCard = ({ name, year }: { name: string; year?: number }) => {
+  const NameCard = ({ name, year, team }: { name: string; year?: number; team?: string }) => {
     const entry = lookupEntry(name);
-    const playerTeam = entry?.type === "player" ? resolvePlayerTeam(name, year) : undefined;
-    const teamClass = entry?.type === "player" && playerTeam
-      ? getTeamClass(playerTeam)
+    const resolvedTeam = entry?.type === "player"
+      ? (team || resolvePlayerTeam(name, year))
+      : undefined;
+    const teamClass = entry?.type === "player" && resolvedTeam
+      ? getTeamClass(resolvedTeam)
       : entry?.type === "team"
       ? getTeamClass(name)
       : "";
@@ -530,7 +567,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                           {i > 0 && (
                             <span className="text-xs text-muted-foreground font-semibold uppercase px-1">{sep}</span>
                           )}
-                          <NameCard name={e.name} year={e.year} />
+                          <NameCard name={e.name} year={e.year} team={e.team} />
                         </span>
                       ))}
                     </div>
