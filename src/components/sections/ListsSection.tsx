@@ -394,7 +394,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                 <span className="text-primary font-bold text-lg w-10 text-right">#{item.rank}</span>
                 <div className="flex-1">
                   <div className="flex flex-wrap gap-1.5">
-                    {item.names.map((n, i) => <NameCard key={`${n}-${i}`} name={n} />)}
+                    {(item.names && item.names.length > 0 ? item.names : ((item as any).name ? [(item as any).name] : [])).map((n: string, i: number) => <NameCard key={`${n}-${i}`} name={n} />)}
                   </div>
                   {item.note && <div className="text-sm text-muted-foreground mt-1.5">{item.note}</div>}
                 </div>
@@ -473,7 +473,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
                   </div>
                   <div className="flex-1 space-y-1">
                     <MultiNameSelector
-                      values={item.names}
+                      values={item.names ?? []}
                       onChange={vals => updateItemNames(idx, vals)}
                       index={searchIndex}
                     />
