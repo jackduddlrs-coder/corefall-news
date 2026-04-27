@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { pastStandings, trophyData, getTeamClass, seasons, fullMatches, majorWinners, apexDetailed } from "@/data/corefallData";
+import { getPre700ApexWinYears, getPre700CttWinYears } from "@/data/historicalHonors";
 import { playerTournamentResults, tournamentNames } from "@/data/tournamentResults";
 import { ChevronDown, ChevronRight, Trophy, Info, BookOpen } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
