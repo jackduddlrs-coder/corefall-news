@@ -221,9 +221,10 @@ const MultiNameSelector = ({ values, onChange, index, placeholder }: MultiNameSe
             >
               <span className="text-white truncate">{m.name}</span>
               <span className="flex items-center gap-2 shrink-0">
-                {m.type === "player" && m.team && (
-                  <span className={`team-tag text-xs ${getTeamClass(m.team)}`}>{m.team}</span>
-                )}
+                {m.type === "player" && (() => {
+                  const t = resolvePlayerTeam(m.name);
+                  return t ? <span className={`team-tag text-xs ${getTeamClass(t)}`}>{t}</span> : null;
+                })()}
                 <span className="text-xs text-muted-foreground uppercase">{m.type}</span>
               </span>
             </button>
