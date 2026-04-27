@@ -277,7 +277,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditingList(null);
     setEditName("");
     setEditDescription("");
-    setEditItems([{ rank: 1, names: [], note: "" }]);
+    setEditItems([{ rank: 1, entries: [], separator: "and", note: "" }]);
   };
 
   const startEdit = (list: FanList) => {
@@ -285,7 +285,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditingList(list);
     setEditName(list.name);
     setEditDescription(list.description || "");
-    setEditItems(list.items.length ? [...list.items] : [{ rank: 1, names: [], note: "" }]);
+    setEditItems(list.items.length ? [...list.items] : [{ rank: 1, entries: [], separator: "and", note: "" }]);
   };
 
   const cancelEdit = () => {
@@ -294,7 +294,7 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
   };
 
   const addItem = () => {
-    setEditItems([...editItems, { rank: editItems.length + 1, names: [], note: "" }]);
+    setEditItems([...editItems, { rank: editItems.length + 1, entries: [], separator: "and", note: "" }]);
   };
 
   const removeItem = (idx: number) => {
@@ -302,9 +302,15 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     setEditItems(newItems);
   };
 
-  const updateItemNames = (idx: number, names: string[]) => {
+  const updateItemEntries = (idx: number, entries: NameEntry[]) => {
     const newItems = [...editItems];
-    newItems[idx] = { ...newItems[idx], names };
+    newItems[idx] = { ...newItems[idx], entries };
+    setEditItems(newItems);
+  };
+
+  const updateItemSeparator = (idx: number, separator: "and" | "vs") => {
+    const newItems = [...editItems];
+    newItems[idx] = { ...newItems[idx], separator };
     setEditItems(newItems);
   };
 
@@ -328,10 +334,11 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
       return;
     }
     const cleanedItems = editItems
-      .filter(it => it.names.length > 0)
+      .filter(it => it.entries.length > 0)
       .map((it, i) => ({
         rank: i + 1,
-        names: it.names,
+        entries: it.entries,
+        separator: it.separator || "and",
         note: (it.note || "").trim(),
       }));
 
