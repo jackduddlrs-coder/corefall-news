@@ -148,11 +148,21 @@ export const HallOfImmortalsSection = ({ onPlayerClick }: HallOfImmortalsProps) 
                   </h3>
                   <p className="text-xs md:text-sm text-muted-foreground">{immortal.primaryTeam}</p>
                 </div>
-                <div className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-full">
-                  <Trophy className="h-3 w-3 md:h-4 md:w-4 text-amber-500" />
-                  <span className="text-xs md:text-sm font-semibold text-amber-500">
-                    {immortal.apexTitles}
-                  </span>
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-full" title="Apex Titles">
+                    <Trophy className="h-3 w-3 md:h-4 md:w-4 text-amber-500" />
+                    <span className="text-xs md:text-sm font-semibold text-amber-500">
+                      {immortal.apexTitles}
+                    </span>
+                  </div>
+                  {immortal.cttTitles > 0 && (
+                    <div className="flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded-full" title="CTT Titles">
+                      <Shield className="h-3 w-3 md:h-4 md:w-4 text-emerald-400" />
+                      <span className="text-xs md:text-sm font-semibold text-emerald-400">
+                        {immortal.cttTitles}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
