@@ -30,11 +30,17 @@ const buildSearchIndex = (): SearchEntry[] => {
 };
 
 // ---------- MultiNameSelector ----------
-// Holds a list of confirmed "chips" (names picked from dropdown) plus a search buffer.
-// Typing only ever updates the search buffer — picking from the dropdown adds a new chip.
+// Holds a list of confirmed "chips" (names picked from dropdown, each with optional year)
+// plus a search buffer. Typing only ever updates the search buffer — picking from the
+// dropdown adds a new chip.
+export interface NameEntry {
+  name: string;
+  year?: number;
+}
+
 interface MultiNameSelectorProps {
-  values: string[];
-  onChange: (vals: string[]) => void;
+  values: NameEntry[];
+  onChange: (vals: NameEntry[]) => void;
   index: SearchEntry[];
   placeholder?: string;
 }
