@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Edit, Save, X, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, Edit, Save, X, ArrowLeft, Download } from "lucide-react";
 import { pastStandings, pastTeamStandings, getTeamClass } from "@/data/corefallData";
 
 // Build a unique, deduped index of every player and team across all seasons (active + inactive)
@@ -333,6 +333,37 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
     loadLists();
   };
 
+  const exportList = (list: FanList) => {
+    const lines: string[] = [];
+    lines.push(list.name);
+    lines.push("=".repeat(list.name.length));
+    if (list.description) {
+      lines.push("");
+      lines.push(list.description);
+    }
+    lines.push("");
+    list.items.forEach(item => {
+      const names = (item.names && item.names.length > 0
+        ? item.names
+        : (item as any).name ? [(item as any).name] : []) as string[];
+      lines.push(`#${item.rank}. ${names.join(" / ")}`);
+      if (item.note) lines.push(`    ${item.note}`);
+    });
+    lines.push("");
+    lines.push(`Exported ${new Date().toLocaleString()}`);
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${list.name.replace(/[^a-z0-9]+/gi, "_").toLowerCase() || "list"}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({ title: "List exported" });
+  };
+
   const deleteList = async (list: FanList) => {
     if (!confirm(`Delete list "${list.name}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("fan_lists").delete().eq("id", list.id);
@@ -372,6 +403,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
             <ArrowLeft className="h-4 w-4 mr-1" /> Back to Lists
           </Button>
           <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => exportList(viewingList)}>
+              <Download className="h-4 w-4 mr-1" /> Export
+            </Button>
             <Button size="sm" onClick={() => startEdit(viewingList)}>
               <Edit className="h-4 w-4 mr-1" /> Edit
             </Button>
@@ -543,6 +577,9 @@ export function ListsSection({ onPlayerClick }: ListsSectionProps) {
               <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                 <Button size="sm" variant="outline" className="flex-1" onClick={() => startEdit(list)}>
                   <Edit className="h-3 w-3 mr-1" /> Edit
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => exportList(list)} title="Export as .txt">
+                  <Download className="h-3 w-3" />
                 </Button>
                 <Button size="sm" variant="destructive" onClick={() => deleteList(list)}>
                   <Trash2 className="h-3 w-3" />
