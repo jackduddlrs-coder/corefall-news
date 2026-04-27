@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Edit, Save, X, ArrowLeft } from "lucide-react";
+import { Plus, Trash2, Edit, Save, X, ArrowLeft, Download } from "lucide-react";
 import { pastStandings, pastTeamStandings, getTeamClass } from "@/data/corefallData";
 
 // Build a unique, deduped index of every player and team across all seasons (active + inactive)
