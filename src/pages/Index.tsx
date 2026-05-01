@@ -19,7 +19,7 @@ type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-ape
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: "home", label: "Feed" },
-  { id: "results", label: "711 Results" },
+  { id: "results", label: "712 Results" },
   { id: "archive", label: "Archive" },
   { id: "teams", label: "Team History" },
   { id: "majors", label: "Trophy Room" },
