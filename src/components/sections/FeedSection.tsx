@@ -2,24 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 OFFSEASON • Vampire Ortez Signs with Damage • Bat Bornoil Joins Fadee
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">712 Transfer</span>
-          <h3 className="text-white mt-3">Vampire Ortez Leaves Dashlol for Damage</h3>
-          <p className="text-foreground">
-            After finishing 711 at <span className="stat-highlight">2nd place with 2650 points</span>, Vampire Ortez departs Dashlol and joins Damage for the 712 season.
-          </p>
-        </div>
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-fadee">712 Transfer</span>
-          <h3 className="text-white mt-3">Bat Bornoil Departs Damage for Fadee</h3>
-          <p className="text-foreground">
-            Bat Bornoil leaves Damage to join <span className="stat-highlight">Fadee</span> ahead of the 712 season.
-          </p>
-        </div>
+        🔄 712 SEASON UNDERWAY • Vampire Ortez Wins Heartland Cup 712 • Damage Leads Team Race
       </div>
 
       <div 
@@ -29,72 +12,63 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-zemigamar mb-2 inline-block">APEX 711 CHAMPION</span>
+          <span className="team-tag team-damage mb-2 inline-block">HEARTLAND CUP 712 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            SKY SUNYER<br/>WINS APEX 711
+            VAMPIRE ORTEZ<br/>WINS HEARTLAND 712
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Zemiga-Mar star claims the ultimate prize, defeating Nothing Sawryr 2-0 in the Grand Finals.
+            In his Damage debut, Vampire Ortez claims the first major of the 712 season — his 6th career major.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 711 Final Standings</h2>
-      
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 712 Early Leaders</h2>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-zemigamar">Apex Champion</span>
-          <h3 className="text-white mt-3">Sky Sunyer Wins Apex 711</h3>
+          <span className="team-tag team-damage">Heartland Cup 712</span>
+          <h3 className="text-white mt-3">Vampire Ortez Wins Heartland Cup 712</h3>
           <p className="text-foreground">
-            The Zemiga-Mar star captures the Apex World Championship, sweeping Nothing Sawryr <span className="stat-highlight">2-0</span> in the Grand Finals.
+            Vampire Ortez kicks off his Damage tenure by claiming <span className="stat-highlight">Heartland Cup 712</span>, his 6th career major.
           </p>
         </div>
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-damage">Season Leader</span>
+          <h3 className="text-white mt-3">Vampire Ortez Tops Early Standings</h3>
+          <p className="text-foreground">
+            The Damage star leads the 712 individual race with <span className="stat-highlight">550 points</span>.
+          </p>
+        </div>
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-damage">Team Leader</span>
+          <h3 className="text-white mt-3">Damage Leads Team Race Early</h3>
+          <p className="text-foreground">
+            Damage paces the league with <span className="stat-highlight">700 points</span>, ahead of Cal Hal (650) and Fadee (600).
+          </p>
+        </div>
+        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
+          <span className="team-tag team-qalf">2nd Place</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe Surges to 2nd</h3>
+          <p className="text-foreground">
+            The Qalf star sits 2nd in early 712 standings with <span className="stat-highlight">450 points</span>.
+          </p>
+        </div>
+      </div>
 
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6 mt-10">Looking Back: Season 711</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">New Life Champion</span>
-          <h3 className="text-white mt-3">Rem Asamtoy Claims 2nd Major of 711</h3>
+          <span className="team-tag team-zemigamar">Apex 711 Champion</span>
+          <h3 className="text-white mt-3">Sky Sunyer Won Apex 711</h3>
           <p className="text-foreground">
-            The Qalf star adds New Life to his Malice Cup title, finishing the season with <span className="stat-highlight">2400 points</span>.
+            The Zemiga-Mar star captured the Apex World Championship, sweeping Nothing Sawryr <span className="stat-highlight">2-0</span> in the Grand Finals.
           </p>
         </div>
-        
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Season Champion</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Finishes 711 with 3250 Points</h3>
+          <span className="team-tag team-dashlol">711 Season Champion</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Topped 711 with 3250 Points</h3>
           <p className="text-foreground">
-            The Apex champ dominates the season with <span className="stat-highlight">3250 points</span> and 14 KOs.
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">2nd Place</span>
-          <h3 className="text-white mt-3">Vampire Ortez Finishes at 2650 Points</h3>
-          <p className="text-foreground">
-            The Dashlol star ends the season at 2nd with <span className="stat-highlight">2650 points</span> and 12 KOs.
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">KO Leader</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Leads Season with 14 KOs</h3>
-          <p className="text-foreground">
-            The season star finishes with <span className="stat-highlight">14 knockouts</span>, ahead of Jam Naze (13).
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">3rd Place</span>
-          <h3 className="text-white mt-3">Nothing Sawryr Finishes 711 at 2550 Points</h3>
-          <p className="text-foreground">
-            The Armageddon champion ends the season at 3rd with <span className="stat-highlight">2550 points</span> and 7 KOs.
-          </p>
-        </div>
-        
-        <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Team Champions</span>
-          <h3 className="text-white mt-3">Dashlol Wins Team Race with 7550 Points</h3>
-          <p className="text-foreground">
-            Dashlol finishes the season on top with <span className="stat-highlight">7550 points</span>, ahead of Limium (7000).
+            Mega Hawnnon dominated 711 with <span className="stat-highlight">3250 points</span> and 14 KOs. Full standings available in the Archive.
           </p>
         </div>
       </div>
