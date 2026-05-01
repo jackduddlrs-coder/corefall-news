@@ -1,5 +1,12 @@
 // Past Team Standings
 export const pastTeamStandings: Record<string, { team: string; points: number }[]> = {
+  "712": [
+    { team: "Damage", points: 700 }, { team: "Cal Hal", points: 650 }, { team: "Fadee", points: 600 },
+    { team: "Qalf", points: 550 }, { team: "Dashlol", points: 550 }, { team: "Gastro", points: 450 },
+    { team: "Limium", points: 400 }, { team: "Zemiga-Mar", points: 350 }, { team: "AFE", points: 350 },
+    { team: "Varcity", points: 300 }, { team: "Engery", points: 300 }, { team: "Juire", points: 100 },
+    { team: "Juniper", points: 100 }, { team: "QW", points: 50 }
+  ],
   "711": [
     { team: "Dashlol", points: 7550 }, { team: "Limium", points: 7000 }, { team: "Cal Hal", points: 5750 },
     { team: "Gastro", points: 5150 }, { team: "Damage", points: 5050 }, { team: "Qalf", points: 4800 },
@@ -105,6 +112,40 @@ export const pastTeamStandings: Record<string, { team: string; points: number }[
 
 // Past Individual Standings - Top 40 for each season from Excel files
 export const pastStandings: Record<string, { Rank: number; Name: string; Team: string; Age: number; Points: number; KOs: number }[]> = {
+  "712": [
+    { Rank: 1, Name: "Vampire Ortez", Team: "Damage", Age: 30, Points: 550, KOs: 1 },
+    { Rank: 2, Name: "Daredevil Gaffe", Team: "Qalf", Age: 27, Points: 450, KOs: 2 },
+    { Rank: 3, Name: "Ghost Mazze", Team: "Cal Hal", Age: 25, Points: 400, KOs: 1 },
+    { Rank: 4, Name: "Jam Naze", Team: "Gastro", Age: 26, Points: 350, KOs: 2 },
+    { Rank: 5, Name: "Mega Hawnnon", Team: "Dashlol", Age: 30, Points: 300, KOs: 1 },
+    { Rank: 6, Name: "Sky Sunyer", Team: "Zemiga-Mar", Age: 30, Points: 300, KOs: 2 },
+    { Rank: 7, Name: "Spring Cemet", Team: "Limium", Age: 26, Points: 250, KOs: 2 },
+    { Rank: 8, Name: "Bat Bornoil", Team: "Fadee", Age: 30, Points: 250, KOs: 1 },
+    { Rank: 9, Name: "Rocket Dalbale", Team: "Cal Hal", Age: 27, Points: 200, KOs: 0 },
+    { Rank: 10, Name: "Harsh Raii", Team: "AFE", Age: 28, Points: 200, KOs: 1 },
+    { Rank: 11, Name: "Pepper Teraa", Team: "Varcity", Age: 24, Points: 200, KOs: 1 },
+    { Rank: 12, Name: "Venom Zairos", Team: "Engery", Age: 25, Points: 200, KOs: 0 },
+    { Rank: 13, Name: "Cascade Juner", Team: "Damage", Age: 33, Points: 150, KOs: 0 },
+    { Rank: 14, Name: "Octane Danza", Team: "AFE", Age: 26, Points: 150, KOs: 2 },
+    { Rank: 15, Name: "Cross Exzona", Team: "Dashlol", Age: 29, Points: 150, KOs: 2 },
+    { Rank: 16, Name: "Freeze Jagwiab", Team: "Fadee", Age: 27, Points: 150, KOs: 0 },
+    { Rank: 17, Name: "Nothing Sawryr", Team: "Gastro", Age: 31, Points: 100, KOs: 0 },
+    { Rank: 18, Name: "Titan Aui", Team: "Limium", Age: 29, Points: 100, KOs: 0 },
+    { Rank: 19, Name: "Rem Asamtoy", Team: "Qalf", Age: 30, Points: 100, KOs: 1 },
+    { Rank: 20, Name: "Zeus Ziki", Team: "Fadee", Age: 33, Points: 100, KOs: 0 },
+    { Rank: 21, Name: "Clipper Doznu", Team: "Varcity", Age: 30, Points: 100, KOs: 0 },
+    { Rank: 22, Name: "Orange Raer", Team: "Juniper", Age: 23, Points: 100, KOs: 0 },
+    { Rank: 23, Name: "Destiny Renon", Team: "Dashlol", Age: 22, Points: 100, KOs: 1 },
+    { Rank: 24, Name: "Horizon Xazilon", Team: "Fadee", Age: 23, Points: 100, KOs: 1 },
+    { Rank: 25, Name: "Wraith Cunelly", Team: "Engery", Age: 32, Points: 50, KOs: 0 },
+    { Rank: 26, Name: "Rhino Aso", Team: "Limium", Age: 26, Points: 50, KOs: 0 },
+    { Rank: 27, Name: "Guardian Garlim", Team: "Cal Hal", Age: 28, Points: 50, KOs: 0 },
+    { Rank: 28, Name: "Pulse Farward", Team: "Juire", Age: 31, Points: 50, KOs: 0 },
+    { Rank: 29, Name: "Marked Xazvin", Team: "Zemiga-Mar", Age: 26, Points: 50, KOs: 0 },
+    { Rank: 30, Name: "Whisper Caforse", Team: "QW", Age: 24, Points: 50, KOs: 0 },
+    { Rank: 31, Name: "Hail Masogoto", Team: "Engery", Age: 22, Points: 50, KOs: 0 },
+    { Rank: 32, Name: "Epic Episi", Team: "Juire", Age: 23, Points: 50, KOs: 0 }
+  ],
   "711": [
     { Rank: 1, Name: "Mega Hawnnon", Team: "Dashlol", Age: 29, Points: 3250, KOs: 14 },
     { Rank: 2, Name: "Vampire Ortez", Team: "Dashlol", Age: 29, Points: 2650, KOs: 12 },
@@ -697,7 +738,7 @@ export const trophyData = [
   { name: "Cloud Youug", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (700) - Limium Contributor" },
   { name: "Saint Lameron", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (700) - Limium Contributor" },
   { name: "Heretic Forchis", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (701) - Cal Hal Contributor" },
-  { name: "Vampire Ortez", total: 5, apex: 0, ctt: 0, major: 5, list: "Chaos Reigns (711), Solar (710), Heartland Cup (707), Heritage (709), New Life (709)" },
+  { name: "Vampire Ortez", total: 6, apex: 0, ctt: 0, major: 6, list: "Heartland Cup (712), Chaos Reigns (711), Solar (710), Heartland Cup (707), Heritage (709), New Life (709)" },
   { name: "Shark Obimovch", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (702)" },
   { name: "Pulse Farward", total: 1, apex: 0, ctt: 0, major: 1, list: "Chaos Reigns (708)" },
   { name: "Bat Bornoil", total: 4, apex: 0, ctt: 2, major: 2, list: "Heritage (710), Wind Breakers (708), CTT (707, 708)" },
@@ -1050,6 +1091,8 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Tournaments: Apex, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
+// Season 712
+  { year: 712, tournament: "Heartland Cup", winner: "Vampire Ortez" },
 // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
