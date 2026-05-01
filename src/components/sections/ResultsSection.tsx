@@ -16,8 +16,8 @@ export function ResultsSection({ onPlayerClick, onTeamClick }: ResultsSectionPro
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   
-  const standings = pastStandings["711"] || [];
-  const teamStandings = pastTeamStandings["711"] || [];
+  const standings = pastStandings["712"] || [];
+  const teamStandings = pastTeamStandings["712"] || [];
 
   // Get players for each team
   const teamPlayers = useMemo(() => {
