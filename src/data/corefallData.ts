@@ -1091,6 +1091,8 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Tournaments: Apex, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
+// Season 712
+  { year: 712, tournament: "Heartland Cup", winner: "Vampire Ortez" },
 // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
