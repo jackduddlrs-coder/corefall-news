@@ -1098,6 +1098,7 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
 // Season 712
   { year: 712, tournament: "Heartland Cup", winner: "Vampire Ortez" },
+  { year: 712, tournament: "Chaos Reigns", winner: "Sky Sunyer" },
 // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
