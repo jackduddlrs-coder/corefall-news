@@ -1103,6 +1103,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
 // Season 712
   { year: 712, tournament: "Heartland Cup", winner: "Vampire Ortez" },
   { year: 712, tournament: "Chaos Reigns", winner: "Sky Sunyer" },
+  { year: 712, tournament: "Heritage Clash", winner: "Ghost Mazze" },
 // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
