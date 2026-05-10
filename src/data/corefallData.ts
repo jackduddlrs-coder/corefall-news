@@ -1,10 +1,10 @@
 // Past Team Standings
 export const pastTeamStandings: Record<string, { team: string; points: number }[]> = {
   "712": [
-    { team: "Cal Hal", points: 1300 }, { team: "Dashlol", points: 1250 }, { team: "Gastro", points: 1150 },
-    { team: "Damage", points: 1050 }, { team: "Qalf", points: 1050 }, { team: "Limium", points: 1050 },
-    { team: "Zemiga-Mar", points: 1050 }, { team: "Fadee", points: 800 }, { team: "AFE", points: 550 },
-    { team: "Varcity", points: 550 }, { team: "Engery", points: 500 }, { team: "Juire", points: 200 },
+    { team: "Cal Hal", points: 2150 }, { team: "Limium", points: 2000 }, { team: "Dashlol", points: 1800 },
+    { team: "Damage", points: 1500 }, { team: "Gastro", points: 1450 }, { team: "Qalf", points: 1450 },
+    { team: "Zemiga-Mar", points: 1400 }, { team: "Fadee", points: 1300 }, { team: "Engery", points: 1000 },
+    { team: "AFE", points: 800 }, { team: "Varcity", points: 750 }, { team: "Juire", points: 200 },
     { team: "Juniper", points: 100 }, { team: "QW", points: 100 }
   ],
   "711": [
