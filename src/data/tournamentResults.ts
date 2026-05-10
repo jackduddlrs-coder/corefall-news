@@ -1,7 +1,7 @@
 // Tournament names by season (10 majors per season)
 // Tournament names by season (10 majors per season)
 export const tournamentNames: Record<string, string[]> = {
-  "712": ["Heartland", "Chaos"],
+  "712": ["Heartland", "Chaos", "Heritage"],
   "711": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
   "710": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
   "709": ["Heartland", "Chaos", "Heritage", "Descent", "Solar", "Nightmare", "Wind Breakers", "Malice", "Armageddon", "New Life"],
