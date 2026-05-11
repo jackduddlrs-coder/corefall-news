@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 SEASON UNDERWAY • Daredevil Gaffe Wins Descent Trials 712 • Cal Hal Extends Team Lead
+        🔄 712 SEASON UNDERWAY • Mega Hawnnon Wins Solar Summit 712 • Cal Hal Leads Teams at 3300
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-qalf mb-2 inline-block">DESCENT TRIALS 712 CHAMPION</span>
+          <span className="team-tag team-dashlol mb-2 inline-block">SOLAR SUMMIT 712 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            DAREDEVIL GAFFE<br/>WINS DESCENT TRIALS 712
+            MEGA HAWNNON<br/>WINS SOLAR SUMMIT 712
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Qalf veteran captures his 3rd career major and surges to the top of the 712 standings with 1600 points.
+            The Dashlol icon claims his 7th career trophy and surges to 2nd in the 712 standings with 1700 points.
           </p>
         </div>
       </div>
@@ -26,31 +26,31 @@ export function FeedSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Descent Trials 712</span>
-          <h3 className="text-white mt-3">Daredevil Gaffe Wins Descent Trials 712</h3>
+          <span className="team-tag team-dashlol">Solar Summit 712</span>
+          <h3 className="text-white mt-3">Mega Hawnnon Wins Solar Summit 712</h3>
           <p className="text-foreground">
-            Daredevil Gaffe captures <span className="stat-highlight">Descent Trials 712</span> — his 3rd career major.
+            Mega Hawnnon captures <span className="stat-highlight">Solar Summit 712</span> — his 7th career trophy.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-qalf">Season Leader</span>
-          <h3 className="text-white mt-3">Daredevil Gaffe Tops 712 Standings</h3>
+          <h3 className="text-white mt-3">Daredevil Gaffe Holds 712 Lead</h3>
           <p className="text-foreground">
-            The Qalf star leads the 712 individual race with <span className="stat-highlight">1600 points</span> and 6 KOs.
+            Daredevil Gaffe paces the 712 individual race with <span className="stat-highlight">1750 points</span> and 8 KOs.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-calhal">Team Leader</span>
-          <h3 className="text-white mt-3">Cal Hal Extends Team Lead</h3>
+          <h3 className="text-white mt-3">Cal Hal Stays Top of Teams</h3>
           <p className="text-foreground">
-            Cal Hal paces the league with <span className="stat-highlight">2850 points</span>, ahead of Qalf (2400) and Limium (2250).
+            Cal Hal leads with <span className="stat-highlight">3300 points</span>, ahead of Qalf (2900) and Dashlol (2850).
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Chasing the Lead</span>
-          <h3 className="text-white mt-3">Vampire Ortez Holds 2nd at 1500</h3>
+          <span className="team-tag team-damage">Top Three Tightens</span>
+          <h3 className="text-white mt-3">Vampire Ortez Sits Third at 1650</h3>
           <p className="text-foreground">
-            Vampire Ortez sits second with <span className="stat-highlight">1500 points</span>, just ahead of Ghost Mazze (1350).
+            Just 100 points separate the top three as Vampire Ortez holds <span className="stat-highlight">1650 points</span>.
           </p>
         </div>
       </div>
