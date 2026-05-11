@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 SEASON UNDERWAY • Ghost Mazze Wins Heritage Clash 712 • Cal Hal Extends Team Lead
+        🔄 712 SEASON UNDERWAY • Daredevil Gaffe Wins Descent Trials 712 • Cal Hal Extends Team Lead
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-calhal mb-2 inline-block">HERITAGE CLASH 712 CHAMPION</span>
+          <span className="team-tag team-qalf mb-2 inline-block">DESCENT TRIALS 712 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            GHOST MAZZE<br/>WINS HERITAGE CLASH 712
+            DAREDEVIL GAFFE<br/>WINS DESCENT TRIALS 712
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Cal Hal star claims his first career major and surges to the top of the 712 standings with 1250 points.
+            The Qalf veteran captures his 3rd career major and surges to the top of the 712 standings with 1600 points.
           </p>
         </div>
       </div>
@@ -26,31 +26,31 @@ export function FeedSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Heritage Clash 712</span>
-          <h3 className="text-white mt-3">Ghost Mazze Wins Heritage Clash 712</h3>
+          <span className="team-tag team-qalf">Descent Trials 712</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe Wins Descent Trials 712</h3>
           <p className="text-foreground">
-            Ghost Mazze captures <span className="stat-highlight">Heritage Clash 712</span> — his first career major.
+            Daredevil Gaffe captures <span className="stat-highlight">Descent Trials 712</span> — his 3rd career major.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Season Leader</span>
-          <h3 className="text-white mt-3">Ghost Mazze Tops 712 Standings</h3>
+          <span className="team-tag team-qalf">Season Leader</span>
+          <h3 className="text-white mt-3">Daredevil Gaffe Tops 712 Standings</h3>
           <p className="text-foreground">
-            The Cal Hal star leads the 712 individual race with <span className="stat-highlight">1250 points</span> and 4 KOs.
+            The Qalf star leads the 712 individual race with <span className="stat-highlight">1600 points</span> and 6 KOs.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-calhal">Team Leader</span>
           <h3 className="text-white mt-3">Cal Hal Extends Team Lead</h3>
           <p className="text-foreground">
-            Cal Hal paces the league with <span className="stat-highlight">2150 points</span>, ahead of Limium (2000) and Dashlol (1800).
+            Cal Hal paces the league with <span className="stat-highlight">2850 points</span>, ahead of Qalf (2400) and Limium (2250).
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-zemigamar">Tied for 2nd</span>
-          <h3 className="text-white mt-3">Sky, Vampire & Daredevil Tied at 1050</h3>
+          <span className="team-tag team-damage">Chasing the Lead</span>
+          <h3 className="text-white mt-3">Vampire Ortez Holds 2nd at 1500</h3>
           <p className="text-foreground">
-            Sky Sunyer, Vampire Ortez and Daredevil Gaffe are deadlocked at <span className="stat-highlight">1050 points</span>, with KOs as the tie-breaker.
+            Vampire Ortez sits second with <span className="stat-highlight">1500 points</span>, just ahead of Ghost Mazze (1350).
           </p>
         </div>
       </div>
