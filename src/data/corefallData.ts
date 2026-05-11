@@ -736,7 +736,7 @@ export const trophyData = [
   { name: "Justice Karoawaki", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (700), Solar Summit (703)" },
   { name: "Whiteout Gar-Kiola", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (702), Malice (705)" },
   { name: "Nothing Sawryr", total: 9, apex: 1, ctt: 1, major: 7, list: "Apex (709), CTT (710), Armageddon (711), Heartland (710), Malice (710), Solar (708, 709), Malice (707), Nightmare (706)" },
-  { name: "Mega Hawnnon", total: 6, apex: 1, ctt: 0, major: 5, list: "Heritage (711), Apex (710), Nightmare (710), Chaos Reigns (710), Descent (708), Malice (709)" },
+  { name: "Mega Hawnnon", total: 7, apex: 1, ctt: 0, major: 6, list: "Solar Summit (712), Heritage (711), Apex (710), Nightmare (710), Chaos Reigns (710), Descent (708), Malice (709)" },
   { name: "Supernova Aloi", total: 2, apex: 0, ctt: 1, major: 1, list: "CTT (710), Nightmare (709)" },
   { name: "Tiger Griff", total: 2, apex: 0, ctt: 0, major: 2, list: "Chaos Reigns (700), Nightmare (700)" },
   { name: "Monster Piccoloo", total: 2, apex: 0, ctt: 0, major: 2, list: "Solar (700), Chaos Reigns (701)" },
