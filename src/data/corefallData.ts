@@ -1107,6 +1107,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 712, tournament: "Chaos Reigns", winner: "Sky Sunyer" },
   { year: 712, tournament: "Heritage Clash", winner: "Ghost Mazze" },
   { year: 712, tournament: "Descent Trials", winner: "Daredevil Gaffe" },
+  { year: 712, tournament: "Solar Summit", winner: "Mega Hawnnon" },
 // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
