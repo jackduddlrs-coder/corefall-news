@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 SEASON UNDERWAY • Mega Hawnnon Wins Solar Summit 712 • Cal Hal Leads Teams at 3300
+        🔄 712 SEASON UNDERWAY • Jam Naze Wins Nightmare 712 • Cal Hal Leads Teams at 3800
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-dashlol mb-2 inline-block">SOLAR SUMMIT 712 CHAMPION</span>
+          <span className="team-tag team-gastro mb-2 inline-block">NIGHTMARE 712 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            MEGA HAWNNON<br/>WINS SOLAR SUMMIT 712
+            JAM NAZE<br/>WINS NIGHTMARE 712
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Dashlol icon claims his 7th career trophy and surges to 2nd in the 712 standings with 1700 points.
+            The Gastro star claims his 4th career trophy (3rd major) and surges to the top of the 712 standings with 2050 points.
           </p>
         </div>
       </div>
@@ -26,31 +26,31 @@ export function FeedSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-dashlol">Solar Summit 712</span>
-          <h3 className="text-white mt-3">Mega Hawnnon Wins Solar Summit 712</h3>
+          <span className="team-tag team-gastro">Nightmare 712</span>
+          <h3 className="text-white mt-3">Jam Naze Wins Nightmare 712</h3>
           <p className="text-foreground">
-            Mega Hawnnon captures <span className="stat-highlight">Solar Summit 712</span> — his 7th career trophy.
+            Jam Naze captures <span className="stat-highlight">Nightmare 712</span> — his 3rd career major.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Season Leader</span>
-          <h3 className="text-white mt-3">Daredevil Gaffe Holds 712 Lead</h3>
+          <span className="team-tag team-gastro">Season Leader</span>
+          <h3 className="text-white mt-3">Jam Naze Takes the 712 Lead</h3>
           <p className="text-foreground">
-            Daredevil Gaffe paces the 712 individual race with <span className="stat-highlight">1750 points</span> and 8 KOs.
+            Jam Naze leaps to the top of the individual race with <span className="stat-highlight">2050 points</span> and 7 KOs.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-calhal">Team Leader</span>
-          <h3 className="text-white mt-3">Cal Hal Stays Top of Teams</h3>
+          <h3 className="text-white mt-3">Cal Hal Stretches Team Lead</h3>
           <p className="text-foreground">
-            Cal Hal leads with <span className="stat-highlight">3300 points</span>, ahead of Qalf (2900) and Dashlol (2850).
+            Cal Hal leads with <span className="stat-highlight">3800 points</span>, ahead of a four-way tie at 3300 (Qalf, Dashlol, Limium, Gastro).
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Top Three Tightens</span>
-          <h3 className="text-white mt-3">Vampire Ortez Sits Third at 1650</h3>
+          <span className="team-tag team-damage">Tight at the Top</span>
+          <h3 className="text-white mt-3">Just 150 Points Separate Top Four</h3>
           <p className="text-foreground">
-            Just 100 points separate the top three as Vampire Ortez holds <span className="stat-highlight">1650 points</span>.
+            Vampire Ortez (1950), Daredevil Gaffe (1900) and Mega Hawnnon (1900) are all within striking distance of Jam Naze's lead.
           </p>
         </div>
       </div>
