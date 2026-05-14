@@ -1110,6 +1110,7 @@ export const majorWinners: { year: number; tournament: string; winner: string }[
   { year: 712, tournament: "Descent Trials", winner: "Daredevil Gaffe" },
   { year: 712, tournament: "Solar Summit", winner: "Mega Hawnnon" },
   { year: 712, tournament: "Nightmare", winner: "Jam Naze" },
+  { year: 712, tournament: "Wind Breakers", winner: "Spring Cemet" },
 // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
