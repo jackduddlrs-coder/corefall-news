@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 SEASON UNDERWAY • Jam Naze Wins Nightmare 712 • Cal Hal Leads Teams at 3800
+        🔄 712 SEASON UNDERWAY • Spring Cemet Wins Wind Breakers 712 • Limium Takes Team Lead at 4400
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-gastro mb-2 inline-block">NIGHTMARE 712 CHAMPION</span>
+          <span className="team-tag team-limium mb-2 inline-block">WIND BREAKERS 712 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            JAM NAZE<br/>WINS NIGHTMARE 712
+            SPRING CEMET<br/>WINS WIND BREAKERS 712
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Gastro star claims his 4th career trophy (3rd major) and surges to the top of the 712 standings with 2050 points.
+            The Limium star captures the first major of his career and surges to 1800 points on the season.
           </p>
         </div>
       </div>
@@ -26,31 +26,31 @@ export function FeedSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Nightmare 712</span>
-          <h3 className="text-white mt-3">Jam Naze Wins Nightmare 712</h3>
+          <span className="team-tag team-limium">Wind Breakers 712</span>
+          <h3 className="text-white mt-3">Spring Cemet's First Major</h3>
           <p className="text-foreground">
-            Jam Naze captures <span className="stat-highlight">Nightmare 712</span> — his 3rd career major.
+            Spring Cemet captures <span className="stat-highlight">Wind Breakers 712</span> — the first major title of his career.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-gastro">Season Leader</span>
-          <h3 className="text-white mt-3">Jam Naze Takes the 712 Lead</h3>
+          <span className="team-tag team-qalf">Tied at the Top</span>
+          <h3 className="text-white mt-3">Daredevil & Jam Deadlocked at 2150</h3>
           <p className="text-foreground">
-            Jam Naze leaps to the top of the individual race with <span className="stat-highlight">2050 points</span> and 7 KOs.
+            Daredevil Gaffe and Jam Naze share the individual lead with <span className="stat-highlight">2150 points</span>, with Mega Hawnnon (2100) right behind.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Team Leader</span>
-          <h3 className="text-white mt-3">Cal Hal Stretches Team Lead</h3>
+          <span className="team-tag team-limium">Team Leader</span>
+          <h3 className="text-white mt-3">Limium Seizes the Team Lead</h3>
           <p className="text-foreground">
-            Cal Hal leads with <span className="stat-highlight">3800 points</span>, ahead of a four-way tie at 3300 (Qalf, Dashlol, Limium, Gastro).
+            Powered by Spring's win, Limium jumps to <span className="stat-highlight">4400 points</span>, edging Cal Hal (4350) for the top spot.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Tight at the Top</span>
-          <h3 className="text-white mt-3">Just 150 Points Separate Top Four</h3>
+          <span className="team-tag team-damage">Tight Top Five</span>
+          <h3 className="text-white mt-3">Just 350 Points Separate Top Five</h3>
           <p className="text-foreground">
-            Vampire Ortez (1950), Daredevil Gaffe (1900) and Mega Hawnnon (1900) are all within striking distance of Jam Naze's lead.
+            Vampire Ortez (2050) and Spring Cemet (1800) round out a packed leaderboard — every contender is still in striking distance.
           </p>
         </div>
       </div>
