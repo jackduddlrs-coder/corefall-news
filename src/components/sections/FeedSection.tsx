@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 SEASON UNDERWAY • Spring Cemet Wins Wind Breakers 712 • Limium Takes Team Lead at 4400
+        🔄 712 SEASON UNDERWAY • Daredevil Gaffe Wins Malice Cup 712 • Cal Hal Surges to 5000 Team Points
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-limium mb-2 inline-block">WIND BREAKERS 712 CHAMPION</span>
+          <span className="team-tag team-qalf mb-2 inline-block">MALICE CUP 712 CHAMPION</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            SPRING CEMET<br/>WINS WIND BREAKERS 712
+            DAREDEVIL GAFFE<br/>WINS MALICE CUP 712
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Limium star captures the first major of his career and surges to 1800 points on the season.
+            The Qalf phenom claims his 4th career major and pulls clear of the field at 2700 points on the season.
           </p>
         </div>
       </div>
@@ -26,31 +26,31 @@ export function FeedSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-limium">Wind Breakers 712</span>
-          <h3 className="text-white mt-3">Spring Cemet's First Major</h3>
+          <span className="team-tag team-qalf">Malice Cup 712</span>
+          <h3 className="text-white mt-3">Daredevil's 4th Major</h3>
           <p className="text-foreground">
-            Spring Cemet captures <span className="stat-highlight">Wind Breakers 712</span> — the first major title of his career.
+            Daredevil Gaffe captures <span className="stat-highlight">Malice Cup 712</span> — his second trophy of the season after Descent Trials.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Tied at the Top</span>
-          <h3 className="text-white mt-3">Daredevil & Jam Deadlocked at 2150</h3>
+          <span className="team-tag team-qalf">Runaway Lead</span>
+          <h3 className="text-white mt-3">Daredevil Pulls Away at 2700</h3>
           <p className="text-foreground">
-            Daredevil Gaffe and Jam Naze share the individual lead with <span className="stat-highlight">2150 points</span>, with Mega Hawnnon (2100) right behind.
+            Daredevil opens a <span className="stat-highlight">350-point gap</span> over Vampire Ortez (2350) and Jam Naze (2250) at the top of the season race.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-limium">Team Leader</span>
-          <h3 className="text-white mt-3">Limium Seizes the Team Lead</h3>
+          <span className="team-tag team-calhal">Team Leader</span>
+          <h3 className="text-white mt-3">Cal Hal Reclaims the Top Spot</h3>
           <p className="text-foreground">
-            Powered by Spring's win, Limium jumps to <span className="stat-highlight">4400 points</span>, edging Cal Hal (4350) for the top spot.
+            Cal Hal jumps to <span className="stat-highlight">5000 points</span>, edging Limium (4750) and Qalf (4600) for the team lead.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">Tight Top Five</span>
-          <h3 className="text-white mt-3">Just 350 Points Separate Top Five</h3>
+          <span className="team-tag team-damage">KO King</span>
+          <h3 className="text-white mt-3">Daredevil Tops KOs at 10</h3>
           <p className="text-foreground">
-            Vampire Ortez (2050) and Spring Cemet (1800) round out a packed leaderboard — every contender is still in striking distance.
+            Daredevil also leads the KO race with <span className="stat-highlight">10 knockouts</span>, ahead of Pepper Teraa and Octane Danza (9).
           </p>
         </div>
       </div>
