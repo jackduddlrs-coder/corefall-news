@@ -761,8 +761,9 @@ export const trophyData = [
   { name: "Jam Naze", total: 4, apex: 0, ctt: 1, major: 3, list: "CTT (710), Wind Breakers (710), Nightmare (711), Nightmare (712)" },
   { name: "Titan Aui", total: 2, apex: 0, ctt: 0, major: 2, list: "Armageddon (710), Wind Breakers (711)" },
   { name: "Club Faxzin", total: 1, apex: 0, ctt: 1, major: 0, list: "CTT (710)" },
-  { name: "Rocket Dalbale", total: 1, apex: 0, ctt: 0, major: 1, list: "Heartland (711)" },
-  { name: "Spring Cemet", total: 1, apex: 0, ctt: 0, major: 1, list: "Wind Breakers (712)" }
+  { name: "Rocket Dalbale", total: 2, apex: 0, ctt: 0, major: 2, list: "Armageddon (712), Heartland (711)" },
+  { name: "Spring Cemet", total: 1, apex: 0, ctt: 0, major: 1, list: "Wind Breakers (712)" },
+  { name: "Harsh Raii", total: 1, apex: 0, ctt: 0, major: 1, list: "New Life (712)" }
 ];
 
 // Apex Finals History
