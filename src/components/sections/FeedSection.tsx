@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 712 SEASON UNDERWAY • Daredevil Gaffe Wins Malice Cup 712 • Cal Hal Surges to 5000 Team Points
+        🔄 712 SEASON UNDERWAY • Rocket Wins Armageddon • Harsh Claims New Life • Daredevil Locks Season Star • Cal Hal Wins 712 CTT
       </div>
 
       <div 
@@ -12,45 +12,45 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-qalf mb-2 inline-block">MALICE CUP 712 CHAMPION</span>
+          <span className="team-tag team-calhal mb-2 inline-block">DOUBLEHEADER WEEKEND</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            DAREDEVIL GAFFE<br/>WINS MALICE CUP 712
+            ROCKET TAKES ARMAGEDDON<br/>HARSH WINS NEW LIFE
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            The Qalf phenom claims his 4th career major and pulls clear of the field at 2700 points on the season.
+            Rocket Dalbale grabs his 2nd career major while Harsh Raii breaks through for his first. Daredevil clinches the 712 Season Star and Cal Hal wraps the CTT crown.
           </p>
         </div>
       </div>
 
-      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 712 Leaders</h2>
+      <h2 className="text-white border-b-2 border-primary pb-2 mb-6">Season 712 — Late Season Storylines</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Malice Cup 712</span>
-          <h3 className="text-white mt-3">Daredevil's 4th Major</h3>
+          <span className="team-tag team-calhal">Armageddon 712</span>
+          <h3 className="text-white mt-3">Rocket's Second Major</h3>
           <p className="text-foreground">
-            Daredevil Gaffe captures <span className="stat-highlight">Malice Cup 712</span> — his second trophy of the season after Descent Trials.
+            Rocket Dalbale captures <span className="stat-highlight">Armageddon 712</span>, adding to his Heartland 711 crown for <span className="stat-highlight">2 career majors</span>.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-qalf">Runaway Lead</span>
-          <h3 className="text-white mt-3">Daredevil Pulls Away at 2700</h3>
+          <span className="team-tag team-afe">New Life 712</span>
+          <h3 className="text-white mt-3">Harsh Raii Breaks Through</h3>
           <p className="text-foreground">
-            Daredevil opens a <span className="stat-highlight">350-point gap</span> over Vampire Ortez (2350) and Jam Naze (2250) at the top of the season race.
+            Harsh Raii lifts his <span className="stat-highlight">first career major</span> at New Life 712, capping a 2300-point season for AFE.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Team Leader</span>
-          <h3 className="text-white mt-3">Cal Hal Reclaims the Top Spot</h3>
+          <span className="team-tag team-qalf">Season Star</span>
+          <h3 className="text-white mt-3">Daredevil Locks the 712 Star</h3>
           <p className="text-foreground">
-            Cal Hal jumps to <span className="stat-highlight">5000 points</span>, edging Limium (4750) and Qalf (4600) for the team lead.
+            Daredevil Gaffe finishes the regular season at <span className="stat-highlight">3150 points</span> and <span className="stat-highlight">12 KOs</span> to claim the 712 Season Star.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-damage">KO King</span>
-          <h3 className="text-white mt-3">Daredevil Tops KOs at 10</h3>
+          <span className="team-tag team-calhal">CTT 712</span>
+          <h3 className="text-white mt-3">Cal Hal Wins the Team Title</h3>
           <p className="text-foreground">
-            Daredevil also leads the KO race with <span className="stat-highlight">10 knockouts</span>, ahead of Pepper Teraa and Octane Danza (9).
+            Cal Hal closes the team race at <span className="stat-highlight">6650 points</span>, edging Limium (6150) and Qalf (5250) for the 712 CTT.
           </p>
         </div>
       </div>
