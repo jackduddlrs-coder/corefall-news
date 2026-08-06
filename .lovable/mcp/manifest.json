@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "corefall-news",
+      "version": "0.1.0",
+      "title": "Corefall News"
+    },
+    "tools": [
+      {
+        "name": "search_players",
+        "title": "Search players",
+        "description": "Search Corefall fighters by (partial) name across every recorded season. Returns each match with their most recent team, age, seasons competed, and total career points.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Full or partial fighter name."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max results, defaults to 15."
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_player_profile",
+        "title": "Get player profile",
+        "description": "Full career profile for one Corefall fighter: season-by-season standings, trophy haul, Apex finals appearances, major wins, and roster moves.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Fighter's full name, e.g. 'Daredevil Gaffe'."
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_season_standings",
+        "title": "Get season standings",
+        "description": "Return the player standings (rank, name, team, age, points, KOs) and the team standings for a given Corefall season year.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "year": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Season year, e.g. 712. Modern seasons run from 700 onwards."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Max number of players to return. Defaults to 25."
+            }
+          },
+          "required": [
+            "year"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_season_history",
+        "title": "Get season history",
+        "description": "Corefall season history: Apex champion, Apex finals matchup, CTT-winning team, Season Star, and every major winner for each season.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "fromYear": {
+              "type": "integer",
+              "description": "Earliest season year to include (inclusive)."
+            },
+            "toYear": {
+              "type": "integer",
+              "description": "Latest season year to include (inclusive)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_roster_moves",
+        "title": "Get roster moves",
+        "description": "List Corefall transfers/roster moves, optionally filtered by season, player, or team (old or new).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "season": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Season year, e.g. 712."
+            },
+            "player": {
+              "type": "string",
+              "description": "Filter by fighter name (partial match)."
+            },
+            "team": {
+              "type": "string",
+              "description": "Filter by team, matching either the old or new team."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_fan_lists",
+        "title": "List fan-voted lists",
+        "description": "List the in-universe fan-voted Corefall lists published in the archive, with their ranked entries.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "search": {
+              "type": "string",
+              "description": "Filter lists whose name contains this text."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max lists to return, defaults to 20."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
