@@ -43,7 +43,7 @@ export default defineTool({
     }
 
     const payload = {
-      name: trophies?.name ?? seasonResults[0]?.team ? seasonResults[0]?.rank !== undefined ? name : name : name,
+      name: trophies?.name ?? name,
       trophies: trophies ?? null,
       apexFinals,
       majorWins: majors,
