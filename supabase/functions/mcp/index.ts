@@ -833,7 +833,7 @@ var pastStandings = {
   ]
 };
 var seasons = [
-  { year: 712, apex: "TBD", team: "TBD", apexAge: 0, ctt: "Cal Hal", star: "Daredevil Gaffe", starTeam: "Qalf", starAge: 27 },
+  { year: 712, apex: "Daredevil Gaffe", team: "Qalf", apexAge: 27, ctt: "Cal Hal", star: "Daredevil Gaffe", starTeam: "Qalf", starAge: 27 },
   { year: 711, apex: "Sky Sunyer", team: "Zemiga-Mar", apexAge: 29, ctt: "Dashlol", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 29 },
   { year: 710, apex: "Mega Hawnnon", team: "Dashlol", apexAge: 28, ctt: "Gastro", star: "Mega Hawnnon", starTeam: "Dashlol", starAge: 28 },
   { year: 709, apex: "Nothing Sawryr", team: "Gastro", apexAge: 28, ctt: "Qalf", star: "Cascade Juner", starTeam: "Damage", starAge: 30 },
@@ -906,7 +906,7 @@ var trophyData = [
   { name: "Bat Bornoil", total: 4, apex: 0, ctt: 2, major: 2, list: "Heritage (710), Wind Breakers (708), CTT (707, 708)" },
   { name: "Sky Sunyer", total: 7, apex: 1, ctt: 2, major: 4, list: "Apex (711), CTT (707, 708), Wind Breakers (709), Descent (710, 711), Chaos Reigns (712)" },
   { name: "Ghost Mazze", total: 1, apex: 0, ctt: 0, major: 1, list: "Heritage Clash (712)" },
-  { name: "Daredevil Gaffe", total: 5, apex: 0, ctt: 1, major: 4, list: "Malice Cup (712), Descent Trials (712), Heartland Cup (709), CTT (709), New Life (710)" },
+  { name: "Daredevil Gaffe", total: 6, apex: 1, ctt: 1, major: 5, list: "Apex (712), Malice Cup (712), Descent Trials (712), Heartland Cup (709), CTT (709), New Life (710)" },
   { name: "Rem Asamtoy", total: 3, apex: 0, ctt: 1, major: 2, list: "CTT (709), Malice Cup (711), New Life (711)" },
   { name: "Jam Naze", total: 4, apex: 0, ctt: 1, major: 3, list: "CTT (710), Wind Breakers (710), Nightmare (711), Nightmare (712)" },
   { name: "Titan Aui", total: 2, apex: 0, ctt: 0, major: 2, list: "Armageddon (710), Wind Breakers (711)" },
@@ -916,6 +916,7 @@ var trophyData = [
   { name: "Harsh Raii", total: 1, apex: 0, ctt: 0, major: 1, list: "New Life (712)" }
 ];
 var apexDetailed = [
+  { year: 712, win: "Daredevil Gaffe", wTeam: "Qalf", winAge: 27, lose: "Vampire Ortez", lTeam: "Damage", loseAge: 30 },
   { year: 711, win: "Sky Sunyer", wTeam: "Zemiga-Mar", winAge: 29, lose: "Nothing Sawryr", lTeam: "Gastro", loseAge: 30 },
   { year: 710, win: "Mega Hawnnon", wTeam: "Dashlol", winAge: 28, lose: "Vampire Ortez", lTeam: "Dashlol", loseAge: 28 },
   { year: 709, win: "Nothing Sawryr", wTeam: "Gastro", winAge: 28, lose: "Mega Hawnnon", lTeam: "Dashlol", loseAge: 27, qualified: ["Cascade Juner", "Vampire Ortez", "Mega Hawnnon", "Daredevil Gaffe", "Sky Sunyer", "Heal Calofloure", "Zeus Ziki", "Nothing Sawryr", "Wraith Cunelly", "Rem Asamtoy", "Supernova Aloi", "Bat Bornoil", "Pulse Farward", "Fisher Cerzonal", "Harsh Raii", "Clipper Doznu"] },
@@ -962,6 +963,7 @@ var majorWinners = [
   { year: 712, tournament: "Malice Cup", winner: "Daredevil Gaffe" },
   { year: 712, tournament: "Armageddon", winner: "Rocket Dalbale" },
   { year: 712, tournament: "New Life", winner: "Harsh Raii" },
+  { year: 712, tournament: "Apex", winner: "Daredevil Gaffe" },
   // Season 711
   { year: 711, tournament: "Apex", winner: "Sky Sunyer" },
   { year: 711, tournament: "New Life", winner: "Rem Asamtoy" },
