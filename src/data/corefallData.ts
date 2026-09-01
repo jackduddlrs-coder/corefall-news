@@ -806,6 +806,39 @@ export const apexDetailed = [
 
 // Full Match Data
 export const fullMatches: Record<string, { round: string; match: string }[]> = {
+  "712": [
+    { round: "Finals", match: "Daredevil Gaffe (2-0(4-2,4-1)) vs Vampire Ortez" },
+    { round: "SF", match: "Daredevil Gaffe (4-3) vs Jam Naze" },
+    { round: "SF", match: "Vampire Ortez (4-2) vs Mega Hawnnon" },
+    // Group A - Double Elimination
+    { round: "UBR1", match: "Daredevil Gaffe (4-1) vs Pepper Teraa (Group A)" },
+    { round: "UBR1", match: "Harsh Raii (4-2) vs Spring Cemet (Group A)" },
+    { round: "UBR1", match: "Ghost Mazze (4-0) vs Octane Danza (Group A)" },
+    { round: "UBR1", match: "Mega Hawnnon (4-2) vs Nothing Sawryr (Group A)" },
+    { round: "LBR1", match: "Spring Cemet (4-0) vs Pepper Teraa (Group A)" },
+    { round: "LBR1", match: "Nothing Sawryr (4-1) vs Octane Danza (Group A)" },
+    { round: "UBSF", match: "Daredevil Gaffe (4-1) vs Harsh Raii (Group A)" },
+    { round: "UBSF", match: "Mega Hawnnon (4-2) vs Ghost Mazze (Group A)" },
+    { round: "LBQF", match: "Ghost Mazze (4-2) vs Spring Cemet (Group A)" },
+    { round: "LBQF", match: "Harsh Raii (4-3) vs Nothing Sawryr (Group A)" },
+    { round: "LBSF", match: "Ghost Mazze (4-1) vs Harsh Raii (Group A)" },
+    { round: "UBF", match: "Daredevil Gaffe (4-3) vs Mega Hawnnon (Group A)" },
+    { round: "LBF", match: "Mega Hawnnon (4-1) vs Ghost Mazze (Group A)" },
+    // Group B - Double Elimination
+    { round: "UBR1", match: "Vampire Ortez (4-1) vs Freeze Jagwiab (Group B)" },
+    { round: "UBR1", match: "Rocket Dalbale (4-2) vs Titan Aui (Group B)" },
+    { round: "UBR1", match: "Jam Naze (4-0) vs Venom Zairos (Group B)" },
+    { round: "UBR1", match: "Rem Asamtoy (4-2) vs Sky Sunyer (Group B)" },
+    { round: "LBR1", match: "Titan Aui (4-0) vs Freeze Jagwiab (Group B)" },
+    { round: "LBR1", match: "Sky Sunyer (4-0) vs Venom Zairos (Group B)" },
+    { round: "UBSF", match: "Vampire Ortez (4-3) vs Rocket Dalbale (Group B)" },
+    { round: "UBSF", match: "Jam Naze (4-0) vs Rem Asamtoy (Group B)" },
+    { round: "LBQF", match: "Rem Asamtoy (4-2) vs Titan Aui (Group B)" },
+    { round: "LBQF", match: "Rocket Dalbale (4-2) vs Sky Sunyer (Group B)" },
+    { round: "LBSF", match: "Rocket Dalbale (4-3) vs Rem Asamtoy (Group B)" },
+    { round: "UBF", match: "Vampire Ortez (4-2) vs Jam Naze (Group B)" },
+    { round: "LBF", match: "Jam Naze (4-2) vs Rocket Dalbale (Group B)" }
+  ],
   "711": [
     { round: "Finals", match: "Sky Sunyer (2-0(4-2,4-2)) vs Nothing Sawryr" },
     { round: "SF", match: "Sky Sunyer (4-0) vs Rem Asamtoy" },
