@@ -76,6 +76,7 @@ const Index = () => {
               <BookOpen className="h-4 w-4" />
               Wiki
             </Link>
+            <ExportDataButton />
             <GlobalSearch onPlayerClick={handlePlayerClick} onTeamClick={handleTeamClick} />
           </div>
         </div>
