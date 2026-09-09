@@ -13,6 +13,7 @@ import { GamesSection } from "@/components/sections/GamesSection";
 import { PlayerModal } from "@/components/PlayerModal";
 import { TeamModal } from "@/components/TeamModal";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import { ExportDataButton } from "@/components/ExportDataButton";
 import { BookOpen } from "lucide-react";
 
 type SectionId = "home" | "results" | "archive" | "teams" | "majors" | "full-apex" | "apex" | "compare" | "team-compare" | "games";
