@@ -11,13 +11,13 @@ type SortKey = "Points" | "KOs" | "Age" | null;
 type SortDir = "asc" | "desc";
 
 export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionProps) {
-  const [selectedSeason, setSelectedSeason] = useState("709");
+  const [selectedSeason, setSelectedSeason] = useState("712");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   
-  const seasonOptions = ["711", "710", "709", "708", "707", "706", "705", "704", "703", "702", "701", "700"];
+  const seasonOptions = ["712", "711", "710", "709", "708", "707", "706", "705", "704", "703", "702", "701", "700"];
   
   const standings = pastStandings[selectedSeason] || [];
   const teamStandings = pastTeamStandings[selectedSeason] || [];
