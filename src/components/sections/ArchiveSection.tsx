@@ -11,13 +11,13 @@ type SortKey = "Points" | "KOs" | "Age" | null;
 type SortDir = "asc" | "desc";
 
 export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionProps) {
-  const [selectedSeason, setSelectedSeason] = useState("709");
+  const [selectedSeason, setSelectedSeason] = useState("712");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   
-  const seasonOptions = ["711", "710", "709", "708", "707", "706", "705", "704", "703", "702", "701", "700"];
+  const seasonOptions = ["712", "711", "710", "709", "708", "707", "706", "705", "704", "703", "702", "701", "700"];
   
   const standings = pastStandings[selectedSeason] || [];
   const teamStandings = pastTeamStandings[selectedSeason] || [];
@@ -72,7 +72,7 @@ export function ArchiveSection({ onPlayerClick, onTeamClick }: ArchiveSectionPro
   return (
     <div className="animate-fadeIn">
       <h1 className="text-white">Historical Standings Archive</h1>
-      <p className="text-foreground">Browse standings from past seasons (700-711). Click column headers to sort.</p>
+      <p className="text-foreground">Browse standings from past seasons (700-712). Click column headers to sort.</p>
 
       <div className="flex flex-wrap gap-4 mb-5">
         <select 
