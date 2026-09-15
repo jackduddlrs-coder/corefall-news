@@ -1180,6 +1180,8 @@ export const fullMatches: Record<string, { round: string; match: string }[]> = {
 // Tournaments: Apex, Heritage, Descent, Malice, Nightmare, Solar, Heartland, Wind Breakers, Armageddon, New Life, Chaos Reigns
 // Verified against trophyData
 export const majorWinners: { year: number; tournament: string; winner: string }[] = [
+// Season 713
+  { year: 713, tournament: "Heartland Cup", winner: "Rocket Dalbale" },
 // Season 712
   { year: 712, tournament: "Heartland Cup", winner: "Vampire Ortez" },
   { year: 712, tournament: "Chaos Reigns", winner: "Sky Sunyer" },

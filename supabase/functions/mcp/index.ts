@@ -1001,6 +1001,8 @@ var apexDetailed = [
   { year: 679, win: "Rolle Asikov", wTeam: "Limium", winAge: 30, lose: "Zinc Waq", lTeam: "Engery", loseAge: 28 }
 ];
 var majorWinners = [
+  // Season 713
+  { year: 713, tournament: "Heartland Cup", winner: "Rocket Dalbale" },
   // Season 712
   { year: 712, tournament: "Heartland Cup", winner: "Vampire Ortez" },
   { year: 712, tournament: "Chaos Reigns", winner: "Sky Sunyer" },
