@@ -16,8 +16,8 @@ export function ResultsSection({ onPlayerClick, onTeamClick }: ResultsSectionPro
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
   
-  const standings = pastStandings["712"] || [];
-  const teamStandings = pastTeamStandings["712"] || [];
+  const standings = pastStandings["713"] || [];
+  const teamStandings = pastTeamStandings["713"] || [];
 
   // Get players for each team
   const teamPlayers = useMemo(() => {
@@ -68,8 +68,8 @@ export function ResultsSection({ onPlayerClick, onTeamClick }: ResultsSectionPro
 
   return (
     <div className="animate-fadeIn">
-      <h1 className="text-[hsl(var(--gold))]">Season 712 Standings</h1>
-      <p className="text-foreground">Live standings for <strong>Season 712</strong>. Click column headers to sort.</p>
+      <h1 className="text-[hsl(var(--gold))]">Season 713 Standings</h1>
+      <p className="text-foreground">Live standings for <strong>Season 713</strong>. Click column headers to sort.</p>
 
       <input
         type="text"
