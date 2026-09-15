@@ -11,6 +11,21 @@ import { z } from "npm:zod@^3.25.76";
 
 // src/data/corefallData.ts
 var pastTeamStandings = {
+  "713": [
+    { team: "Cal Hal", points: 1e3 },
+    { team: "Qalf", points: 650 },
+    { team: "Limium", points: 650 },
+    { team: "Engery", points: 650 },
+    { team: "Gastro", points: 600 },
+    { team: "Dashlol", points: 500 },
+    { team: "Fadee", points: 450 },
+    { team: "AFE", points: 300 },
+    { team: "Zemiga-Mar", points: 250 },
+    { team: "Damage", points: 150 },
+    { team: "Juniper", points: 100 },
+    { team: "QW", points: 100 },
+    { team: "Juire", points: 50 }
+  ],
   "712": [
     { team: "Cal Hal", points: 6650 },
     { team: "Limium", points: 6150 },
