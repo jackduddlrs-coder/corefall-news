@@ -2,7 +2,7 @@ export function FeedSection() {
   return (
     <div className="animate-fadeIn">
       <div className="bg-panel p-3 border-l-4 border-secondary mb-6 font-mono text-secondary font-bold text-lg">
-        🔄 713 SEASON UNDERWAY • Rocket Dalbale Wins Heartland Cup 713 • Cal Hal Leads the Team Race • 712 Season Now Archived
+        🔄 713 SEASON UNDERWAY • Ghost Mazze Wins Chaos Reigns 713 • Cal Hal Leads the Team Race • 712 Season Now Archived
       </div>
 
       <div 
@@ -12,12 +12,12 @@ export function FeedSection() {
         }}
       >
         <div>
-          <span className="team-tag team-calhal mb-2 inline-block">HEARTLAND CUP 713</span>
+          <span className="team-tag team-calhal mb-2 inline-block">CHAOS REIGNS 713</span>
           <h1 className="text-3xl md:text-5xl font-bold text-white m-0 leading-tight drop-shadow-[0_0_20px_hsl(var(--primary))]">
-            ROCKET OPENS 713<br/>WITH HEARTLAND GOLD
+            GHOST SEIZES<br/>CHAOS REIGNS
           </h1>
           <p className="text-base md:text-lg text-muted-foreground mt-2 max-w-xl">
-            Rocket Dalbale takes the first major of the new season, his third career title, and jumps straight to the top of the 713 standings with 550 points.
+            Ghost Mazze wins Chaos Reigns 713, his second career major, and rockets to the top of the 713 standings with 900 points.
           </p>
         </div>
       </div>
