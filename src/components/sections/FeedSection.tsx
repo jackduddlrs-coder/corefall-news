@@ -26,17 +26,17 @@ export function FeedSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
-          <span className="team-tag team-calhal">Heartland Cup 713</span>
-          <h3 className="text-white mt-3">Rocket's Third Trophy</h3>
+          <span className="team-tag team-calhal">Chaos Reigns 713</span>
+          <h3 className="text-white mt-3">Ghost's Second Major</h3>
           <p className="text-foreground">
-            Rocket Dalbale adds <span className="stat-highlight">Heartland Cup 713</span> to Armageddon 712 and Heartland 711 for <span className="stat-highlight">3 career majors</span>.
+            Ghost Mazze adds <span className="stat-highlight">Chaos Reigns 713</span> to Heritage Clash 712 for <span className="stat-highlight">2 career majors</span> and now leads the 713 standings with 900 points.
           </p>
         </div>
         <div className="bg-panel p-6 rounded-xl border border-border transition-transform hover:-translate-y-1 hover:border-primary">
           <span className="team-tag team-calhal">713 Team Race</span>
           <h3 className="text-white mt-3">Cal Hal Out in Front</h3>
           <p className="text-foreground">
-            Cal Hal opens 713 on <span className="stat-highlight">1000 points</span>, ahead of Qalf, Limium and Engery (650 apiece).
+            Cal Hal pulls ahead on <span className="stat-highlight">1900 points</span>, with Limium and Gastro chasing on 1300 apiece.
           </p>
         </div>
       </div>
